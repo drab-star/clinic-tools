@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI in Practice — Clinic Tools</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans+Gurmukhi:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --teal:#0E7C7B; --teal-700:#0b605f; --teal-900:#083e3d;
+    --mint:#e3f1ee; --mint-2:#eef7f4;
+    --ink:#132029; --ink-2:#3a4a55; --muted:#6b7b87;
+    --bg:#f3f6f4; --card:#ffffff; --line:#e7edea;
+    --c-what:#0e7c7b; --b-what:#e2f0ef;
+    --c-why:#0f766e;  --b-why:#e3f2ee;
+    --c-risk:#b45309; --b-risk:#fbeedd;
+    --c-alt:#1d4ed8;  --b-alt:#e8effd;
+    --c-rec:#7c3aed;  --b-rec:#f1ebfd;
+    --c-sut:#0369a1;  --b-sut:#e1f0fa;
+    --c-wis:#4338ca;  --b-wis:#e9eafb;
+    --c-la:#b45309;   --b-la:#fcefd6;
+    --shadow-sm:0 1px 2px rgba(19,32,41,.05);
+    --shadow:0 2px 6px rgba(19,32,41,.05),0 14px 34px rgba(19,32,41,.07);
+    --radius:18px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:'Inter','Noto Sans Devanagari',system-ui,-apple-system,sans-serif;
+    background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.6;
+  }
+  h1,h2,h3,.jak{font-family:'Plus Jakarta Sans','Noto Sans Devanagari',sans-serif}
+  .wrap{max-width:900px;margin:0 auto;padding:0 22px}
+
+  /* HERO */
+  header.site{
+    position:relative;overflow:hidden;color:#fff;padding:26px 0 30px;
+    background:radial-gradient(120% 140% at 15% -10%,#12908d 0%,var(--teal) 42%,var(--teal-900) 100%);
+  }
+  header.site::after{content:"";position:absolute;right:-80px;top:-90px;width:280px;height:280px;border-radius:50%;background:rgba(255,255,255,.06)}
+  .brandrow{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;position:relative;z-index:1}
+  .brand{display:flex;align-items:center;gap:13px}
+  .logo{width:46px;height:46px;border-radius:13px;background:rgba(255,255,255,.16);display:grid;place-items:center;font-weight:800;font-size:18px;letter-spacing:-.5px;border:1px solid rgba(255,255,255,.28);font-family:'Plus Jakarta Sans',sans-serif}
+  .brand h1{font-size:19px;margin:0;font-weight:800;letter-spacing:-.3px}
+  .brand p{margin:2px 0 0;font-size:12.5px;opacity:.82;font-weight:400}
+  .langtoggle{display:flex;background:rgba(255,255,255,.14);border-radius:11px;padding:3px;border:1px solid rgba(255,255,255,.22)}
+  .langtoggle button{border:0;background:transparent;color:#fff;font-family:inherit;font-size:13px;font-weight:600;padding:7px 15px;border-radius:8px;cursor:pointer;opacity:.72;transition:.15s}
+  .langtoggle button.active{background:#fff;color:var(--teal-900);opacity:1}
+  .herotag{position:relative;z-index:1;margin:20px 0 0;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:23px;letter-spacing:-.5px;max-width:560px;line-height:1.25}
+  .herotag span{color:#bff0e7}
+
+  /* TAB BAR (sticky) */
+  .tabbar{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.86);backdrop-filter:saturate(140%) blur(8px);border-bottom:1px solid var(--line)}
+  nav.tabs{display:flex;gap:6px;overflow-x:auto;padding:9px 0}
+  nav.tabs button{
+    border:0;background:transparent;color:var(--muted);font-family:'Plus Jakarta Sans',sans-serif;
+    font-size:13.5px;font-weight:700;padding:9px 15px;cursor:pointer;white-space:nowrap;border-radius:11px;
+    display:inline-flex;align-items:center;gap:8px;transition:.15s;
+  }
+  nav.tabs button svg{width:16px;height:16px}
+  nav.tabs button:hover{background:var(--mint-2);color:var(--teal-700)}
+  nav.tabs button.active{background:var(--teal);color:#fff}
+  nav.tabs button .soon{font-size:9.5px;font-weight:800;background:rgba(0,0,0,.08);padding:2px 6px;border-radius:20px;letter-spacing:.4px}
+  nav.tabs button.active .soon{background:rgba(255,255,255,.25)}
+
+  main{padding:26px 0 64px}
+  .panel{display:none;animation:fade .28s ease}
+  .panel.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+
+  .lead{font-size:15.5px;color:var(--ink-2);max-width:640px;margin:2px 0 20px}
+  .lead b{color:var(--ink);font-weight:600}
+
+  .disclaimer{background:#fffaf0;border:1px solid #f6e0b0;color:#8a5a10;border-radius:14px;padding:13px 16px;font-size:13px;margin-bottom:24px;display:flex;gap:11px;align-items:flex-start}
+  .disclaimer svg{flex-shrink:0;margin-top:1px;color:#c98a1e}
+  .disclaimer b{color:#6f460a}
+
+  .section-label{font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--muted);margin:0 0 13px;font-family:'Plus Jakarta Sans',sans-serif}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:13px}
+  .proc-card{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;padding:17px 17px 16px;cursor:pointer;
+    text-align:left;font-family:inherit;transition:.18s;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;gap:2px;position:relative;
+  }
+  .proc-card:hover{border-color:transparent;box-shadow:var(--shadow);transform:translateY(-3px)}
+  .proc-card .badge{width:44px;height:44px;border-radius:13px;background:var(--mint);color:var(--teal);display:grid;place-items:center;margin-bottom:11px}
+  .proc-card .badge svg{width:25px;height:25px}
+  .proc-card .nm{font-weight:700;font-size:15px;color:var(--ink);font-family:'Plus Jakarta Sans',sans-serif}
+  .proc-card .sub{font-size:12.5px;color:var(--muted);margin-top:1px}
+  .proc-card .go{position:absolute;top:18px;right:16px;color:var(--line);transition:.18s}
+  .proc-card:hover .go{color:var(--teal);transform:translateX(3px)}
+
+  .explainer{display:none}
+  .explainer.active{display:block}
+  .back{background:none;border:0;color:var(--teal-700);font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:13.5px;cursor:pointer;padding:6px 0;margin-bottom:10px;display:inline-flex;align-items:center;gap:6px}
+  .back:hover{color:var(--teal-900)}
+  .proc-head{display:flex;align-items:center;gap:14px;margin:2px 0 22px}
+  .proc-head .badge{width:52px;height:52px;border-radius:15px;background:var(--mint);color:var(--teal);display:grid;place-items:center;flex-shrink:0}
+  .proc-head .badge svg{width:29px;height:29px}
+  .proc-title{font-size:25px;font-weight:800;letter-spacing:-.5px;margin:0}
+
+  .infocard{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow-sm);margin-bottom:14px;overflow:hidden}
+  .infocard h3{margin:0;padding:15px 18px;font-size:14.5px;font-weight:700;display:flex;align-items:center;gap:11px;font-family:'Plus Jakarta Sans',sans-serif}
+  .infocard .body{padding:2px 18px 18px;font-size:14.5px;color:var(--ink-2)}
+  .infocard .body p{margin:0}
+  .infocard ul{margin:2px 0 0;padding-left:6px;list-style:none}
+  .infocard li{position:relative;padding-left:20px;margin-bottom:8px}
+  .infocard li::before{content:"";position:absolute;left:2px;top:9px;width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.5}
+  .tag{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;flex-shrink:0}
+  .tag svg{width:17px;height:17px}
+  /* tinted variants */
+  .v-what .tag{background:var(--b-what);color:var(--c-what)} .v-what h3{color:var(--c-what)} .v-what li{color:var(--c-what)}
+  .v-why .tag{background:var(--b-why);color:var(--c-why)} .v-why h3{color:var(--c-why)}
+  .v-risk{border-color:#f3ddc2} .v-risk h3{background:var(--b-risk);color:var(--c-risk);border-bottom:1px solid #f3ddc2} .v-risk .tag{background:#fff;color:var(--c-risk)} .v-risk li{color:var(--c-risk)}
+  .v-alt .tag{background:var(--b-alt);color:var(--c-alt)} .v-alt h3{color:var(--c-alt)} .v-alt li{color:var(--c-alt)}
+  .v-rec .tag{background:var(--b-rec);color:var(--c-rec)} .v-rec h3{color:var(--c-rec)}
+  .v-sut .tag{background:var(--b-sut);color:var(--c-sut)} .v-sut h3{color:var(--c-sut)}
+  .v-wis{border-color:#dcdcf6} .v-wis h3{background:var(--b-wis);color:var(--c-wis);border-bottom:1px solid #dcdcf6} .v-wis .tag{background:#fff;color:var(--c-wis)} .v-wis li{color:var(--c-wis)}
+  .v-la{border-color:#f3e2bd} .v-la h3{background:var(--b-la);color:var(--c-la);border-bottom:1px solid #f3e2bd} .v-la .tag{background:#fff;color:var(--c-la)} .v-la li{color:var(--c-la)}
+  .infocard li b{color:var(--ink)}
+
+  /* CHECK / progress */
+  .check{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;margin-top:24px}
+  .check h3{margin:0 0 3px;font-size:17px;font-family:'Plus Jakarta Sans',sans-serif}
+  .check .hint{font-size:13px;color:var(--muted);margin:0 0 16px}
+  .prog{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+  .prog .track{flex:1;height:8px;border-radius:99px;background:var(--mint);overflow:hidden}
+  .prog .fill{height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--teal),#18a39c);transition:width .3s ease}
+  .prog .ptxt{font-size:12.5px;font-weight:700;color:var(--teal-700);font-family:'Plus Jakarta Sans',sans-serif;white-space:nowrap}
+  .checkitem{display:flex;gap:12px;align-items:flex-start;padding:12px 13px;border:1px solid var(--line);border-radius:12px;margin-bottom:9px;cursor:pointer;transition:.14s}
+  .checkitem:hover{background:var(--mint-2)}
+  .checkitem.done{background:var(--mint-2);border-color:#bfe4dd}
+  .checkitem input{margin-top:2px;width:18px;height:18px;accent-color:var(--teal);flex-shrink:0}
+  .checkitem span{font-size:14px}
+  .qbox{width:100%;margin-top:14px;border:1px solid var(--line);border-radius:12px;padding:12px 13px;font-family:inherit;font-size:14px;resize:vertical;min-height:70px;background:#fcfdfd}
+  .qbox:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(14,124,123,.13)}
+  .summary{margin-top:16px;padding:16px 18px;border-radius:14px;background:linear-gradient(120deg,var(--mint-2),var(--mint));border:1px solid #bfe4dd;font-size:14px;display:none;align-items:flex-start;gap:12px}
+  .summary.show{display:flex;animation:fade .3s}
+  .summary svg{flex-shrink:0;color:var(--teal);margin-top:1px}
+  .summary b{color:var(--teal-900)}
+
+  .soon-panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:52px 30px;text-align:center;box-shadow:var(--shadow-sm)}
+  .soon-panel .ic{width:64px;height:64px;border-radius:18px;background:var(--mint);color:var(--teal);display:grid;place-items:center;margin:0 auto 16px}
+  .soon-panel .ic svg{width:34px;height:34px}
+  .soon-panel h2{margin:0 0 8px;font-size:21px}
+  .soon-panel p{color:var(--muted);font-size:14.5px;max-width:470px;margin:0 auto;line-height:1.6}
+  .roadmap{display:flex;gap:9px;justify-content:center;flex-wrap:wrap;margin-top:22px}
+  .chip{background:var(--bg);border:1px solid var(--line);border-radius:99px;padding:7px 14px;font-size:12.5px;font-weight:600;color:var(--ink-2)}
+
+  footer{border-top:1px solid var(--line);padding:26px 0;font-size:12.5px;color:var(--muted);text-align:center;line-height:1.6}
+  .hidden{display:none!important}
+  @media(max-width:560px){.herotag{font-size:20px}.proc-title{font-size:22px}.brand p{display:none}.grid{grid-template-columns:1fr 1fr}}
+  @media(max-width:400px){.grid{grid-template-columns:1fr}}
+  .langpick{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 20px;padding:14px 16px;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-sm)}
+  .langpick .lbl{font-family:'Plus Jakarta Sans','Noto Sans Devanagari','Noto Sans Gurmukhi',sans-serif;font-weight:700;font-size:13.5px;color:var(--ink);display:flex;align-items:center;gap:9px}
+  .langpick .lbl svg{width:18px;height:18px;color:var(--teal)}
+  .langpick .selectwrap{position:relative;margin-left:auto}
+  .langpick select{appearance:none;-webkit-appearance:none;font-family:'Inter','Noto Sans Devanagari','Noto Sans Gurmukhi',sans-serif;font-size:14px;font-weight:600;color:var(--ink);background:var(--mint-2);border:1px solid #cfe6e0;border-radius:10px;padding:9px 40px 9px 15px;cursor:pointer}
+  .langpick select:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(14,124,123,.13)}
+  .langpick .selectwrap::after{content:"";position:absolute;right:15px;top:50%;width:8px;height:8px;border-right:2px solid var(--teal-700);border-bottom:2px solid var(--teal-700);transform:translateY(-70%) rotate(45deg);pointer-events:none}
+</style>
+</head>
+<body class="lang-en">
+<header class="site">
+  <div class="wrap">
+    <div class="brandrow">
+      <div class="brand">
+        <div class="logo">AiP</div>
+        <div>
+          <h1>AI in Practice</h1>
+          <p>Practical AI tools for the modern clinic</p>
+        </div>
+      </div>
+    </div>
+    <p class="herotag" data-en="Tools to help you <span>run tomorrow's clinic, today.</span>" data-hi="कल का क्लिनिक <span>आज चलाने</span> में मदद करने वाले टूल।" data-pa="ਤੁਹਾਡੀ ਮਦਦ ਲਈ ਟੂਲ — <span>ਕੱਲ੍ਹ ਦਾ ਕਲੀਨਿਕ, ਅੱਜ ਚਲਾਓ।</span>"></p>
+  </div>
+</header>
+<div class="tabbar">
+  <div class="wrap">
+    <nav class="tabs" id="tabs">
+      <button data-tab="consent" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12h6M9 16h4M8 3h8a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M9 3v3h6V3"/></svg>Consent Explainer</button>
+      <button data-tab="perio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M6 7v10M18 7v10M4 17h16M9 7v10M14 7v10"/></svg>Perio Chart<span class="soon">SOON</span></button>
+      <button data-tab="more"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>More Tools<span class="soon">SOON</span></button>
+    </nav>
+  </div>
+</div>
+
+<main>
+  <div class="wrap">
+
+    <section class="panel active" id="panel-consent">
+      <p class="lead" data-en="<b>Understand your treatment before you sit in the chair.</b> Choose a procedure to see what it involves, why it's advised, the risks, the alternatives, and what recovery looks like — in plain language." data-hi="<b>कुर्सी पर बैठने से पहले अपने इलाज को समझें।</b> कोई प्रक्रिया चुनें और जानें कि उसमें क्या होता है, वह क्यों बताई गई है, उसके जोखिम, विकल्प और ठीक होने में क्या लगता है — सरल भाषा में।" data-pa="<b>ਕੁਰਸੀ ਤੇ ਬੈਠਣ ਤੋਂ ਪਹਿਲਾਂ ਆਪਣੇ ਇਲਾਜ ਨੂੰ ਸਮਝੋ।</b> ਕੋਈ ਪ੍ਰਕਿਰਿਆ ਚੁਣੋ ਅਤੇ ਜਾਣੋ ਕਿ ਉਸ ਵਿੱਚ ਕੀ ਹੁੰਦਾ ਹੈ, ਇਹ ਕਿਉਂ ਦੱਸੀ ਗਈ ਹੈ, ਇਸਦੇ ਖ਼ਤਰੇ, ਬਦਲ ਅਤੇ ਠੀਕ ਹੋਣ ਵਿੱਚ ਕੀ ਲੱਗਦਾ ਹੈ — ਸਾਦੀ ਭਾਸ਼ਾ ਵਿੱਚ।"></p>
+
+      <div class="disclaimer">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+        <span data-en="For understanding only — not a legal consent form. Your final consent is signed with your doctor in the clinic." data-hi="सिर्फ़ समझने के लिए — यह कानूनी सहमति फॉर्म नहीं है। अंतिम सहमति क्लिनिक में आपके डॉक्टर के साथ हस्ताक्षरित होती है।" data-pa="ਸਿਰਫ਼ ਸਮਝਣ ਲਈ — ਇਹ ਕਾਨੂੰਨੀ ਸਹਿਮਤੀ ਫਾਰਮ ਨਹੀਂ ਹੈ। ਅੰਤਿਮ ਸਹਿਮਤੀ ਕਲੀਨਿਕ ਵਿੱਚ ਤੁਹਾਡੇ ਡਾਕਟਰ ਨਾਲ ਹੁੰਦੀ ਹੈ।"></span>
+      </div>
+
+      <div class="langpick">
+        <span class="lbl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg><span data-en="Choose your language" data-hi="अपनी भाषा चुनें" data-pa="ਆਪਣੀ ਭਾਸ਼ਾ ਚੁਣੋ"></span></span>
+        <div class="selectwrap">
+          <select id="langSelect" aria-label="Language">
+            <option value="en">English</option>
+            <option value="hi">हिन्दी</option>
+            <option value="pa">ਪੰਜਾਬੀ</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="procPicker">
+        <p class="section-label" data-en="Choose your procedure" data-hi="अपनी प्रक्रिया चुनें" data-pa="ਆਪਣੀ ਪ੍ਰਕਿਰਿਆ ਚੁਣੋ"></p>
+        <div class="grid" id="procGrid"></div>
+      </div>
+
+      <div class="explainer" id="explainer">
+        <button class="back" id="backBtn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+          <span data-en="All procedures" data-hi="सभी प्रक्रियाएँ" data-pa="ਸਾਰੀਆਂ ਪ੍ਰਕਿਰਿਆਵਾਂ"></span>
+        </button>
+        <div class="proc-head">
+          <div class="badge" id="procBadge"></div>
+          <h2 class="proc-title" id="procTitle"></h2>
+        </div>
+        <div id="sections"></div>
+
+        <div class="check">
+          <h3 data-en="Before your appointment" data-hi="अपॉइंटमेंट से पहले" data-pa="ਆਪਣੀ ਮੁਲਾਕਾਤ ਤੋਂ ਪਹਿਲਾਂ"></h3>
+          <p class="hint" data-en="Tick each box once you've read and understood it. This just helps you — nothing is saved or sent." data-hi="जो पढ़ और समझ लिया हो, उस पर निशान लगाएँ। यह सिर्फ आपकी मदद के लिए है — कुछ भी सेव या भेजा नहीं जाता।" data-pa="ਜੋ ਪੜ੍ਹ ਅਤੇ ਸਮਝ ਲਿਆ ਹੋਵੇ, ਉਸ ਤੇ ਨਿਸ਼ਾਨ ਲਗਾਓ। ਇਹ ਸਿਰਫ਼ ਤੁਹਾਡੀ ਮਦਦ ਲਈ ਹੈ — ਕੁਝ ਵੀ ਸੇਵ ਜਾਂ ਭੇਜਿਆ ਨਹੀਂ ਜਾਂਦਾ।"></p>
+          <div class="prog">
+            <div class="track"><div class="fill" id="progFill"></div></div>
+            <div class="ptxt" id="progTxt"></div>
+          </div>
+          <div id="checkList"></div>
+          <textarea class="qbox" id="qbox" placeholder=""></textarea>
+          <div class="summary" id="summary"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-perio">
+      <div class="soon-panel">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M6 7v10M10 7v10M14 7v10M18 7v10M4 17h16"/></svg></div>
+        <h2 data-en="Perio Chart — coming next" data-hi="पेरियो चार्ट — जल्द आ रहा है" data-pa="ਪੈਰਿਓ ਚਾਰਟ — ਜਲਦੀ ਆ ਰਿਹਾ ਹੈ"></h2>
+        <p data-en="An interactive periodontal chart: fill 6 points per tooth by tap or voice, auto-flag deep pockets and bleeding, and export a clean chart — without stopping to reach for the keyboard." data-hi="एक इंटरैक्टिव पेरियोडॉन्टल चार्ट: हर दाँत के 6 बिंदु टैप या आवाज़ से भरें, गहरी पॉकेट और ब्लीडिंग अपने-आप चिह्नित करें, और साफ़ चार्ट एक्सपोर्ट करें।" data-pa="ਇੱਕ ਇੰਟਰੈਕਟਿਵ ਪੈਰਿਓਡੌਂਟਲ ਚਾਰਟ: ਹਰ ਦੰਦ ਦੇ 6 ਪੌਇੰਟ ਟੈਪ ਜਾਂ ਆਵਾਜ਼ ਨਾਲ ਭਰੋ, ਡੂੰਘੀਆਂ ਪਾਕਟਾਂ ਅਤੇ ਖ਼ੂਨ ਆਪਣੇ-ਆਪ ਨਿਸ਼ਾਨਬੱਧ ਕਰੋ, ਅਤੇ ਸਾਫ਼ ਚਾਰਟ ਐਕਸਪੋਰਟ ਕਰੋ।"></p>
+        <div class="roadmap">
+          <span class="chip">Interactive chart</span>
+          <span class="chip">Auto pocket/bleeding flags</span>
+          <span class="chip">Voice fill (stretch)</span>
+          <span class="chip">Export</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-more">
+      <div class="soon-panel">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div>
+        <h2 data-en="More tools on the way" data-hi="और उपकरण जल्द ही" data-pa="ਹੋਰ ਟੂਲ ਜਲਦੀ ਹੀ"></h2>
+        <p data-en="This hub grows over time. Each new tool from the channel gets its own tab here — one link to share, everything in one place." data-hi="यह हब समय के साथ बढ़ेगा। चैनल का हर नया टूल यहाँ अपने टैब में आएगा — शेयर करने के लिए एक ही लिंक, सब कुछ एक जगह।" data-pa="ਇਹ ਹੱਬ ਸਮੇਂ ਨਾਲ ਵਧੇਗਾ। ਚੈਨਲ ਦਾ ਹਰ ਨਵਾਂ ਟੂਲ ਇੱਥੇ ਆਪਣੇ ਟੈਬ ਵਿੱਚ ਆਵੇਗਾ — ਸਾਂਝਾ ਕਰਨ ਲਈ ਇੱਕੋ ਲਿੰਕ, ਸਭ ਕੁਝ ਇੱਕ ਥਾਂ।"></p>
+        <div class="roadmap">
+          <span class="chip">Explain It Like They're Twelve</span>
+          <span class="chip">Review Responder</span>
+          <span class="chip">Recall / Reactivation</span>
+          <span class="chip">Pre-Op Instructions</span>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span data-en="AI in Practice · An educational aid, not a legal consent form — always confirm the details with your own dentist." data-hi="AI in Practice · एक शैक्षिक सहायता, कानूनी सहमति फॉर्म नहीं — विवरण अपने डॉक्टर से ज़रूर पुष्टि करें।" data-pa="AI in Practice · ਇੱਕ ਵਿੱਦਿਅਕ ਸਹਾਇਤਾ, ਕਾਨੂੰਨੀ ਸਹਿਮਤੀ ਫਾਰਮ ਨਹੀਂ — ਵੇਰਵੇ ਆਪਣੇ ਡਾਕਟਰ ਤੋਂ ਜ਼ਰੂਰ ਪੁਸ਼ਟੀ ਕਰੋ।"></span>
+  </div>
+</footer>
+
+<script>
+const PROC = [
+  {
+    id:"implant", icon:"🦾",
+    name:{en:"Dental Implant", hi:"डेंटल इम्प्लांट", pa:"ਡੈਂਟਲ ਇੰਪਲਾਂਟ"},
+    sub:{en:"Replace a missing tooth", hi:"गायब दाँत की जगह", pa:"ਗੁੰਮ ਹੋਏ ਦੰਦ ਦੀ ਥਾਂ"},
+    what:{en:"A small titanium screw is placed into the jawbone to act as a new tooth root. Once it fuses with the bone, a crown (the visible tooth) is fixed on top.",
+          hi:"जबड़े की हड्डी में एक छोटा टाइटेनियम स्क्रू लगाया जाता है जो नए दाँत की जड़ का काम करता है। हड्डी से जुड़ने के बाद उसके ऊपर एक क्राउन (दिखने वाला दाँत) लगाया जाता है।",
+          pa:"ਜਬਾੜੇ ਦੀ ਹੱਡੀ ਵਿੱਚ ਇੱਕ ਛੋਟਾ ਟਾਈਟੇਨੀਅਮ ਪੇਚ ਲਗਾਇਆ ਜਾਂਦਾ ਹੈ ਜੋ ਨਵੇਂ ਦੰਦ ਦੀ ਜੜ੍ਹ ਦਾ ਕੰਮ ਕਰਦਾ ਹੈ। ਹੱਡੀ ਨਾਲ ਜੁੜਨ ਤੋਂ ਬਾਅਦ ਇਸ ਦੇ ਉੱਪਰ ਇੱਕ ਕ੍ਰਾਊਨ (ਦਿਖਣ ਵਾਲਾ ਦੰਦ) ਲਗਾਇਆ ਜਾਂਦਾ ਹੈ।"},
+    why:{en:"It replaces a missing tooth so you can chew and smile normally, keeps the jawbone from shrinking, and doesn't need the neighbouring teeth to be cut down.",
+         hi:"यह गायब दाँत की जगह लेता है ताकि आप सामान्य रूप से चबा और मुस्कुरा सकें, जबड़े की हड्डी को घटने से रोकता है, और इसके लिए बगल के दाँत घिसने की ज़रूरत नहीं पड़ती।",
+         pa:"ਇਹ ਗੁੰਮ ਹੋਏ ਦੰਦ ਦੀ ਥਾਂ ਲੈਂਦਾ ਹੈ ਤਾਂ ਜੋ ਤੁਸੀਂ ਆਮ ਤਰ੍ਹਾਂ ਚਬਾ ਅਤੇ ਮੁਸਕਰਾ ਸਕੋ, ਜਬਾੜੇ ਦੀ ਹੱਡੀ ਨੂੰ ਘਟਣ ਤੋਂ ਰੋਕਦਾ ਹੈ, ਅਤੇ ਇਸ ਲਈ ਨਾਲ ਦੇ ਦੰਦ ਘਸਾਉਣ ਦੀ ਲੋੜ ਨਹੀਂ ਪੈਂਦੀ।"},
+    risks:{en:["Swelling, bruising or soreness for a few days","Infection at the implant site","Temporary numbness or tingling of the lip, chin or tongue if a nerve is close by","The implant not fusing with the bone (failure), which may need it removed and redone","For upper back teeth, occasional sinus-related issues"],
+           hi:["कुछ दिनों तक सूजन, नील या दर्द","इम्प्लांट वाली जगह पर संक्रमण","पास में नस होने पर होंठ, ठुड्डी या जीभ में अस्थायी सुन्नपन या झनझनाहट","इम्प्लांट का हड्डी से न जुड़ना (विफलता), जिसे निकालकर दोबारा करना पड़ सकता है","ऊपर के पिछले दाँतों में कभी-कभी साइनस से जुड़ी दिक्कत"],
+           pa:["ਕੁਝ ਦਿਨ ਸੋਜ, ਨੀਲ ਜਾਂ ਦਰਦ","ਇੰਪਲਾਂਟ ਵਾਲੀ ਥਾਂ ਤੇ ਲਾਗ","ਨੇੜੇ ਨਸ ਹੋਣ ਤੇ ਬੁੱਲ੍ਹ, ਠੋਡੀ ਜਾਂ ਜੀਭ ਵਿੱਚ ਅਸਥਾਈ ਸੁੰਨਪਨ ਜਾਂ ਝਰਨਾਹਟ","ਇੰਪਲਾਂਟ ਦਾ ਹੱਡੀ ਨਾਲ ਨਾ ਜੁੜਨਾ (ਅਸਫਲਤਾ), ਜਿਸ ਨੂੰ ਕੱਢ ਕੇ ਦੁਬਾਰਾ ਕਰਨਾ ਪੈ ਸਕਦਾ ਹੈ","ਉੱਪਰਲੇ ਪਿਛਲੇ ਦੰਦਾਂ ਵਿੱਚ ਕਦੇ-ਕਦੇ ਸਾਈਨਸ ਨਾਲ ਜੁੜੀ ਸਮੱਸਿਆ"]},
+    alt:{en:["A fixed bridge (using the teeth on either side)","A removable denture","Leaving the gap as it is"],
+         hi:["फिक्स्ड ब्रिज (दोनों तरफ के दाँतों का सहारा लेकर)","निकालने-लगाने वाला डेंचर","गैप को वैसे ही छोड़ देना"],
+         pa:["ਫਿਕਸਡ ਬ੍ਰਿਜ (ਦੋਵੇਂ ਪਾਸੇ ਦੇ ਦੰਦਾਂ ਦਾ ਸਹਾਰਾ ਲੈ ਕੇ)","ਕੱਢਣ-ਲਗਾਉਣ ਵਾਲਾ ਡੈਂਚਰ","ਖਾਲੀ ਥਾਂ ਨੂੰ ਉਵੇਂ ਹੀ ਛੱਡਣਾ"]},
+    rec:{en:"Expect mild swelling and soreness for a few days and stick to soft food. The bone usually takes 3 to 6 months to heal fully before the final crown goes on. Keep the area clean and follow the aftercare instructions.",
+         hi:"कुछ दिनों तक हल्की सूजन और दर्द रह सकता है, इसलिए नरम भोजन लें। अंतिम क्राउन लगने से पहले हड्डी को पूरी तरह ठीक होने में आमतौर पर 3 से 6 महीने लगते हैं। जगह को साफ़ रखें और देखभाल के निर्देशों का पालन करें।",
+         pa:"ਕੁਝ ਦਿਨ ਹਲਕੀ ਸੋਜ ਅਤੇ ਦਰਦ ਰਹਿ ਸਕਦਾ ਹੈ, ਇਸ ਲਈ ਨਰਮ ਭੋਜਨ ਲਓ। ਅੰਤਿਮ ਕ੍ਰਾਊਨ ਲੱਗਣ ਤੋਂ ਪਹਿਲਾਂ ਹੱਡੀ ਨੂੰ ਪੂਰੀ ਤਰ੍ਹਾਂ ਠੀਕ ਹੋਣ ਵਿੱਚ ਆਮ ਤੌਰ ਤੇ 3 ਤੋਂ 6 ਮਹੀਨੇ ਲੱਗਦੇ ਹਨ। ਥਾਂ ਨੂੰ ਸਾਫ਼ ਰੱਖੋ ਅਤੇ ਦੇਖਭਾਲ ਦੀਆਂ ਹਦਾਇਤਾਂ ਦੀ ਪਾਲਣਾ ਕਰੋ।"},
+    sutures:{en:"Stitches are often placed at the surgery site. They're usually removed at a quick follow-up about 7 to 10 days later — unless they're the dissolving type that goes on its own. Your doctor will tell you which.",
+             hi:"सर्जरी वाली जगह पर अक्सर टाँके लगाए जाते हैं। इन्हें आमतौर पर करीब 7 से 10 दिन बाद एक छोटी फ़ॉलो-अप विज़िट में हटाया जाता है — जब तक कि वे अपने-आप घुलने वाले न हों। डॉक्टर आपको बता देंगे कि कौन-से हैं।",
+             pa:"ਸਰਜਰੀ ਵਾਲੀ ਥਾਂ ਤੇ ਅਕਸਰ ਟਾਂਕੇ ਲਗਾਏ ਜਾਂਦੇ ਹਨ। ਇਹਨਾਂ ਨੂੰ ਆਮ ਤੌਰ ਤੇ ਲਗਭਗ 7 ਤੋਂ 10 ਦਿਨ ਬਾਅਦ ਇੱਕ ਛੋਟੀ ਫਾਲੋ-ਅੱਪ ਮੁਲਾਕਾਤ ਵਿੱਚ ਹਟਾਇਆ ਜਾਂਦਾ ਹੈ — ਜਦੋਂ ਤੱਕ ਕਿ ਉਹ ਆਪਣੇ-ਆਪ ਘੁਲਣ ਵਾਲੇ ਨਾ ਹੋਣ। ਤੁਹਾਡਾ ਡਾਕਟਰ ਦੱਸ ਦੇਵੇਗਾ ਕਿ ਕਿਹੜੇ ਹਨ।"}
+  },
+  {
+    id:"rct", icon:"🩹",
+    name:{en:"Root Canal", hi:"रूट कैनाल", pa:"ਰੂਟ ਕੈਨਾਲ"},
+    sub:{en:"Save an infected tooth", hi:"संक्रमित दाँत बचाना", pa:"ਲਾਗ ਵਾਲਾ ਦੰਦ ਬਚਾਓ"},
+    what:{en:"The infected or inflamed soft tissue (the 'nerve') inside the tooth is cleaned out, and the space is disinfected and sealed. This saves the natural tooth instead of removing it.",
+          hi:"दाँत के अंदर की संक्रमित या सूजी हुई नस को साफ़ किया जाता है, और उस जगह को कीटाणुरहित करके भर दिया जाता है। इससे दाँत निकालने के बजाय प्राकृतिक दाँत बच जाता है।",
+          pa:"ਦੰਦ ਦੇ ਅੰਦਰ ਦੀ ਲਾਗ ਵਾਲੀ ਜਾਂ ਸੁੱਜੀ ਹੋਈ ਨਸ ਨੂੰ ਸਾਫ਼ ਕੀਤਾ ਜਾਂਦਾ ਹੈ, ਅਤੇ ਉਸ ਥਾਂ ਨੂੰ ਕੀਟਾਣੂ-ਰਹਿਤ ਕਰਕੇ ਭਰ ਦਿੱਤਾ ਜਾਂਦਾ ਹੈ। ਇਸ ਨਾਲ ਦੰਦ ਕੱਢਣ ਦੀ ਬਜਾਏ ਕੁਦਰਤੀ ਦੰਦ ਬਚ ਜਾਂਦਾ ਹੈ।"},
+    why:{en:"It relieves the pain caused by deep decay or infection and lets you keep your own tooth, which is almost always better than losing it.",
+         hi:"यह गहरी सड़न या संक्रमण से होने वाले दर्द को दूर करता है और आपको अपना दाँत रखने देता है, जो लगभग हमेशा दाँत खोने से बेहतर होता है।",
+         pa:"ਇਹ ਡੂੰਘੀ ਸੜਨ ਜਾਂ ਲਾਗ ਤੋਂ ਹੋਣ ਵਾਲੇ ਦਰਦ ਨੂੰ ਦੂਰ ਕਰਦਾ ਹੈ ਅਤੇ ਤੁਹਾਨੂੰ ਆਪਣਾ ਦੰਦ ਰੱਖਣ ਦਿੰਦਾ ਹੈ, ਜੋ ਲਗਭਗ ਹਮੇਸ਼ਾ ਦੰਦ ਗੁਆਉਣ ਨਾਲੋਂ ਬਿਹਤਰ ਹੁੰਦਾ ਹੈ।"},
+    risks:{en:["Tenderness or soreness for a few days after","A possible flare-up of infection needing extra visits","The tooth becoming more brittle, so a crown is usually advised afterwards","Rarely, a fine instrument tip separating inside the canal","In some cases the treatment doesn't work and the tooth may need re-treatment or removal"],
+           hi:["बाद में कुछ दिनों तक हल्का दर्द या कोमलता","संक्रमण दोबारा भड़कना, जिसके लिए और विज़िट लग सकती हैं","दाँत का कमज़ोर हो जाना, इसलिए आमतौर पर बाद में क्राउन लगाने की सलाह दी जाती है","बहुत कम मामलों में, कैनाल के अंदर बारीक उपकरण की नोक टूट जाना","कुछ मामलों में इलाज सफल न होना और दाँत का दोबारा इलाज या निकालना पड़ना"],
+           pa:["ਬਾਅਦ ਵਿੱਚ ਕੁਝ ਦਿਨ ਹਲਕਾ ਦਰਦ ਜਾਂ ਕੋਮਲਤਾ","ਲਾਗ ਦਾ ਦੁਬਾਰਾ ਭੜਕਣਾ, ਜਿਸ ਲਈ ਹੋਰ ਮੁਲਾਕਾਤਾਂ ਲੱਗ ਸਕਦੀਆਂ ਹਨ","ਦੰਦ ਦਾ ਕਮਜ਼ੋਰ ਹੋ ਜਾਣਾ, ਇਸ ਲਈ ਆਮ ਤੌਰ ਤੇ ਬਾਅਦ ਵਿੱਚ ਕ੍ਰਾਊਨ ਲਗਾਉਣ ਦੀ ਸਲਾਹ ਦਿੱਤੀ ਜਾਂਦੀ ਹੈ","ਬਹੁਤ ਘੱਟ ਮਾਮਲਿਆਂ ਵਿੱਚ, ਕੈਨਾਲ ਦੇ ਅੰਦਰ ਬਰੀਕ ਔਜ਼ਾਰ ਦੀ ਨੋਕ ਟੁੱਟ ਜਾਣਾ","ਕੁਝ ਮਾਮਲਿਆਂ ਵਿੱਚ ਇਲਾਜ ਸਫ਼ਲ ਨਾ ਹੋਣਾ ਅਤੇ ਦੰਦ ਦਾ ਦੁਬਾਰਾ ਇਲਾਜ ਜਾਂ ਕੱਢਣਾ ਪੈਣਾ"]},
+    alt:{en:["Removing the tooth, then replacing it with an implant, bridge or denture","Leaving it untreated — not advised, as the infection spreads and the pain returns"],
+         hi:["दाँत निकालना, फिर उसकी जगह इम्प्लांट, ब्रिज या डेंचर लगाना","बिना इलाज छोड़ना — सलाह नहीं दी जाती, क्योंकि संक्रमण फैलता है और दर्द लौट आता है"],
+         pa:["ਦੰਦ ਕੱਢਣਾ, ਫਿਰ ਉਸ ਦੀ ਥਾਂ ਇੰਪਲਾਂਟ, ਬ੍ਰਿਜ ਜਾਂ ਡੈਂਚਰ ਲਗਾਉਣਾ","ਬਿਨਾਂ ਇਲਾਜ ਛੱਡਣਾ — ਸਲਾਹ ਨਹੀਂ ਦਿੱਤੀ ਜਾਂਦੀ, ਕਿਉਂਕਿ ਲਾਗ ਫੈਲਦੀ ਹੈ ਅਤੇ ਦਰਦ ਵਾਪਸ ਆ ਜਾਂਦਾ ਹੈ"]},
+    rec:{en:"You may feel tenderness for a few days — normal painkillers usually handle it. Avoid chewing hard on that tooth until the crown is placed. A crown is generally recommended afterwards to protect the tooth.",
+         hi:"कुछ दिनों तक हल्का दर्द महसूस हो सकता है — सामान्य दर्दनिवारक आमतौर पर काफ़ी होते हैं। क्राउन लगने तक उस दाँत पर कड़ी चीज़ें न चबाएँ। दाँत की सुरक्षा के लिए बाद में आमतौर पर क्राउन की सलाह दी जाती है।",
+         pa:"ਕੁਝ ਦਿਨ ਹਲਕਾ ਦਰਦ ਮਹਿਸੂਸ ਹੋ ਸਕਦਾ ਹੈ — ਆਮ ਦਰਦ-ਨਿਵਾਰਕ ਆਮ ਤੌਰ ਤੇ ਕਾਫ਼ੀ ਹੁੰਦੇ ਹਨ। ਕ੍ਰਾਊਨ ਲੱਗਣ ਤੱਕ ਉਸ ਦੰਦ ਤੇ ਸਖ਼ਤ ਚੀਜ਼ਾਂ ਨਾ ਚਬਾਓ। ਦੰਦ ਦੀ ਸੁਰੱਖਿਆ ਲਈ ਬਾਅਦ ਵਿੱਚ ਆਮ ਤੌਰ ਤੇ ਕ੍ਰਾਊਨ ਦੀ ਸਲਾਹ ਦਿੱਤੀ ਜਾਂਦੀ ਹੈ।"}
+  },
+  {
+    id:"extraction", icon:"🦷",
+    name:{en:"Tooth Extraction", hi:"दाँत निकालना", pa:"ਦੰਦ ਕੱਢਣਾ"},
+    sub:{en:"Remove a tooth", hi:"दाँत हटाना", pa:"ਦੰਦ ਹਟਾਉਣਾ"},
+    what:{en:"A tooth that can't be saved is removed. The area is numbed first, and afterwards you'll be given instructions to help it heal.",
+          hi:"जो दाँत बचाया नहीं जा सकता उसे निकाल दिया जाता है। पहले उस जगह को सुन्न किया जाता है, और बाद में ठीक होने में मदद के लिए निर्देश दिए जाते हैं।",
+          pa:"ਜੋ ਦੰਦ ਬਚਾਇਆ ਨਹੀਂ ਜਾ ਸਕਦਾ ਉਸ ਨੂੰ ਕੱਢ ਦਿੱਤਾ ਜਾਂਦਾ ਹੈ। ਪਹਿਲਾਂ ਉਸ ਥਾਂ ਨੂੰ ਸੁੰਨ ਕੀਤਾ ਜਾਂਦਾ ਹੈ, ਅਤੇ ਬਾਅਦ ਵਿੱਚ ਠੀਕ ਹੋਣ ਵਿੱਚ ਮਦਦ ਲਈ ਹਦਾਇਤਾਂ ਦਿੱਤੀਆਂ ਜਾਂਦੀਆਂ ਹਨ।"},
+    why:{en:"It's advised when a tooth is too badly decayed, infected, loosened by gum disease, broken, or crowding the others, and can't be repaired.",
+         hi:"यह तब बताया जाता है जब दाँत बहुत ज़्यादा सड़ चुका हो, संक्रमित हो, मसूड़ों की बीमारी से ढीला हो, टूटा हो, या दूसरों पर भीड़ कर रहा हो और उसकी मरम्मत न हो सके।",
+         pa:"ਇਹ ਉਦੋਂ ਦੱਸਿਆ ਜਾਂਦਾ ਹੈ ਜਦੋਂ ਦੰਦ ਬਹੁਤ ਜ਼ਿਆਦਾ ਸੜ ਚੁੱਕਾ ਹੋਵੇ, ਲਾਗ ਵਾਲਾ ਹੋਵੇ, ਮਸੂੜਿਆਂ ਦੀ ਬਿਮਾਰੀ ਨਾਲ ਢਿੱਲਾ ਹੋਵੇ, ਟੁੱਟਾ ਹੋਵੇ, ਜਾਂ ਦੂਜਿਆਂ ਤੇ ਭੀੜ ਕਰ ਰਿਹਾ ਹੋਵੇ ਅਤੇ ਉਸ ਦੀ ਮੁਰੰਮਤ ਨਾ ਹੋ ਸਕੇ।"},
+    risks:{en:["Bleeding, swelling and soreness for a few days","'Dry socket' — a painful delay in healing if the clot is lost","Infection at the site","Temporary numbness of the lip or tongue for lower back teeth near a nerve","Rarely, injury to a neighbouring tooth or a small piece of root left behind"],
+           hi:["कुछ दिनों तक खून आना, सूजन और दर्द","'ड्राई सॉकेट' — थक्का निकल जाने पर ठीक होने में दर्दभरी देरी","जगह पर संक्रमण","नस के पास वाले नीचे के पिछले दाँतों में होंठ या जीभ का अस्थायी सुन्नपन","बहुत कम, बगल के दाँत को चोट या जड़ का छोटा टुकड़ा रह जाना"],
+           pa:["ਕੁਝ ਦਿਨ ਖ਼ੂਨ ਆਉਣਾ, ਸੋਜ ਅਤੇ ਦਰਦ","'ਡ੍ਰਾਈ ਸਾਕਟ' — ਥੱਕਾ ਨਿਕਲ ਜਾਣ ਤੇ ਠੀਕ ਹੋਣ ਵਿੱਚ ਦਰਦ ਭਰੀ ਦੇਰੀ","ਥਾਂ ਤੇ ਲਾਗ","ਨਸ ਦੇ ਨੇੜੇ ਵਾਲੇ ਹੇਠਲੇ ਪਿਛਲੇ ਦੰਦਾਂ ਵਿੱਚ ਬੁੱਲ੍ਹ ਜਾਂ ਜੀਭ ਦਾ ਅਸਥਾਈ ਸੁੰਨਪਨ","ਬਹੁਤ ਘੱਟ, ਨਾਲ ਦੇ ਦੰਦ ਨੂੰ ਸੱਟ ਜਾਂ ਜੜ੍ਹ ਦਾ ਛੋਟਾ ਟੁਕੜਾ ਰਹਿ ਜਾਣਾ"]},
+    alt:{en:["Root canal and a crown, if the tooth can still be saved","Gum treatment, if looseness is due to gum disease","The best option depends on the specific tooth — the doctor will advise"],
+         hi:["रूट कैनाल और क्राउन, अगर दाँत अभी बचाया जा सकता हो","मसूड़ों का इलाज, अगर ढीलापन मसूड़ों की बीमारी से हो","सबसे अच्छा विकल्प उस दाँत पर निर्भर करता है — डॉक्टर सलाह देंगे"],
+         pa:["ਰੂਟ ਕੈਨਾਲ ਅਤੇ ਕ੍ਰਾਊਨ, ਜੇ ਦੰਦ ਹਾਲੇ ਬਚਾਇਆ ਜਾ ਸਕਦਾ ਹੋਵੇ","ਮਸੂੜਿਆਂ ਦਾ ਇਲਾਜ, ਜੇ ਢਿੱਲਾਪਨ ਮਸੂੜਿਆਂ ਦੀ ਬਿਮਾਰੀ ਕਾਰਨ ਹੋਵੇ","ਸਭ ਤੋਂ ਵਧੀਆ ਬਦਲ ਉਸ ਦੰਦ ਤੇ ਨਿਰਭਰ ਕਰਦਾ ਹੈ — ਡਾਕਟਰ ਸਲਾਹ ਦੇਵੇਗਾ"]},
+    rec:{en:"Bite gently on the gauze pad to stop bleeding. For the first day, avoid rinsing hard, using straws, and smoking, as these can dislodge the clot. Stick to soft, cool foods. Swelling settles over a few days. Plan how the tooth will be replaced.",
+         hi:"खून रोकने के लिए गॉज़ पर हल्के से दबाएँ। पहले दिन ज़ोर से कुल्ला करने, स्ट्रॉ इस्तेमाल करने और धूम्रपान से बचें, क्योंकि इससे थक्का हट सकता है। नरम, ठंडा भोजन लें। सूजन कुछ दिनों में कम हो जाती है। दाँत की जगह भरने की योजना बनाएँ।",
+         pa:"ਖ਼ੂਨ ਰੋਕਣ ਲਈ ਗੌਜ਼ ਤੇ ਹਲਕਾ ਦਬਾਓ। ਪਹਿਲੇ ਦਿਨ ਜ਼ੋਰ ਨਾਲ ਕੁਰਲੀ ਕਰਨ, ਸਟ੍ਰਾ ਵਰਤਣ ਅਤੇ ਸਿਗਰਟ ਤੋਂ ਬਚੋ, ਕਿਉਂਕਿ ਇਸ ਨਾਲ ਥੱਕਾ ਹਟ ਸਕਦਾ ਹੈ। ਨਰਮ, ਠੰਢਾ ਭੋਜਨ ਲਓ। ਸੋਜ ਕੁਝ ਦਿਨਾਂ ਵਿੱਚ ਘਟ ਜਾਂਦੀ ਹੈ। ਦੰਦ ਦੀ ਥਾਂ ਭਰਨ ਦੀ ਯੋਜਨਾ ਬਣਾਓ।"},
+    sutures:{en:"If stitches are placed (more common with surgical or wisdom-tooth removals), they're usually taken out after about 7 to 10 days at a short follow-up visit — unless they're the dissolving kind.",
+             hi:"अगर टाँके लगाए जाते हैं (सर्जिकल या अक्ल दाढ़ निकालने में ज़्यादा आम), तो इन्हें आमतौर पर करीब 7 से 10 दिन बाद एक छोटी फ़ॉलो-अप विज़िट में हटाया जाता है — जब तक कि वे अपने-आप घुलने वाले न हों।",
+             pa:"ਜੇ ਟਾਂਕੇ ਲਗਾਏ ਜਾਂਦੇ ਹਨ (ਸਰਜੀਕਲ ਜਾਂ ਅਕਲ ਦਾੜ੍ਹ ਕੱਢਣ ਵਿੱਚ ਜ਼ਿਆਦਾ ਆਮ), ਤਾਂ ਇਹਨਾਂ ਨੂੰ ਆਮ ਤੌਰ ਤੇ ਲਗਭਗ 7 ਤੋਂ 10 ਦਿਨ ਬਾਅਦ ਇੱਕ ਛੋਟੀ ਫਾਲੋ-ਅੱਪ ਮੁਲਾਕਾਤ ਵਿੱਚ ਹਟਾਇਆ ਜਾਂਦਾ ਹੈ — ਜਦੋਂ ਤੱਕ ਕਿ ਉਹ ਆਪਣੇ-ਆਪ ਘੁਲਣ ਵਾਲੇ ਨਾ ਹੋਣ।"},
+    extra:{en:["Wisdom teeth (the last molars at the back) are often stuck under the gum or bone, so removing them can be a small surgery — the gum is opened and sometimes a little bone is removed.","Expect more swelling, some jaw stiffness, and a longer recovery than a simple extraction — usually settling over about a week.","Lower wisdom teeth sit close to a nerve, so temporary numbness or tingling of the lip, chin or tongue is a specific risk. It's uncommon and usually recovers on its own.","Stitches are commonly placed and removed after about 7 to 10 days.","Use cold packs on the first day, keep the area clean, and follow the aftercare closely to avoid a painful dry socket."],
+           hi:["अक्ल दाढ़ (सबसे पीछे की दाढ़) अक्सर मसूड़े या हड्डी के नीचे फँसी होती है, इसलिए इसे निकालना एक छोटी सर्जरी हो सकती है — मसूड़ा खोला जाता है और कभी-कभी थोड़ी हड्डी हटाई जाती है।","सामान्य दाँत निकालने की तुलना में ज़्यादा सूजन, जबड़े में कुछ अकड़न और लंबी रिकवरी हो सकती है — आमतौर पर करीब एक हफ़्ते में ठीक हो जाती है।","नीचे की अक्ल दाढ़ एक नस के पास होती है, इसलिए होंठ, ठुड्डी या जीभ में अस्थायी सुन्नपन या झनझनाहट एक खास जोखिम है। यह कम होता है और आमतौर पर अपने-आप ठीक हो जाता है।","आमतौर पर टाँके लगाए जाते हैं और करीब 7 से 10 दिन बाद हटाए जाते हैं।","पहले दिन ठंडी सिकाई करें, जगह को साफ़ रखें, और दर्दभरे ड्राई सॉकेट से बचने के लिए देखभाल का ध्यान से पालन करें।"],
+           pa:["ਅਕਲ ਦਾੜ੍ਹ (ਸਭ ਤੋਂ ਪਿਛਲੀ ਦਾੜ੍ਹ) ਅਕਸਰ ਮਸੂੜੇ ਜਾਂ ਹੱਡੀ ਦੇ ਹੇਠਾਂ ਫਸੀ ਹੁੰਦੀ ਹੈ, ਇਸ ਲਈ ਇਸ ਨੂੰ ਕੱਢਣਾ ਇੱਕ ਛੋਟੀ ਸਰਜਰੀ ਹੋ ਸਕਦੀ ਹੈ — ਮਸੂੜਾ ਖੋਲ੍ਹਿਆ ਜਾਂਦਾ ਹੈ ਅਤੇ ਕਦੇ-ਕਦੇ ਥੋੜ੍ਹੀ ਹੱਡੀ ਹਟਾਈ ਜਾਂਦੀ ਹੈ।","ਆਮ ਦੰਦ ਕੱਢਣ ਦੇ ਮੁਕਾਬਲੇ ਜ਼ਿਆਦਾ ਸੋਜ, ਜਬਾੜੇ ਵਿੱਚ ਕੁਝ ਅਕੜਨ ਅਤੇ ਲੰਮੀ ਰਿਕਵਰੀ ਹੋ ਸਕਦੀ ਹੈ — ਆਮ ਤੌਰ ਤੇ ਲਗਭਗ ਇੱਕ ਹਫ਼ਤੇ ਵਿੱਚ ਠੀਕ ਹੋ ਜਾਂਦੀ ਹੈ।","ਹੇਠਲੀ ਅਕਲ ਦਾੜ੍ਹ ਇੱਕ ਨਸ ਦੇ ਨੇੜੇ ਹੁੰਦੀ ਹੈ, ਇਸ ਲਈ ਬੁੱਲ੍ਹ, ਠੋਡੀ ਜਾਂ ਜੀਭ ਵਿੱਚ ਅਸਥਾਈ ਸੁੰਨਪਨ ਜਾਂ ਝਰਨਾਹਟ ਇੱਕ ਖ਼ਾਸ ਖ਼ਤਰਾ ਹੈ। ਇਹ ਘੱਟ ਹੁੰਦਾ ਹੈ ਅਤੇ ਆਮ ਤੌਰ ਤੇ ਆਪਣੇ-ਆਪ ਠੀਕ ਹੋ ਜਾਂਦਾ ਹੈ।","ਆਮ ਤੌਰ ਤੇ ਟਾਂਕੇ ਲਗਾਏ ਜਾਂਦੇ ਹਨ ਅਤੇ ਲਗਭਗ 7 ਤੋਂ 10 ਦਿਨ ਬਾਅਦ ਹਟਾਏ ਜਾਂਦੇ ਹਨ।","ਪਹਿਲੇ ਦਿਨ ਠੰਢੀ ਸਿਕਾਈ ਕਰੋ, ਥਾਂ ਨੂੰ ਸਾਫ਼ ਰੱਖੋ, ਅਤੇ ਦਰਦ ਭਰੇ ਡ੍ਰਾਈ ਸਾਕਟ ਤੋਂ ਬਚਣ ਲਈ ਦੇਖਭਾਲ ਦਾ ਧਿਆਨ ਨਾਲ ਪਾਲਣ ਕਰੋ।"]}
+  },
+  {
+    id:"flap", icon:"🪡",
+    name:{en:"Flap Surgery (Gum Treatment)", hi:"फ्लैप सर्जरी (मसूड़ों का इलाज)", pa:"ਫਲੈਪ ਸਰਜਰੀ (ਮਸੂੜਿਆਂ ਦਾ ਇਲਾਜ)"},
+    sub:{en:"Surgery for advanced gum disease", hi:"बढ़ी मसूड़ों की बीमारी की सर्जरी", pa:"ਵਧੀ ਮਸੂੜਿਆਂ ਦੀ ਬਿਮਾਰੀ ਦੀ ਸਰਜਰੀ"},
+    what:{en:"When gum disease is advanced and deep cleaning alone can't reach the infection, the gum is gently lifted back (a 'flap') under local anaesthetic to expose the tooth roots and bone. The area is thoroughly cleaned, diseased tissue is removed, the bone may be reshaped or grafted, and the gum is then stitched back into place.",
+          hi:"जब मसूड़ों की बीमारी बढ़ जाती है और सिर्फ़ डीप क्लीनिंग से संक्रमण तक नहीं पहुँचा जा सकता, तब लोकल एनेस्थीसिया के तहत मसूड़े को धीरे से ऊपर उठाया जाता है (एक 'फ्लैप') ताकि दाँत की जड़ें और हड्डी दिख सकें। जगह को अच्छी तरह साफ़ किया जाता है, रोगग्रस्त ऊतक हटाया जाता है, ज़रूरत पर हड्डी को दोबारा आकार दिया या ग्राफ्ट किया जाता है, और फिर मसूड़े को टाँके लगाकर वापस जोड़ दिया जाता है।",
+          pa:"ਜਦੋਂ ਮਸੂੜਿਆਂ ਦੀ ਬਿਮਾਰੀ ਵਧ ਜਾਂਦੀ ਹੈ ਅਤੇ ਸਿਰਫ਼ ਡੀਪ ਕਲੀਨਿੰਗ ਨਾਲ ਲਾਗ ਤੱਕ ਨਹੀਂ ਪਹੁੰਚਿਆ ਜਾ ਸਕਦਾ, ਤਾਂ ਲੋਕਲ ਬੇਹੋਸ਼ੀ ਦੀ ਦਵਾਈ ਹੇਠ ਮਸੂੜੇ ਨੂੰ ਹੌਲੀ ਨਾਲ ਉੱਪਰ ਚੁੱਕਿਆ ਜਾਂਦਾ ਹੈ (ਇੱਕ 'ਫਲੈਪ') ਤਾਂ ਜੋ ਦੰਦ ਦੀਆਂ ਜੜ੍ਹਾਂ ਅਤੇ ਹੱਡੀ ਦਿੱਸ ਸਕਣ। ਥਾਂ ਨੂੰ ਚੰਗੀ ਤਰ੍ਹਾਂ ਸਾਫ਼ ਕੀਤਾ ਜਾਂਦਾ ਹੈ, ਰੋਗੀ ਟਿਸ਼ੂ ਹਟਾਇਆ ਜਾਂਦਾ ਹੈ, ਲੋੜ ਤੇ ਹੱਡੀ ਨੂੰ ਦੁਬਾਰਾ ਆਕਾਰ ਦਿੱਤਾ ਜਾਂ ਗ੍ਰਾਫਟ ਕੀਤਾ ਜਾਂਦਾ ਹੈ, ਅਤੇ ਫਿਰ ਮਸੂੜੇ ਨੂੰ ਟਾਂਕੇ ਲਗਾ ਕੇ ਵਾਪਸ ਜੋੜ ਦਿੱਤਾ ਜਾਂਦਾ ਹੈ।"},
+    why:{en:"It treats the deep gum pockets that keep trapping bacteria, cleans the roots properly, and helps stop — and sometimes rebuild — the bone loss that would otherwise loosen and lose your teeth. It's done when non-surgical treatment hasn't controlled the disease.",
+         hi:"यह उन गहरी मसूड़ों की पॉकेट का इलाज करता है जिनमें बैक्टीरिया फँसते रहते हैं, जड़ों को ठीक से साफ़ करता है, और उस हड्डी के नुकसान को रोकने — और कभी-कभी दोबारा बनाने — में मदद करता है जिससे दाँत ढीले होकर गिर सकते हैं। यह तब किया जाता है जब बिना सर्जरी वाले इलाज से बीमारी काबू में नहीं आई हो।",
+         pa:"ਇਹ ਉਹਨਾਂ ਡੂੰਘੀਆਂ ਮਸੂੜਿਆਂ ਦੀਆਂ ਪਾਕਟਾਂ ਦਾ ਇਲਾਜ ਕਰਦਾ ਹੈ ਜਿਨ੍ਹਾਂ ਵਿੱਚ ਬੈਕਟੀਰੀਆ ਫਸਦੇ ਰਹਿੰਦੇ ਹਨ, ਜੜ੍ਹਾਂ ਨੂੰ ਠੀਕ ਤਰ੍ਹਾਂ ਸਾਫ਼ ਕਰਦਾ ਹੈ, ਅਤੇ ਉਸ ਹੱਡੀ ਦੇ ਨੁਕਸਾਨ ਨੂੰ ਰੋਕਣ — ਅਤੇ ਕਦੇ-ਕਦੇ ਦੁਬਾਰਾ ਬਣਾਉਣ — ਵਿੱਚ ਮਦਦ ਕਰਦਾ ਹੈ ਜਿਸ ਨਾਲ ਦੰਦ ਢਿੱਲੇ ਹੋ ਕੇ ਡਿੱਗ ਸਕਦੇ ਹਨ। ਇਹ ਉਦੋਂ ਕੀਤਾ ਜਾਂਦਾ ਹੈ ਜਦੋਂ ਬਿਨਾਂ ਸਰਜਰੀ ਵਾਲੇ ਇਲਾਜ ਨਾਲ ਬਿਮਾਰੀ ਕਾਬੂ ਵਿੱਚ ਨਾ ਆਈ ਹੋਵੇ।"},
+    risks:{en:["Swelling, soreness and some bleeding for a few days","Gums shrink back as they heal, so teeth can look longer and feel more sensitive to hot and cold","Some temporary looseness of the teeth before they firm up again","Infection at the surgical site, though this is uncommon with good care","Results depend partly on your home cleaning and stopping smoking — the disease can return if it isn't maintained"],
+           hi:["कुछ दिनों तक सूजन, दर्द और थोड़ा खून आना","ठीक होते समय मसूड़े सिकुड़ते हैं, इसलिए दाँत लंबे दिख सकते हैं और गरम-ठंडे के प्रति ज़्यादा संवेदनशील हो सकते हैं","दाँत दोबारा कसने से पहले कुछ समय अस्थायी ढीलापन","सर्जरी वाली जगह पर संक्रमण, हालांकि अच्छी देखभाल से यह कम होता है","नतीजे कुछ हद तक आपकी घर की सफ़ाई और धूम्रपान छोड़ने पर निर्भर करते हैं — देखभाल न होने पर बीमारी लौट सकती है"],
+           pa:["ਕੁਝ ਦਿਨ ਸੋਜ, ਦਰਦ ਅਤੇ ਥੋੜ੍ਹਾ ਖ਼ੂਨ ਆਉਣਾ","ਠੀਕ ਹੁੰਦੇ ਸਮੇਂ ਮਸੂੜੇ ਸੁੰਗੜਦੇ ਹਨ, ਇਸ ਲਈ ਦੰਦ ਲੰਮੇ ਦਿੱਸ ਸਕਦੇ ਹਨ ਅਤੇ ਗਰਮ-ਠੰਢੇ ਪ੍ਰਤੀ ਜ਼ਿਆਦਾ ਸੰਵੇਦਨਸ਼ੀਲ ਹੋ ਸਕਦੇ ਹਨ","ਦੰਦ ਦੁਬਾਰਾ ਕੱਸਣ ਤੋਂ ਪਹਿਲਾਂ ਕੁਝ ਸਮਾਂ ਅਸਥਾਈ ਢਿੱਲਾਪਨ","ਸਰਜਰੀ ਵਾਲੀ ਥਾਂ ਤੇ ਲਾਗ, ਹਾਲਾਂਕਿ ਚੰਗੀ ਦੇਖਭਾਲ ਨਾਲ ਇਹ ਘੱਟ ਹੁੰਦੀ ਹੈ","ਨਤੀਜੇ ਕੁਝ ਹੱਦ ਤੱਕ ਤੁਹਾਡੀ ਘਰ ਦੀ ਸਫ਼ਾਈ ਅਤੇ ਸਿਗਰਟ ਛੱਡਣ ਤੇ ਨਿਰਭਰ ਕਰਦੇ ਹਨ — ਦੇਖਭਾਲ ਨਾ ਹੋਣ ਤੇ ਬਿਮਾਰੀ ਵਾਪਸ ਆ ਸਕਦੀ ਹੈ"]},
+    alt:{en:["Non-surgical deep cleaning (scaling and root planing) — tried first, but not enough once the pockets are deep","Removing and replacing the tooth if it's too badly affected to save","Leaving it untreated, which leads to more bone loss and eventual tooth loss"],
+         hi:["बिना सर्जरी वाली डीप क्लीनिंग (स्केलिंग और रूट प्लानिंग) — पहले आज़माई जाती है, पर पॉकेट गहरी होने पर पर्याप्त नहीं","अगर दाँत बचाने लायक न बचा हो तो उसे निकालकर उसकी जगह भरना","बिना इलाज छोड़ना, जिससे और हड्डी घटती है और अंततः दाँत गिर जाते हैं"],
+         pa:["ਬਿਨਾਂ ਸਰਜਰੀ ਵਾਲੀ ਡੀਪ ਕਲੀਨਿੰਗ (ਸਕੇਲਿੰਗ ਅਤੇ ਰੂਟ ਪਲੈਨਿੰਗ) — ਪਹਿਲਾਂ ਅਜ਼ਮਾਈ ਜਾਂਦੀ ਹੈ, ਪਰ ਪਾਕਟਾਂ ਡੂੰਘੀਆਂ ਹੋਣ ਤੇ ਕਾਫ਼ੀ ਨਹੀਂ","ਜੇ ਦੰਦ ਬਚਾਉਣ ਲਾਇਕ ਨਾ ਬਚਿਆ ਹੋਵੇ ਤਾਂ ਉਸ ਨੂੰ ਕੱਢ ਕੇ ਉਸ ਦੀ ਥਾਂ ਭਰਨਾ","ਬਿਨਾਂ ਇਲਾਜ ਛੱਡਣਾ, ਜਿਸ ਨਾਲ ਹੋਰ ਹੱਡੀ ਘਟਦੀ ਹੈ ਅਤੇ ਅੰਤ ਵਿੱਚ ਦੰਦ ਡਿੱਗ ਜਾਂਦੇ ਹਨ"]},
+    rec:{en:"Expect some swelling and soreness for a few days — cold packs and the prescribed painkillers help. Stick to soft, cool foods and chew away from the surgery site. Keep your mouth clean as instructed (often with a special mouth rinse), but don't brush directly over the stitches until you're told it's safe. Most people are back to normal within about a week to ten days.",
+         hi:"कुछ दिनों तक सूजन और दर्द रह सकता है — ठंडी सिकाई और बताई गई दर्दनिवारक दवाएँ मदद करती हैं। नरम, ठंडा भोजन लें और सर्जरी वाली जगह से दूर चबाएँ। बताए अनुसार मुँह साफ़ रखें (अक्सर एक खास माउथ रिंस से), पर जब तक सुरक्षित न बताया जाए, टाँकों पर सीधे ब्रश न करें। ज़्यादातर लोग करीब एक हफ़्ते से दस दिन में सामान्य हो जाते हैं।",
+         pa:"ਕੁਝ ਦਿਨ ਸੋਜ ਅਤੇ ਦਰਦ ਰਹਿ ਸਕਦਾ ਹੈ — ਠੰਢੀ ਸਿਕਾਈ ਅਤੇ ਦੱਸੇ ਗਏ ਦਰਦ-ਨਿਵਾਰਕ ਮਦਦ ਕਰਦੇ ਹਨ। ਨਰਮ, ਠੰਢਾ ਭੋਜਨ ਲਓ ਅਤੇ ਸਰਜਰੀ ਵਾਲੀ ਥਾਂ ਤੋਂ ਦੂਰ ਚਬਾਓ। ਦੱਸੇ ਅਨੁਸਾਰ ਮੂੰਹ ਸਾਫ਼ ਰੱਖੋ (ਅਕਸਰ ਇੱਕ ਖ਼ਾਸ ਮਾਊਥ ਰਿੰਸ ਨਾਲ), ਪਰ ਜਦੋਂ ਤੱਕ ਸੁਰੱਖਿਅਤ ਨਾ ਦੱਸਿਆ ਜਾਵੇ, ਟਾਂਕਿਆਂ ਤੇ ਸਿੱਧਾ ਬੁਰਸ਼ ਨਾ ਕਰੋ। ਜ਼ਿਆਦਾਤਰ ਲੋਕ ਲਗਭਗ ਇੱਕ ਹਫ਼ਤੇ ਤੋਂ ਦਸ ਦਿਨਾਂ ਵਿੱਚ ਆਮ ਹੋ ਜਾਂਦੇ ਹਨ।"},
+    sutures:{en:"Stitches are placed to hold the gum back in its correct position. They're usually removed at a follow-up visit about 7 to 10 days later, unless dissolving stitches were used.",
+             hi:"मसूड़े को उसकी सही जगह पर थामे रखने के लिए टाँके लगाए जाते हैं। इन्हें आमतौर पर करीब 7 से 10 दिन बाद एक फ़ॉलो-अप विज़िट में हटाया जाता है, जब तक कि घुलने वाले टाँके इस्तेमाल न किए गए हों।",
+             pa:"ਮਸੂੜੇ ਨੂੰ ਉਸ ਦੀ ਸਹੀ ਥਾਂ ਤੇ ਥਾਮੇ ਰੱਖਣ ਲਈ ਟਾਂਕੇ ਲਗਾਏ ਜਾਂਦੇ ਹਨ। ਇਹਨਾਂ ਨੂੰ ਆਮ ਤੌਰ ਤੇ ਲਗਭਗ 7 ਤੋਂ 10 ਦਿਨ ਬਾਅਦ ਇੱਕ ਫਾਲੋ-ਅੱਪ ਮੁਲਾਕਾਤ ਵਿੱਚ ਹਟਾਇਆ ਜਾਂਦਾ ਹੈ, ਜਦੋਂ ਤੱਕ ਕਿ ਘੁਲਣ ਵਾਲੇ ਟਾਂਕੇ ਨਾ ਵਰਤੇ ਗਏ ਹੋਣ।"}
+  },
+  {
+    id:"crown", icon:"👑",
+    name:{en:"Crown / Veneer", hi:"क्राउन / विनियर", pa:"ਕ੍ਰਾਊਨ / ਵਿਨੀਅਰ"},
+    sub:{en:"Cap or reshape a tooth", hi:"कैप या दाँत सुधारना", pa:"ਦੰਦ ਤੇ ਕੈਪ ਜਾਂ ਸੁਧਾਰ"},
+    what:{en:"A crown is a cap that covers a whole tooth to protect and rebuild it. A veneer is a thin shell bonded to the front of a tooth to improve how it looks.",
+          hi:"क्राउन एक कैप है जो पूरे दाँत को ढककर उसे सुरक्षित और मज़बूत करती है। विनियर एक पतली परत है जो दाँत के सामने चिपकाई जाती है ताकि उसकी बनावट बेहतर दिखे।",
+          pa:"ਕ੍ਰਾਊਨ ਇੱਕ ਕੈਪ ਹੈ ਜੋ ਪੂਰੇ ਦੰਦ ਨੂੰ ਢੱਕ ਕੇ ਉਸ ਨੂੰ ਸੁਰੱਖਿਅਤ ਅਤੇ ਮਜ਼ਬੂਤ ਕਰਦੀ ਹੈ। ਵਿਨੀਅਰ ਇੱਕ ਪਤਲੀ ਪਰਤ ਹੈ ਜੋ ਦੰਦ ਦੇ ਅਗਲੇ ਪਾਸੇ ਚਿਪਕਾਈ ਜਾਂਦੀ ਹੈ ਤਾਂ ਜੋ ਉਸ ਦੀ ਦਿੱਖ ਬਿਹਤਰ ਹੋਵੇ।"},
+    why:{en:"A crown protects a weak, cracked or root-canal-treated tooth. A veneer improves the shape, colour or small gaps of a front tooth for a better smile.",
+         hi:"क्राउन कमज़ोर, चटके या रूट कैनाल किए गए दाँत की रक्षा करता है। विनियर आगे के दाँत की बनावट, रंग या छोटे गैप को सुधारकर मुस्कान बेहतर बनाता है।",
+         pa:"ਕ੍ਰਾਊਨ ਕਮਜ਼ੋਰ, ਟੁੱਟੇ ਜਾਂ ਰੂਟ ਕੈਨਾਲ ਕੀਤੇ ਦੰਦ ਦੀ ਰੱਖਿਆ ਕਰਦੀ ਹੈ। ਵਿਨੀਅਰ ਅਗਲੇ ਦੰਦ ਦੀ ਦਿੱਖ, ਰੰਗ ਜਾਂ ਛੋਟੇ ਪਾੜਿਆਂ ਨੂੰ ਸੁਧਾਰ ਕੇ ਮੁਸਕਾਨ ਬਿਹਤਰ ਬਣਾਉਂਦੀ ਹੈ।"},
+    risks:{en:["Sensitivity for a while after the tooth is prepared","Some natural tooth has to be reshaped, which cannot be undone","Occasionally the nerve gets irritated and a root canal is needed later","A crown or veneer can chip or come loose over the years","The colour may not perfectly match the neighbouring teeth"],
+           hi:["दाँत तैयार करने के बाद कुछ समय संवेदनशीलता","कुछ प्राकृतिक दाँत घिसना पड़ता है, जो वापस नहीं हो सकता","कभी-कभी नस में जलन होने पर बाद में रूट कैनाल की ज़रूरत","सालों में क्राउन या विनियर चटक सकता है या ढीला हो सकता है","रंग बगल के दाँतों से पूरी तरह न मिले"],
+           pa:["ਦੰਦ ਤਿਆਰ ਕਰਨ ਤੋਂ ਬਾਅਦ ਕੁਝ ਸਮਾਂ ਸੰਵੇਦਨਸ਼ੀਲਤਾ","ਕੁਝ ਕੁਦਰਤੀ ਦੰਦ ਘਸਾਉਣਾ ਪੈਂਦਾ ਹੈ, ਜੋ ਵਾਪਸ ਨਹੀਂ ਹੋ ਸਕਦਾ","ਕਦੇ-ਕਦੇ ਨਸ ਵਿੱਚ ਜਲਣ ਹੋਣ ਤੇ ਬਾਅਦ ਵਿੱਚ ਰੂਟ ਕੈਨਾਲ ਦੀ ਲੋੜ","ਸਾਲਾਂ ਵਿੱਚ ਕ੍ਰਾਊਨ ਜਾਂ ਵਿਨੀਅਰ ਟੁੱਟ ਸਕਦਾ ਹੈ ਜਾਂ ਢਿੱਲਾ ਹੋ ਸਕਦਾ ਹੈ","ਰੰਗ ਨਾਲ ਦੇ ਦੰਦਾਂ ਨਾਲ ਪੂਰੀ ਤਰ੍ਹਾਂ ਨਾ ਮਿਲੇ"]},
+    alt:{en:["A filling or bonding for smaller repairs","Braces or aligners if the real issue is tooth alignment","Leaving the tooth as it is, if it's healthy enough"],
+         hi:["छोटी मरम्मत के लिए फिलिंग या बॉन्डिंग","अगर असली दिक्कत दाँतों की सीध है तो ब्रेसेस या अलाइनर","अगर दाँत काफ़ी स्वस्थ है तो उसे वैसे ही छोड़ना"],
+         pa:["ਛੋਟੀ ਮੁਰੰਮਤ ਲਈ ਫਿਲਿੰਗ ਜਾਂ ਬਾਂਡਿੰਗ","ਜੇ ਅਸਲ ਸਮੱਸਿਆ ਦੰਦਾਂ ਦੀ ਸੇਧ ਹੈ ਤਾਂ ਬ੍ਰੇਸਿਜ਼ ਜਾਂ ਅਲਾਈਨਰ","ਜੇ ਦੰਦ ਕਾਫ਼ੀ ਤੰਦਰੁਸਤ ਹੈ ਤਾਂ ਉਸ ਨੂੰ ਉਵੇਂ ਹੀ ਛੱਡਣਾ"]},
+    rec:{en:"You'll usually wear a temporary crown or veneer between visits. Mild sensitivity is normal at first. Avoid very hard or sticky foods on it. The final one is fitted over a couple of visits once it's made to match your bite and smile.",
+         hi:"विज़िट के बीच आमतौर पर अस्थायी क्राउन या विनियर लगा रहता है। शुरू में हल्की संवेदनशीलता सामान्य है। उस पर बहुत कड़ी या चिपचिपी चीज़ें न खाएँ। आपकी बाइट और मुस्कान से मिलाकर बनने के बाद अंतिम क्राउन कुछ विज़िट में फिट किया जाता है।",
+         pa:"ਮੁਲਾਕਾਤਾਂ ਦੇ ਵਿਚਕਾਰ ਆਮ ਤੌਰ ਤੇ ਅਸਥਾਈ ਕ੍ਰਾਊਨ ਜਾਂ ਵਿਨੀਅਰ ਲੱਗਾ ਰਹਿੰਦਾ ਹੈ। ਸ਼ੁਰੂ ਵਿੱਚ ਹਲਕੀ ਸੰਵੇਦਨਸ਼ੀਲਤਾ ਆਮ ਹੈ। ਉਸ ਤੇ ਬਹੁਤ ਸਖ਼ਤ ਜਾਂ ਚਿਪਕਣ ਵਾਲੀਆਂ ਚੀਜ਼ਾਂ ਨਾ ਖਾਓ। ਤੁਹਾਡੀ ਬਾਈਟ ਅਤੇ ਮੁਸਕਾਨ ਨਾਲ ਮਿਲਾ ਕੇ ਬਣਨ ਤੋਂ ਬਾਅਦ ਅੰਤਿਮ ਕ੍ਰਾਊਨ ਕੁਝ ਮੁਲਾਕਾਤਾਂ ਵਿੱਚ ਫਿੱਟ ਕੀਤਾ ਜਾਂਦਾ ਹੈ।"}
+  }
+];
+
+const CHECKS = {
+  en:["I understand what the procedure involves and why it's advised.","I understand the main risks and the alternatives to it.","I've written down any questions I still want to ask the doctor.","I understand this is for my understanding, and the final consent is signed with your doctor in the clinic."],
+  hi:["मैं समझता/समझती हूँ कि इस प्रक्रिया में क्या होता है और यह क्यों बताई गई है।","मैं मुख्य जोखिम और इसके विकल्प समझता/समझती हूँ।","जो सवाल मुझे डॉक्टर से पूछने हैं, वे मैंने लिख लिए हैं।","मैं समझता/समझती हूँ कि यह सिर्फ़ मेरी समझ के लिए है, और अंतिम सहमति क्लिनिक में आपके डॉक्टर के साथ हस्ताक्षरित होती है।"],
+  pa:["ਮੈਂ ਸਮਝਦਾ/ਸਮਝਦੀ ਹਾਂ ਕਿ ਇਸ ਪ੍ਰਕਿਰਿਆ ਵਿੱਚ ਕੀ ਹੁੰਦਾ ਹੈ ਅਤੇ ਇਹ ਕਿਉਂ ਦੱਸੀ ਗਈ ਹੈ।","ਮੈਂ ਮੁੱਖ ਖ਼ਤਰੇ ਅਤੇ ਇਸਦੇ ਬਦਲ ਸਮਝਦਾ/ਸਮਝਦੀ ਹਾਂ।","ਜੋ ਸਵਾਲ ਮੈਂ ਡਾਕਟਰ ਤੋਂ ਪੁੱਛਣੇ ਹਨ, ਉਹ ਮੈਂ ਲਿਖ ਲਏ ਹਨ।","ਮੈਂ ਸਮਝਦਾ/ਸਮਝਦੀ ਹਾਂ ਕਿ ਇਹ ਸਿਰਫ਼ ਮੇਰੀ ਸਮਝ ਲਈ ਹੈ, ਅਤੇ ਅੰਤਿਮ ਸਹਿਮਤੀ ਕਲੀਨਿਕ ਵਿੱਚ ਮੇਰੇ ਡਾਕਟਰ ਨਾਲ ਹਸਤਾਖਰ ਕੀਤੀ ਜਾਂਦੀ ਹੈ।"]
+};
+
+const LABELS = {
+  what:{en:"What it is", hi:"यह क्या है", pa:"ਇਹ ਕੀ ਹੈ"},
+  why:{en:"Why it's advised", hi:"यह क्यों बताई गई है", pa:"ਇਹ ਕਿਉਂ ਦੱਸੀ ਗਈ ਹੈ"},
+  risks:{en:"Risks to know", hi:"जानने योग्य जोखिम", pa:"ਜਾਣਨ ਯੋਗ ਖ਼ਤਰੇ"},
+  alt:{en:"Your alternatives", hi:"आपके विकल्प", pa:"ਤੁਹਾਡੇ ਬਦਲ"},
+  rec:{en:"Recovery & aftercare", hi:"रिकवरी और देखभाल", pa:"ਰਿਕਵਰੀ ਅਤੇ ਦੇਖਭਾਲ"},
+  la:{en:"After the anaesthetic (numbness)", hi:"एनेस्थीसिया के बाद (सुन्नपन)", pa:"ਬੇਹੋਸ਼ੀ ਦੀ ਦਵਾਈ ਤੋਂ ਬਾਅਦ (ਸੁੰਨਪਨ)"},
+  sutures:{en:"Stitches (sutures)", hi:"टाँके (सिवनी)", pa:"ਟਾਂਕੇ (ਸਿਊਚਰ)"},
+  wis:{en:"If it's a wisdom tooth", hi:"अगर यह अक्ल दाढ़ है", pa:"ਜੇ ਇਹ ਅਕਲ ਦਾੜ੍ਹ ਹੈ"}
+};
+
+const LA_NOTE = {
+  en:["Your lip, cheek and tongue stay numb for about 2 to 3 hours after the injection.","Don't eat until the numbness fully wears off — it's easy to bite your lip, cheek or tongue without feeling it.","Avoid hot drinks and hot food until the feeling returns, so you don't burn yourself.","Once the numbness is gone, chew carefully on that side to begin with."],
+  hi:["इंजेक्शन के बाद आपके होंठ, गाल और जीभ करीब 2 से 3 घंटे सुन्न रहते हैं।","सुन्नपन पूरी तरह खत्म होने तक कुछ न खाएँ — बिना महसूस हुए होंठ, गाल या जीभ काट लेना आसान है।","एहसास लौटने तक गरम पेय और गरम भोजन से बचें, ताकि आप जल न जाएँ।","सुन्नपन जाने के बाद पहले उस तरफ सावधानी से चबाएँ।"],
+  pa:["ਟੀਕੇ ਤੋਂ ਬਾਅਦ ਤੁਹਾਡੇ ਬੁੱਲ੍ਹ, ਗੱਲ੍ਹ ਅਤੇ ਜੀਭ ਲਗਭਗ 2 ਤੋਂ 3 ਘੰਟੇ ਸੁੰਨ ਰਹਿੰਦੇ ਹਨ।","ਸੁੰਨਪਨ ਪੂਰੀ ਤਰ੍ਹਾਂ ਖ਼ਤਮ ਹੋਣ ਤੱਕ ਕੁਝ ਨਾ ਖਾਓ — ਬਿਨਾਂ ਮਹਿਸੂਸ ਕੀਤੇ ਬੁੱਲ੍ਹ, ਗੱਲ੍ਹ ਜਾਂ ਜੀਭ ਵੱਢ ਲੈਣਾ ਸੌਖਾ ਹੈ।","ਅਹਿਸਾਸ ਵਾਪਸ ਆਉਣ ਤੱਕ ਗਰਮ ਪੀਣ ਅਤੇ ਗਰਮ ਭੋਜਨ ਤੋਂ ਬਚੋ, ਤਾਂ ਜੋ ਤੁਸੀਂ ਸੜ ਨਾ ਜਾਓ।","ਸੁੰਨਪਨ ਜਾਣ ਤੋਂ ਬਾਅਦ ਪਹਿਲਾਂ ਉਸ ਪਾਸੇ ਧਿਆਨ ਨਾਲ ਚਬਾਓ।"]
+};
+
+const SUMMARY_TXT = {
+  en:"<b>You're ready for your visit.</b> Bring the questions you noted — your doctor will go through them, confirm you understand, and the consent is signed together in the clinic.",
+  hi:"<b>आप अपनी विज़िट के लिए तैयार हैं।</b> अपने लिखे सवाल साथ लाएँ — आपके डॉक्टर उन्हें समझाएँगे, आपकी समझ की पुष्टि करेंगे, और सहमति क्लिनिक में साथ मिलकर हस्ताक्षरित की जाती है।",
+  pa:"<b>ਤੁਸੀਂ ਆਪਣੀ ਮੁਲਾਕਾਤ ਲਈ ਤਿਆਰ ਹੋ।</b> ਆਪਣੇ ਲਿਖੇ ਸਵਾਲ ਨਾਲ ਲਿਆਓ — ਤੁਹਾਡਾ ਡਾਕਟਰ ਉਹਨਾਂ ਨੂੰ ਸਮਝਾਏਗਾ, ਤੁਹਾਡੀ ਸਮਝ ਦੀ ਪੁਸ਼ਟੀ ਕਰੇਗਾ, ਅਤੇ ਸਹਿਮਤੀ ਕਲੀਨਿਕ ਵਿੱਚ ਇਕੱਠੇ ਹਸਤਾਖਰ ਕੀਤੀ ਜਾਂਦੀ ਹੈ।"
+};
+const QPLACE = {en:"Questions I want to ask the doctor…", hi:"डॉक्टर से पूछने के सवाल…", pa:"ਸਵਾਲ ਜੋ ਮੈਂ ਡਾਕਟਰ ਤੋਂ ਪੁੱਛਣੇ ਹਨ…"};
+const PROG = {en:"Understood", hi:"समझा", pa:"ਸਮਝਿਆ"};
+
+let lang = "en";
+let currentProc = null;
+function t(o){ return o[lang]; }
+
+/* ---- SVG icons ---- */
+function svg(inner){ return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'+inner+'</svg>'; }
+const tooth = '<path d="M12 3c-2.4 0-3.4 1.1-4.9 1.1S4.2 3.7 4.2 6.3c0 2.9 1 4 1.6 6.7.4 2 .5 5 1.8 5 1.1 0 1-2.3 1.6-4 .3-.9.9-1.2 1.6-1.2s1.3.3 1.6 1.2c.6 1.7.5 4 1.6 4 1.3 0 1.4-3 1.8-5 .6-2.7 1.6-3.8 1.6-6.7 0-2.6-1.4-2.2-2.9-2.2S14.4 3 12 3Z"/>';
+const PIC = {
+  implant: svg('<path d="M12 2v3M9.5 5h5M9.7 8h4.6M10 11h4M10.4 14h3.2M11 17h2M11.6 20h.8"/><path d="M12 5v0"/>'),
+  rct: svg(tooth+'<path d="M12 8.5v7"/>'),
+  extraction: svg(tooth+'<path d="M18 15v6M15.5 18.5 18 21l2.5-2.5"/>'),
+  flap: svg('<path d="M3.5 20.5c3-3 6.5-6.5 10-10M14 6l1.6-1.6a2 2 0 0 1 2.8 0l1.2 1.2a2 2 0 0 1 0 2.8L18 10"/><path d="M6 15l1.5 1.5M9 12l1.5 1.5"/>'),
+  crown: svg('<path d="M3 8l4 3.5L12 4l5 7.5L21 8l-2 11H5L3 8Z"/>')
+};
+const SEC = {
+  what: svg('<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>'),
+  why:  svg('<path d="M20 6.5 9.5 17 4 11.5"/>'),
+  risks:svg('<path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h16.9a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0zM12 9v4M12 17h.01"/>'),
+  alt:  svg('<path d="M8 6h13M8 12h13M8 18h13"/><path d="M3.5 6h.01M3.5 12h.01M3.5 18h.01"/>'),
+  rec:  svg('<circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 2"/>'),
+  sut:  svg('<path d="M3 12h18"/><path d="M7 8l-2 8M11 8l-2 8M15 8l-2 8M19 8l-2 8"/>'),
+  wis:  svg('<path d="M12 3.2c-1.6 0-2.6.8-4 .8S5 3.4 5 5.6c0 2.4.9 3.3 1.4 5.6.4 1.7.4 4.6 1.7 4.6 1 0 1-2 1.3-3.6"/><path d="M12 3.2c1.6 0 2.6.8 4 .8S19 3.4 19 5.6c0 2.4-.9 3.3-1.4 5.6-.4 1.7-.4 4.6-1.7 4.6-1 0-1-2-1.3-3.6"/><path d="M9.5 16v3M14.5 16v3"/>'),
+  la:   svg('<path d="M12 3s6 6.4 6 10.5a6 6 0 0 1-12 0C6 9.4 12 3 12 3Z"/>')
+};
+
+function applyStaticLang(){
+  document.body.className = "lang-"+lang;
+  document.querySelectorAll("[data-en]").forEach(function(el){
+    el.innerHTML = el.getAttribute("data-"+lang) || el.getAttribute("data-en");
+  });
+  document.getElementById("qbox").placeholder = QPLACE[lang];
+}
+
+function renderPicker(){
+  var g = document.getElementById("procGrid"); g.innerHTML = "";
+  PROC.forEach(function(p){
+    var b = document.createElement("button");
+    b.className = "proc-card";
+    b.innerHTML = '<span class="badge">'+(PIC[p.id]||PIC.crown)+'</span>'+
+      '<span class="nm">'+t(p.name)+'</span><span class="sub">'+t(p.sub)+'</span>'+
+      '<span class="go"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>';
+    b.onclick = function(){ openProc(p.id); };
+    g.appendChild(b);
+  });
+}
+
+function card(variant,icon,label,inner){
+  return '<div class="infocard '+variant+'"><h3><span class="tag">'+icon+'</span>'+label+'</h3><div class="body">'+inner+'</div></div>';
+}
+function list(a){ return "<ul>"+a.map(function(x){return '<li>'+x+'</li>';}).join("")+"</ul>"; }
+
+function openProc(id){
+  var p = PROC.find(function(x){return x.id===id;});
+  currentProc = p;
+  document.getElementById("procPicker").classList.add("hidden");
+  document.getElementById("explainer").classList.add("active");
+  document.getElementById("procTitle").textContent = t(p.name);
+  document.getElementById("procBadge").innerHTML = PIC[p.id]||PIC.crown;
+  var h =
+    card("v-what",SEC.what,t(LABELS.what),'<p>'+t(p.what)+'</p>') +
+    card("v-why",SEC.why,t(LABELS.why),'<p>'+t(p.why)+'</p>');
+  if(p.extra) h += card("v-wis",SEC.wis,t(LABELS.wis),list(t(p.extra)));
+  h +=
+    card("v-risk",SEC.risks,t(LABELS.risks),list(t(p.risks))) +
+    card("v-alt",SEC.alt,t(LABELS.alt),list(t(p.alt))) +
+    card("v-rec",SEC.rec,t(LABELS.rec),'<p>'+t(p.rec)+'</p>');
+  if(p.sutures) h += card("v-sut",SEC.sut,t(LABELS.sutures),'<p>'+t(p.sutures)+'</p>');
+  h += card("v-la",SEC.la,t(LABELS.la),list(LA_NOTE[lang]));
+  document.getElementById("sections").innerHTML = h;
+  renderChecks();
+  document.getElementById("summary").classList.remove("show");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function renderChecks(){
+  var c = document.getElementById("checkList"); c.innerHTML = "";
+  CHECKS[lang].forEach(function(txt,idx){
+    var row = document.createElement("label");
+    row.className = "checkitem";
+    row.innerHTML = '<input type="checkbox"><span>'+txt+'</span>';
+    var box = row.querySelector("input");
+    box.onchange = function(){ row.classList.toggle("done", box.checked); updateProgress(); };
+    c.appendChild(row);
+  });
+  updateProgress();
+}
+function updateProgress(){
+  var boxes = [].slice.call(document.querySelectorAll("#checkList input"));
+  var done = boxes.filter(function(b){return b.checked;}).length;
+  var total = boxes.length || 1;
+  document.getElementById("progFill").style.width = Math.round(done/total*100)+"%";
+  document.getElementById("progTxt").textContent = PROG[lang]+" "+done+" / "+total;
+  var sm = document.getElementById("summary");
+  sm.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6.5 9.5 17 4 11.5"/></svg><span>'+SUMMARY_TXT[lang]+'</span>';
+  sm.classList.toggle("show", done===boxes.length && boxes.length>0);
+}
+
+function backToPicker(){
+  document.getElementById("explainer").classList.remove("active");
+  document.getElementById("procPicker").classList.remove("hidden");
+  currentProc = null;
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+document.getElementById("tabs").addEventListener("click",function(e){
+  var btn = e.target.closest("button"); if(!btn) return;
+  var tab = btn.dataset.tab;
+  document.querySelectorAll("#tabs button").forEach(function(b){b.classList.toggle("active",b===btn);});
+  document.querySelectorAll(".panel").forEach(function(p){p.classList.toggle("active",p.id==="panel-"+tab);});
+  window.scrollTo({top:0,behavior:"smooth"});
+});
+
+document.getElementById("langSelect").addEventListener("change",function(e){
+  lang = e.target.value;
+  applyStaticLang();
+  renderPicker();
+  if(currentProc) openProc(currentProc.id); else backToPicker();
+});
+
+document.getElementById("backBtn").onclick = backToPicker;
+
+document.getElementById('langSelect').value = lang;
+applyStaticLang();
+renderPicker();
+</script>
+</body>
+</html>
