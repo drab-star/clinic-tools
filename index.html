@@ -7,6 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans+Gurmukhi:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
   :root{
     --teal:#0E7C7B; --teal-700:#0b605f; --teal-900:#083e3d;
@@ -160,6 +162,37 @@
   .langpick select{appearance:none;-webkit-appearance:none;font-family:'Inter','Noto Sans Devanagari','Noto Sans Gurmukhi',sans-serif;font-size:14px;font-weight:600;color:var(--ink);background:var(--mint-2);border:1px solid #cfe6e0;border-radius:10px;padding:9px 40px 9px 15px;cursor:pointer}
   .langpick select:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(14,124,123,.13)}
   .langpick .selectwrap::after{content:"";position:absolute;right:15px;top:50%;width:8px;height:8px;border-right:2px solid var(--teal-700);border-bottom:2px solid var(--teal-700);transform:translateY(-70%) rotate(45deg);pointer-events:none}
+  .signcard{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;margin-top:16px}
+  .signcard h3{margin:0 0 14px;font-size:17px;font-family:'Plus Jakarta Sans','Noto Sans Devanagari','Noto Sans Gurmukhi',sans-serif}
+  .field{margin-bottom:15px}
+  .field label{display:block;font-size:13px;font-weight:700;color:var(--ink);margin-bottom:6px;font-family:'Plus Jakarta Sans','Noto Sans Devanagari','Noto Sans Gurmukhi',sans-serif}
+  .field input{width:100%;border:1px solid var(--line);border-radius:10px;padding:12px 13px;font-family:inherit;font-size:15px;background:#fcfdfd}
+  .field input:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(14,124,123,.13)}
+  .field .hint{margin:0 0 8px}
+  .sigwrap{position:relative}
+  .sigpad{width:100%;height:180px;border:1.5px dashed #cfe0dc;border-radius:12px;background:#fbfdfc;touch-action:none;display:block;cursor:crosshair}
+  .sigpad.signed{border-style:solid;border-color:var(--accent)}
+  .sigrow{display:flex;justify-content:flex-end;margin-top:8px}
+  .clearbtn{background:none;border:1px solid var(--line);border-radius:9px;padding:7px 14px;font-family:inherit;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer}
+  .clearbtn:hover{background:var(--mint-2);color:var(--teal-700)}
+  .submitbtn{width:100%;margin-top:18px;border:0;border-radius:12px;padding:15px;font-family:'Plus Jakarta Sans','Noto Sans Devanagari','Noto Sans Gurmukhi',sans-serif;font-size:16px;font-weight:800;color:#fff;background:var(--teal);cursor:pointer;transition:.15s}
+  .submitbtn:disabled{background:#b9cdca;cursor:not-allowed}
+  .submitbtn:not(:disabled):hover{background:var(--teal-700)}
+  .subnote{text-align:center;font-size:12px;color:var(--muted);margin-top:10px}
+  .gatehint{font-size:12.5px;color:var(--risk);margin-top:9px;text-align:center;display:none}
+  .gatehint.show{display:block}
+  .donecard{background:linear-gradient(120deg,var(--mint-2),var(--mint));border:1px solid #bfe4dd;border-radius:var(--radius);padding:36px 24px;text-align:center;display:none;margin-top:16px}
+  .donecard.show{display:block;animation:fade .3s}
+  .donecard .big{width:60px;height:60px;border-radius:50%;background:var(--teal);color:#fff;display:grid;place-items:center;margin:0 auto 14px}
+  .donecard .big svg{width:32px;height:32px}
+  .donecard h3{margin:0 0 6px;font-size:20px}
+  .donecard p{color:var(--ink-2);font-size:14.5px;margin:0}
+  .qrecap{background:#fbfaf3;border:1px solid #f0e6c8;border-radius:12px;padding:13px 15px;margin-bottom:16px}
+  .qrecap h4{margin:0 0 7px;font-size:13.5px;font-weight:700;color:#8a5a10;font-family:'Plus Jakarta Sans','Noto Sans Devanagari','Noto Sans Gurmukhi',sans-serif}
+  .qrecap ul{margin:0;padding-left:18px}
+  .qrecap li{font-size:13.5px;color:#5a4a20;margin-bottom:4px}
+  .qrecap .note{margin:9px 0 0;font-size:12px;color:#8a7a45}
+  #pdfDoc{position:fixed;left:-99999px;top:0;width:720px;background:#fff;color:#14212b;font-family:'Inter','Noto Sans Devanagari','Noto Sans Gurmukhi',sans-serif;padding:44px 44px 52px}
 </style>
 </head>
 <body class="lang-en">
@@ -180,7 +213,8 @@
 <div class="tabbar">
   <div class="wrap">
     <nav class="tabs" id="tabs">
-      <button data-tab="consent" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12h6M9 16h4M8 3h8a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M9 3v3h6V3"/></svg>Consent Explainer</button>
+      <button data-tab="consent" data-mode="read" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12h6M9 16h4M8 3h8a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M9 3v3h6V3"/></svg>Consent Explainer</button>
+      <button data-tab="consent" data-mode="sign"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Sign Consent</button>
       <button data-tab="perio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M6 7v10M18 7v10M4 17h16M9 7v10M14 7v10"/></svg>Perio Chart<span class="soon">SOON</span></button>
       <button data-tab="more"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>More Tools<span class="soon">SOON</span></button>
     </nav>
@@ -195,7 +229,7 @@
 
       <div class="disclaimer">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
-        <span data-en="For understanding only — not a legal consent form. Your final consent is signed with your doctor in the clinic." data-hi="सिर्फ़ समझने के लिए — यह कानूनी सहमति फॉर्म नहीं है। अंतिम सहमति क्लिनिक में आपके डॉक्टर के साथ हस्ताक्षरित होती है।" data-pa="ਸਿਰਫ਼ ਸਮਝਣ ਲਈ — ਇਹ ਕਾਨੂੰਨੀ ਸਹਿਮਤੀ ਫਾਰਮ ਨਹੀਂ ਹੈ। ਅੰਤਿਮ ਸਹਿਮਤੀ ਕਲੀਨਿਕ ਵਿੱਚ ਤੁਹਾਡੇ ਡਾਕਟਰ ਨਾਲ ਹੁੰਦੀ ਹੈ।"></span>
+        <span id="discText"></span>
       </div>
 
       <div class="langpick">
@@ -233,9 +267,41 @@
             <div class="ptxt" id="progTxt"></div>
           </div>
           <div id="checkList"></div>
+          <p class="hint" style="margin-top:2px" data-en="Any questions still on your mind? Write them here — your doctor will answer them when you sign in the clinic." data-hi="कोई सवाल जो अब भी मन में हैं? उन्हें यहाँ लिखें — आपके डॉक्टर हस्ताक्षर के समय क्लिनिक में उनके जवाब देंगे।" data-pa="ਕੋਈ ਸਵਾਲ ਜੋ ਹਾਲੇ ਵੀ ਮਨ ਵਿੱਚ ਹਨ? ਉਹਨਾਂ ਨੂੰ ਇੱਥੇ ਲਿਖੋ — ਤੁਹਾਡਾ ਡਾਕਟਰ ਦਸਤਖਤ ਵੇਲੇ ਕਲੀਨਿਕ ਵਿੱਚ ਉਹਨਾਂ ਦੇ ਜਵਾਬ ਦੇਵੇਗਾ।"></p>
           <textarea class="qbox" id="qbox" placeholder=""></textarea>
           <div class="summary" id="summary"></div>
         </div>
+        <div class="signcard" id="signSection">
+          <h3 data-en="Your details & signature" data-hi="आपका विवरण और हस्ताक्षर" data-pa="ਤੁਹਾਡਾ ਵੇਰਵਾ ਅਤੇ ਦਸਤਖਤ"></h3>
+          <div class="qrecap" id="qRecap" style="display:none">
+            <h4 data-en="Questions for your doctor" data-hi="आपके डॉक्टर के लिए सवाल" data-pa="ਤੁਹਾਡੇ ਡਾਕਟਰ ਲਈ ਸਵਾਲ"></h4>
+            <div id="qRecapList"></div>
+            <p class="note" data-en="Your doctor will go through these with you when you sign in the clinic." data-hi="आपके डॉक्टर क्लिनिक में हस्ताक्षर के समय इन्हें आपके साथ देखेंगे।" data-pa="ਤੁਹਾਡਾ ਡਾਕਟਰ ਕਲੀਨਿਕ ਵਿੱਚ ਦਸਤਖਤ ਵੇਲੇ ਇਹਨਾਂ ਨੂੰ ਤੁਹਾਡੇ ਨਾਲ ਦੇਖੇਗਾ।"></p>
+          </div>
+          <div class="field">
+            <label for="pName" data-en="Full name" data-hi="पूरा नाम" data-pa="ਪੂਰਾ ਨਾਮ"></label>
+            <input id="pName" type="text" autocomplete="name">
+          </div>
+          <div class="field">
+            <label for="pPhone" data-en="Phone (optional)" data-hi="फ़ोन (वैकल्पिक)" data-pa="ਫ਼ੋਨ (ਵਿਕਲਪਿਕ)"></label>
+            <input id="pPhone" type="tel" inputmode="tel" autocomplete="tel">
+          </div>
+          <div class="field">
+            <label data-en="Signature" data-hi="हस्ताक्षर" data-pa="ਦਸਤਖਤ"></label>
+            <p class="hint" data-en="Sign in the box below using your finger or mouse." data-hi="नीचे बॉक्स में अपनी उंगली या माउस से हस्ताक्षर करें।" data-pa="ਹੇਠਾਂ ਬਾਕਸ ਵਿੱਚ ਆਪਣੀ ਉਂਗਲ ਜਾਂ ਮਾਊਸ ਨਾਲ ਦਸਤਖਤ ਕਰੋ।"></p>
+            <div class="sigwrap"><canvas class="sigpad" id="sigpad"></canvas></div>
+            <div class="sigrow"><button type="button" class="clearbtn" id="sigClear" data-en="Clear" data-hi="मिटाएँ" data-pa="ਮਿਟਾਓ"></button></div>
+          </div>
+          <button type="button" class="submitbtn" id="submitBtn" disabled data-en="Submit signed consent" data-hi="हस्ताक्षरित सहमति भेजें" data-pa="ਦਸਤਖਤ ਕੀਤੀ ਸਹਿਮਤੀ ਭੇਜੋ"></button>
+          <p class="gatehint" id="gateHint" data-en="Please enter your name, tick all the boxes above, and sign to submit." data-hi="कृपया अपना नाम भरें, ऊपर के सभी बॉक्स पर निशान लगाएँ, और भेजने के लिए हस्ताक्षर करें।" data-pa="ਕਿਰਪਾ ਕਰਕੇ ਆਪਣਾ ਨਾਮ ਭਰੋ, ਉੱਪਰਲੇ ਸਾਰੇ ਬਾਕਸਾਂ ਤੇ ਨਿਸ਼ਾਨ ਲਗਾਓ, ਅਤੇ ਭੇਜਣ ਲਈ ਦਸਤਖਤ ਕਰੋ।"></p>
+          <p class="subnote" data-en="Your signed form will be emailed to the clinic." data-hi="आपका हस्ताक्षरित फ़ॉर्म क्लिनिक को ईमेल किया जाएगा।" data-pa="ਤੁਹਾਡਾ ਦਸਤਖਤ ਕੀਤਾ ਫਾਰਮ ਕਲੀਨਿਕ ਨੂੰ ਈਮੇਲ ਕੀਤਾ ਜਾਵੇਗਾ।"></p>
+        </div>
+        <div class="donecard" id="doneCard">
+          <div class="big"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6.5 9.5 17 4 11.5"/></svg></div>
+          <h3 data-en="Thank you." data-hi="धन्यवाद।" data-pa="ਧੰਨਵਾਦ।"></h3>
+          <p data-en="Your signed consent has been sent to the clinic. Please see the reception to complete it with the doctor." data-hi="आपकी हस्ताक्षरित सहमति क्लिनिक को भेज दी गई है। कृपया इसे डॉक्टर के साथ पूरा करने के लिए रिसेप्शन पर मिलें।" data-pa="ਤੁਹਾਡੀ ਦਸਤਖਤ ਕੀਤੀ ਸਹਿਮਤੀ ਕਲੀਨਿਕ ਨੂੰ ਭੇਜ ਦਿੱਤੀ ਗਈ ਹੈ। ਕਿਰਪਾ ਕਰਕੇ ਇਸ ਨੂੰ ਡਾਕਟਰ ਨਾਲ ਪੂਰਾ ਕਰਨ ਲਈ ਰਿਸੈਪਸ਼ਨ ਤੇ ਮਿਲੋ।"></p>
+        </div>
+        <div id="pdfDoc" aria-hidden="true"></div>
       </div>
     </section>
 
@@ -454,6 +520,8 @@ function applyStaticLang(){
     el.innerHTML = el.getAttribute("data-"+lang) || el.getAttribute("data-en");
   });
   document.getElementById("qbox").placeholder = QPLACE[lang];
+  if(typeof applySignPlaceholders==="function") applySignPlaceholders();
+  if(typeof applyDisclaimer==="function") applyDisclaimer();
 }
 
 function renderPicker(){
@@ -494,6 +562,7 @@ function openProc(id){
   document.getElementById("sections").innerHTML = h;
   renderChecks();
   document.getElementById("summary").classList.remove("show");
+  if(typeof resetSign==="function") resetSign();
   window.scrollTo({top:0,behavior:"smooth"});
 }
 
@@ -518,6 +587,7 @@ function updateProgress(){
   var sm = document.getElementById("summary");
   sm.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6.5 9.5 17 4 11.5"/></svg><span>'+SUMMARY_TXT[lang]+'</span>';
   sm.classList.toggle("show", done===boxes.length && boxes.length>0);
+  if(typeof refreshGate==="function") refreshGate();
 }
 
 function backToPicker(){
@@ -532,6 +602,7 @@ document.getElementById("tabs").addEventListener("click",function(e){
   var tab = btn.dataset.tab;
   document.querySelectorAll("#tabs button").forEach(function(b){b.classList.toggle("active",b===btn);});
   document.querySelectorAll(".panel").forEach(function(p){p.classList.toggle("active",p.id==="panel-"+tab);});
+  if(tab==="consent"){ signMode=(btn.dataset.mode==="sign"); applyMode(); backToPicker(); }
   window.scrollTo({top:0,behavior:"smooth"});
 });
 
@@ -543,6 +614,168 @@ document.getElementById("langSelect").addEventListener("change",function(e){
 });
 
 document.getElementById("backBtn").onclick = backToPicker;
+
+var signMode = false;
+var DISC = {
+  read: {en:"For understanding only — not a legal consent form. Your final consent is signed with your doctor in the clinic.", hi:"सिर्फ़ समझने के लिए — यह कानूनी सहमति फॉर्म नहीं है। अंतिम सहमति क्लिनिक में आपके डॉक्टर के साथ हस्ताक्षरित होती है।", pa:"ਸਿਰਫ਼ ਸਮਝਣ ਲਈ — ਇਹ ਕਾਨੂੰਨੀ ਸਹਿਮਤੀ ਫਾਰਮ ਨਹੀਂ ਹੈ। ਅੰਤਿਮ ਸਹਿਮਤੀ ਕਲੀਨਿਕ ਵਿੱਚ ਤੁਹਾਡੇ ਡਾਕਟਰ ਨਾਲ ਹੁੰਦੀ ਹੈ।"},
+  sign: {en:"By signing, you confirm you have read and understood this information. This is a pre-visit acknowledgment — your doctor will review it and complete the final consent with you at the clinic.", hi:"हस्ताक्षर करके आप पुष्टि करते हैं कि आपने यह जानकारी पढ़ और समझ ली है। यह एक विज़िट-पूर्व स्वीकृति है — आपके डॉक्टर इसकी समीक्षा करेंगे और क्लिनिक में आपके साथ अंतिम सहमति पूरी करेंगे।", pa:"ਦਸਤਖਤ ਕਰਕੇ ਤੁਸੀਂ ਪੁਸ਼ਟੀ ਕਰਦੇ ਹੋ ਕਿ ਤੁਸੀਂ ਇਹ ਜਾਣਕਾਰੀ ਪੜ੍ਹ ਅਤੇ ਸਮਝ ਲਈ ਹੈ। ਇਹ ਇੱਕ ਮੁਲਾਕਾਤ ਤੋਂ ਪਹਿਲਾਂ ਦੀ ਸਵੀਕ੍ਰਿਤੀ ਹੈ — ਤੁਹਾਡਾ ਡਾਕਟਰ ਇਸ ਦੀ ਸਮੀਖਿਆ ਕਰੇਗਾ ਅਤੇ ਕਲੀਨਿਕ ਵਿੱਚ ਤੁਹਾਡੇ ਨਾਲ ਅੰਤਿਮ ਸਹਿਮਤੀ ਪੂਰੀ ਕਰੇਗਾ।"}
+};
+function applyDisclaimer(){ var el=document.getElementById("discText"); if(el) el.innerHTML=(signMode?DISC.sign:DISC.read)[lang]; }
+function applyMode(){ applyDisclaimer(); }
+
+/* ================= SIGNING (v2) ================= */
+var LANGNAME = {en:"English", hi:"हिन्दी", pa:"ਪੰਜਾਬੀ"};
+var PH = { name:{en:"e.g. Rajesh Kumar", hi:"जैसे राजेश कुमार", pa:"ਜਿਵੇਂ ਰਾਜੇਸ਼ ਕੁਮਾਰ"}, phone:{en:"Optional", hi:"वैकल्पिक", pa:"ਵਿਕਲਪਿਕ"} };
+var SENDING = {en:"Sending…", hi:"भेजा जा रहा है…", pa:"ਭੇਜਿਆ ਜਾ ਰਿਹਾ ਹੈ…"};
+var SEND_ERR = {en:"Couldn't send — please check your connection and try again.", hi:"भेजा नहीं जा सका — कृपया अपना कनेक्शन जाँचें और फिर से कोशिश करें।", pa:"ਭੇਜਿਆ ਨਹੀਂ ਜਾ ਸਕਿਆ — ਕਿਰਪਾ ਕਰਕੇ ਆਪਣਾ ਕਨੈਕਸ਼ਨ ਜਾਂਚੋ ਅਤੇ ਫਿਰ ਕੋਸ਼ਿਸ਼ ਕਰੋ।"};
+var PDF_TITLE = {en:"Pre-Visit Consent Acknowledgment", hi:"विज़िट-पूर्व सहमति स्वीकृति", pa:"ਮੁਲਾਕਾਤ ਤੋਂ ਪਹਿਲਾਂ ਦੀ ਸਹਿਮਤੀ ਸਵੀਕ੍ਰਿਤੀ"};
+var PDF_L = {
+  name:{en:"Patient name", hi:"मरीज़ का नाम", pa:"ਮਰੀਜ਼ ਦਾ ਨਾਮ"},
+  phone:{en:"Phone", hi:"फ़ोन", pa:"ਫ਼ੋਨ"},
+  proc:{en:"Procedure", hi:"प्रक्रिया", pa:"ਪ੍ਰਕਿਰਿਆ"},
+  lang:{en:"Language", hi:"भाषा", pa:"ਭਾਸ਼ਾ"},
+  datetime:{en:"Date & time", hi:"तारीख़ और समय", pa:"ਤਾਰੀਖ਼ ਅਤੇ ਸਮਾਂ"},
+  confirms:{en:"The patient confirmed:", hi:"मरीज़ ने पुष्टि की:", pa:"ਮਰੀਜ਼ ਨੇ ਪੁਸ਼ਟੀ ਕੀਤੀ:"},
+  signed:{en:"Patient signature", hi:"मरीज़ के हस्ताक्षर", pa:"ਮਰੀਜ਼ ਦੇ ਦਸਤਖਤ"}
+};
+var PDF_ACK = {
+  en:"This form is a pre-visit acknowledgment that the patient has read and understood the information above. It does not replace the formal consent, which is reviewed and co-signed with the treating doctor at the clinic.",
+  hi:"यह फ़ॉर्म एक विज़िट-पूर्व स्वीकृति है कि मरीज़ ने ऊपर दी गई जानकारी पढ़ और समझ ली है। यह औपचारिक सहमति की जगह नहीं लेता, जिसकी समीक्षा और सह-हस्ताक्षर क्लिनिक में इलाज करने वाले डॉक्टर के साथ किए जाते हैं।",
+  pa:"ਇਹ ਫਾਰਮ ਇੱਕ ਮੁਲਾਕਾਤ ਤੋਂ ਪਹਿਲਾਂ ਦੀ ਸਵੀਕ੍ਰਿਤੀ ਹੈ ਕਿ ਮਰੀਜ਼ ਨੇ ਉੱਪਰ ਦਿੱਤੀ ਜਾਣਕਾਰੀ ਪੜ੍ਹ ਅਤੇ ਸਮਝ ਲਈ ਹੈ। ਇਹ ਰਸਮੀ ਸਹਿਮਤੀ ਦੀ ਥਾਂ ਨਹੀਂ ਲੈਂਦਾ, ਜਿਸ ਦੀ ਸਮੀਖਿਆ ਅਤੇ ਸਹਿ-ਦਸਤਖਤ ਕਲੀਨਿਕ ਵਿੱਚ ਇਲਾਜ ਕਰਨ ਵਾਲੇ ਡਾਕਟਰ ਨਾਲ ਕੀਤੇ ਜਾਂਦੇ ਹਨ।"
+};
+var PDF_Q = {en:"Questions for the doctor (to be answered at signing):", hi:"डॉक्टर के लिए सवाल (हस्ताक्षर के समय उत्तर दिए जाएंगे):", pa:"ਡਾਕਟਰ ਲਈ ਸਵਾਲ (ਦਸਤਖਤ ਵੇਲੇ ਜਵਾਬ ਦਿੱਤੇ ਜਾਣਗੇ):"};
+
+function escapeHtml(x){ return (x||"").replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c];}); }
+function applySignPlaceholders(){
+  var n=document.getElementById("pName"), ph=document.getElementById("pPhone");
+  if(n) n.placeholder=PH.name[lang];
+  if(ph) ph.placeholder=PH.phone[lang];
+}
+
+var SigPad = (function(){
+  var canvas=document.getElementById("sigpad"), ctx=null, drawing=false, hasInk=false, last=null;
+  function setup(){
+    var r=canvas.getBoundingClientRect(); if(!r.width) return;
+    var dpr=window.devicePixelRatio||1;
+    canvas.width=Math.round(r.width*dpr); canvas.height=Math.round(180*dpr);
+    ctx=canvas.getContext("2d"); ctx.scale(dpr,dpr);
+    ctx.lineWidth=2.2; ctx.lineCap="round"; ctx.lineJoin="round"; ctx.strokeStyle="#12303a";
+  }
+  function pos(e){ var r=canvas.getBoundingClientRect(); var t=(e.touches&&e.touches[0])?e.touches[0]:e; return {x:t.clientX-r.left,y:t.clientY-r.top}; }
+  function start(e){ if(!ctx) setup(); e.preventDefault(); drawing=true; last=pos(e); }
+  function move(e){ if(!drawing||!ctx) return; e.preventDefault(); var pt=pos(e); ctx.beginPath(); ctx.moveTo(last.x,last.y); ctx.lineTo(pt.x,pt.y); ctx.stroke(); last=pt; if(!hasInk){ hasInk=true; canvas.classList.add("signed"); refreshGate(); } }
+  function end(){ drawing=false; }
+  canvas.addEventListener("mousedown",start); canvas.addEventListener("mousemove",move); window.addEventListener("mouseup",end);
+  canvas.addEventListener("touchstart",start,{passive:false}); canvas.addEventListener("touchmove",move,{passive:false}); canvas.addEventListener("touchend",end);
+  return {
+    resize:function(){ if(!hasInk) setup(); },
+    clear:function(){ if(ctx) ctx.clearRect(0,0,canvas.width,canvas.height); hasInk=false; canvas.classList.remove("signed"); refreshGate(); },
+    isSigned:function(){ return hasInk; },
+    dataURL:function(){ return canvas.toDataURL("image/png"); }
+  };
+})();
+document.getElementById("sigClear").onclick=function(){ SigPad.clear(); };
+document.getElementById("pName").addEventListener("input",refreshGate);
+
+function allChecksDone(){ var b=[].slice.call(document.querySelectorAll("#checkList input")); return b.length>0 && b.every(function(x){return x.checked;}); }
+function refreshGate(){
+  var name=(document.getElementById("pName").value||"").trim();
+  var ok = name.length>=2 && allChecksDone() && SigPad.isSigned();
+  var btn=document.getElementById("submitBtn"); if(btn) btn.disabled=!ok;
+  var g=document.getElementById("gateHint"); if(g) g.classList.toggle("show", !ok);
+}
+function resetSign(){
+  var sec=document.getElementById("signSection"); if(sec) sec.style.display = signMode ? "" : "none";
+  var d=document.getElementById("doneCard"); if(d) d.classList.remove("show");
+  SigPad.resize(); SigPad.clear();
+  var qb=document.getElementById("qbox"); if(qb) qb.value="";
+  if(typeof updateQRecap==="function") updateQRecap();
+  var n=document.getElementById("pPhone"); // keep name, clear phone optional? keep both
+  refreshGate();
+}
+
+function buildPdfDom(p){
+  var name=(document.getElementById("pName").value||"").trim();
+  var phone=(document.getElementById("pPhone").value||"").trim();
+  var when=new Date().toLocaleString();
+  function sec(label,inner){ return '<div style="margin:0 0 13px"><div style="font-weight:700;font-size:13.5px;color:#0e7c7b;margin-bottom:3px">'+label+'</div><div style="font-size:13px;line-height:1.55;color:#26333c">'+inner+'</div></div>'; }
+  function ul(a){ return '<ul style="margin:3px 0 0;padding-left:18px">'+a.map(function(x){return '<li style="margin-bottom:4px">'+x+'</li>';}).join("")+'</ul>'; }
+  var h='';
+  h+='<div style="border-bottom:2px solid #0e7c7b;padding-bottom:11px;margin-bottom:15px"><div style="font-size:19px;font-weight:800;color:#0b2f31">AI in Practice</div><div style="font-size:13px;color:#5b6b7a">'+PDF_TITLE[lang]+'</div></div>';
+  h+='<table style="width:100%;font-size:12.5px;margin-bottom:15px;border-collapse:collapse"><tr><td style="padding:3px 0;color:#5b6b7a;width:130px">'+PDF_L.name[lang]+'</td><td style="font-weight:600">'+escapeHtml(name)+'</td></tr>';
+  if(phone) h+='<tr><td style="padding:3px 0;color:#5b6b7a">'+PDF_L.phone[lang]+'</td><td>'+escapeHtml(phone)+'</td></tr>';
+  h+='<tr><td style="padding:3px 0;color:#5b6b7a">'+PDF_L.proc[lang]+'</td><td style="font-weight:600">'+t(p.name)+'</td></tr>';
+  h+='<tr><td style="padding:3px 0;color:#5b6b7a">'+PDF_L.lang[lang]+'</td><td>'+LANGNAME[lang]+'</td></tr>';
+  h+='<tr><td style="padding:3px 0;color:#5b6b7a">'+PDF_L.datetime[lang]+'</td><td>'+when+'</td></tr></table>';
+  h+=sec(t(LABELS.what),t(p.what));
+  h+=sec(t(LABELS.why),t(p.why));
+  if(p.extra) h+=sec(t(LABELS.wis),ul(t(p.extra)));
+  h+=sec(t(LABELS.risks),ul(t(p.risks)));
+  h+=sec(t(LABELS.alt),ul(t(p.alt)));
+  h+=sec(t(LABELS.rec),t(p.rec));
+  if(p.sutures) h+=sec(t(LABELS.sutures),t(p.sutures));
+  h+=sec(t(LABELS.la),ul(LA_NOTE[lang]));
+  h+='<div style="margin:4px 0 13px"><div style="font-weight:700;font-size:13.5px;color:#0e7c7b;margin-bottom:3px">'+PDF_L.confirms[lang]+'</div>'+ul(CHECKS[lang])+'</div>';
+  h+='<div style="background:#f0f7f6;border:1px solid #cfe6e0;border-radius:8px;padding:11px 13px;font-size:12px;color:#26333c;margin-bottom:16px">'+PDF_ACK[lang]+'</div>';
+  var qtext=(document.getElementById("qbox").value||"").trim();
+  if(qtext){
+    var qi=qtext.split(/\n+/).filter(function(x){return x.trim();});
+    h+='<div style="margin:0 0 16px"><div style="font-weight:700;font-size:13.5px;color:#0e7c7b;margin-bottom:3px">'+PDF_Q[lang]+'</div><ul style="margin:3px 0 0;padding-left:18px">'+qi.map(function(x){return '<li style="margin-bottom:4px">'+escapeHtml(x)+'</li>';}).join("")+'</ul></div>';
+  }
+  h+='<div style="margin-top:6px"><div style="font-weight:700;font-size:12.5px;color:#0e7c7b;margin-bottom:6px">'+PDF_L.signed[lang]+'</div><img src="'+SigPad.dataURL()+'" style="height:88px"><div style="border-top:1px solid #26333c;width:260px;margin-top:2px;padding-top:3px;font-size:12px;color:#5b6b7a">'+escapeHtml(name)+' · '+when+'</div></div>';
+  document.getElementById("pdfDoc").innerHTML=h;
+}
+
+function makePdfBase64(){
+  var node=document.getElementById("pdfDoc");
+  var ready = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
+  return ready.then(function(){ return html2canvas(node,{scale:2,backgroundColor:"#ffffff"}); }).then(function(canvas){
+    var img=canvas.toDataURL("image/png");
+    var JsPDF=window.jspdf.jsPDF;
+    var pdf=new JsPDF("p","mm","a4");
+    var pw=pdf.internal.pageSize.getWidth(), ph=pdf.internal.pageSize.getHeight();
+    var iw=pw, ih=canvas.height*(pw/canvas.width);
+    var left=ih, y=0;
+    pdf.addImage(img,"PNG",0,y,iw,ih); left-=ph;
+    while(left>0){ y=left-ih; pdf.addPage(); pdf.addImage(img,"PNG",0,y,iw,ih); left-=ph; }
+    return pdf.output("datauristring").split(",")[1];
+  });
+}
+
+function updateQRecap(){
+  var box=document.getElementById("qRecap"); if(!box) return;
+  var txt=(document.getElementById("qbox").value||"").trim();
+  if(!txt){ box.style.display="none"; return; }
+  var items=txt.split(/\n+/).filter(function(x){return x.trim();});
+  document.getElementById("qRecapList").innerHTML="<ul>"+items.map(function(x){return "<li>"+escapeHtml(x)+"</li>";}).join("")+"</ul>";
+  box.style.display="";
+}
+document.getElementById("qbox").addEventListener("input",updateQRecap);
+
+function submitConsent(){
+  var btn=document.getElementById("submitBtn");
+  if(btn.disabled) return;
+  var p=currentProc; if(!p) return;
+  var name=(document.getElementById("pName").value||"").trim();
+  var phone=(document.getElementById("pPhone").value||"").trim();
+  var origText=btn.innerHTML;
+  btn.disabled=true; btn.innerHTML=SENDING[lang];
+  buildPdfDom(p);
+  makePdfBase64().then(function(b64){
+    var payload={ pdf:b64, filename:"consent-"+((name.replace(/[^a-z0-9]+/gi,"_"))||"patient")+".pdf",
+      patientName:name, phone:phone, procedure:t(p.name), procedureEn:p.name.en, language:LANGNAME[lang], questions:(document.getElementById("qbox").value||"").trim(), when:new Date().toISOString() };
+    return fetch("/api/send",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+  }).then(function(res){
+    if(!res || !res.ok) throw new Error("send failed");
+    document.getElementById("signSection").style.display="none";
+    var d=document.getElementById("doneCard"); d.classList.add("show"); d.scrollIntoView({behavior:"smooth",block:"center"});
+  }).catch(function(err){
+    btn.disabled=false; btn.innerHTML=origText;
+    var g=document.getElementById("gateHint"); g.textContent=SEND_ERR[lang]; g.classList.add("show");
+  });
+}
+document.getElementById("submitBtn").addEventListener("click",submitConsent);
+/* =============== end signing =============== */
 
 document.getElementById('langSelect').value = lang;
 applyStaticLang();
