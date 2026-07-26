@@ -729,15 +729,15 @@ function buildPdfDom(p){
 function makePdfBase64(){
   var node=document.getElementById("pdfDoc");
   var ready = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
-  return ready.then(function(){ return html2canvas(node,{scale:2,backgroundColor:"#ffffff"}); }).then(function(canvas){
-    var img=canvas.toDataURL("image/png");
+  return ready.then(function(){ return html2canvas(node,{scale:1.5,backgroundColor:"#ffffff"}); }).then(function(canvas){
+    var img=canvas.toDataURL("image/jpeg",0.72);
     var JsPDF=window.jspdf.jsPDF;
-    var pdf=new JsPDF("p","mm","a4");
+    var pdf=new JsPDF({orientation:"p",unit:"mm",format:"a4",compress:true});
     var pw=pdf.internal.pageSize.getWidth(), ph=pdf.internal.pageSize.getHeight();
     var iw=pw, ih=canvas.height*(pw/canvas.width);
     var left=ih, y=0;
-    pdf.addImage(img,"PNG",0,y,iw,ih); left-=ph;
-    while(left>0){ y=left-ih; pdf.addPage(); pdf.addImage(img,"PNG",0,y,iw,ih); left-=ph; }
+    pdf.addImage(img,"JPEG",0,y,iw,ih); left-=ph;
+    while(left>0){ y=left-ih; pdf.addPage(); pdf.addImage(img,"JPEG",0,y,iw,ih); left-=ph; }
     return pdf.output("datauristring").split(",")[1];
   });
 }
