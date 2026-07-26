@@ -193,6 +193,9 @@
   .qrecap li{font-size:13.5px;color:#5a4a20;margin-bottom:4px}
   .qrecap .note{margin:9px 0 0;font-size:12px;color:#8a7a45}
   #pdfDoc{position:fixed;left:-99999px;top:0;width:720px;background:#fff;color:#14212b;font-family:'Inter','Noto Sans Devanagari','Noto Sans Gurmukhi',sans-serif;padding:44px 44px 52px}
+  .dlbtn{width:100%;margin-top:10px;border:1.5px solid var(--teal);border-radius:12px;padding:13px;font-family:'Plus Jakarta Sans','Noto Sans Devanagari','Noto Sans Gurmukhi',sans-serif;font-size:15px;font-weight:700;color:var(--teal-700);background:#fff;cursor:pointer;transition:.15s}
+  .dlbtn:disabled{border-color:#cfe0dc;color:#a9b8b5;cursor:not-allowed}
+  .dlbtn:not(:disabled):hover{background:var(--mint-2)}
 </style>
 </head>
 <body class="lang-en">
@@ -293,6 +296,7 @@
             <div class="sigrow"><button type="button" class="clearbtn" id="sigClear" data-en="Clear" data-hi="मिटाएँ" data-pa="ਮਿਟਾਓ"></button></div>
           </div>
           <button type="button" class="submitbtn" id="submitBtn" disabled data-en="Submit signed consent" data-hi="हस्ताक्षरित सहमति भेजें" data-pa="ਦਸਤਖਤ ਕੀਤੀ ਸਹਿਮਤੀ ਭੇਜੋ"></button>
+          <button type="button" class="dlbtn" id="downloadBtn" disabled data-en="Download signed consent" data-hi="हस्ताक्षरित सहमति डाउनलोड करें" data-pa="ਦਸਤਖਤ ਕੀਤੀ ਸਹਿਮਤੀ ਡਾਊਨਲੋਡ ਕਰੋ"></button>
           <p class="gatehint" id="gateHint" data-en="Please enter your name, tick all the boxes above, and sign to submit." data-hi="कृपया अपना नाम भरें, ऊपर के सभी बॉक्स पर निशान लगाएँ, और भेजने के लिए हस्ताक्षर करें।" data-pa="ਕਿਰਪਾ ਕਰਕੇ ਆਪਣਾ ਨਾਮ ਭਰੋ, ਉੱਪਰਲੇ ਸਾਰੇ ਬਾਕਸਾਂ ਤੇ ਨਿਸ਼ਾਨ ਲਗਾਓ, ਅਤੇ ਭੇਜਣ ਲਈ ਦਸਤਖਤ ਕਰੋ।"></p>
           <p class="subnote" data-en="Your signed form will be emailed to the clinic." data-hi="आपका हस्ताक्षरित फ़ॉर्म क्लिनिक को ईमेल किया जाएगा।" data-pa="ਤੁਹਾਡਾ ਦਸਤਖਤ ਕੀਤਾ ਫਾਰਮ ਕਲੀਨਿਕ ਨੂੰ ਈਮੇਲ ਕੀਤਾ ਜਾਵੇਗਾ।"></p>
         </div>
@@ -459,7 +463,7 @@ const PROC = [
 ];
 
 const CHECKS = {
-  en:["I understand what the procedure involves and why it's advised.","I understand the main risks and the alternatives to it.","I've written down any questions I still want to ask the doctor.","I understand this is for my understanding, and the final consent is signed with your doctor in the clinic."],
+  en:["I understand what the procedure involves and why it's advised.","I understand the main risks and the alternatives to it.","I've written down any questions I still want to ask the doctor.","I understand this is for my understanding, and the final consent is signed with the doctor in the clinic."],
   hi:["मैं समझता/समझती हूँ कि इस प्रक्रिया में क्या होता है और यह क्यों बताई गई है।","मैं मुख्य जोखिम और इसके विकल्प समझता/समझती हूँ।","जो सवाल मुझे डॉक्टर से पूछने हैं, वे मैंने लिख लिए हैं।","मैं समझता/समझती हूँ कि यह सिर्फ़ मेरी समझ के लिए है, और अंतिम सहमति क्लिनिक में आपके डॉक्टर के साथ हस्ताक्षरित होती है।"],
   pa:["ਮੈਂ ਸਮਝਦਾ/ਸਮਝਦੀ ਹਾਂ ਕਿ ਇਸ ਪ੍ਰਕਿਰਿਆ ਵਿੱਚ ਕੀ ਹੁੰਦਾ ਹੈ ਅਤੇ ਇਹ ਕਿਉਂ ਦੱਸੀ ਗਈ ਹੈ।","ਮੈਂ ਮੁੱਖ ਖ਼ਤਰੇ ਅਤੇ ਇਸਦੇ ਬਦਲ ਸਮਝਦਾ/ਸਮਝਦੀ ਹਾਂ।","ਜੋ ਸਵਾਲ ਮੈਂ ਡਾਕਟਰ ਤੋਂ ਪੁੱਛਣੇ ਹਨ, ਉਹ ਮੈਂ ਲਿਖ ਲਏ ਹਨ।","ਮੈਂ ਸਮਝਦਾ/ਸਮਝਦੀ ਹਾਂ ਕਿ ਇਹ ਸਿਰਫ਼ ਮੇਰੀ ਸਮਝ ਲਈ ਹੈ, ਅਤੇ ਅੰਤਿਮ ਸਹਿਮਤੀ ਕਲੀਨਿਕ ਵਿੱਚ ਮੇਰੇ ਡਾਕਟਰ ਨਾਲ ਹਸਤਾਖਰ ਕੀਤੀ ਜਾਂਦੀ ਹੈ।"]
 };
@@ -682,6 +686,7 @@ function refreshGate(){
   var name=(document.getElementById("pName").value||"").trim();
   var ok = name.length>=2 && allChecksDone() && SigPad.isSigned();
   var btn=document.getElementById("submitBtn"); if(btn) btn.disabled=!ok;
+  var db=document.getElementById("downloadBtn"); if(db) db.disabled=!ok;
   var g=document.getElementById("gateHint"); if(g) g.classList.toggle("show", !ok);
 }
 function resetSign(){
@@ -726,7 +731,7 @@ function buildPdfDom(p){
   document.getElementById("pdfDoc").innerHTML=h;
 }
 
-function makePdfBase64(){
+function makePdfDoc(){
   var node=document.getElementById("pdfDoc");
   var ready = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
   return ready.then(function(){ return html2canvas(node,{scale:1.5,backgroundColor:"#ffffff"}); }).then(function(canvas){
@@ -738,7 +743,7 @@ function makePdfBase64(){
     var left=ih, y=0;
     pdf.addImage(img,"JPEG",0,y,iw,ih); left-=ph;
     while(left>0){ y=left-ih; pdf.addPage(); pdf.addImage(img,"JPEG",0,y,iw,ih); left-=ph; }
-    return pdf.output("datauristring").split(",")[1];
+    return pdf;
   });
 }
 
@@ -765,8 +770,9 @@ function submitConsent(){
   }
   btn.disabled=true; btn.innerHTML=SENDING[lang];
   var step="pdf";
-  Promise.resolve().then(function(){ buildPdfDom(p); return makePdfBase64(); }).then(function(b64){
+  Promise.resolve().then(function(){ buildPdfDom(p); return makePdfDoc(); }).then(function(pdf){
     step="send";
+    var b64=pdf.output("datauristring").split(",")[1];
     var payload={ pdf:b64, filename:"consent-"+((name.replace(/[^a-z0-9]+/gi,"_"))||"patient")+".pdf",
       patientName:name, phone:phone, procedure:t(p.name), procedureEn:p.name.en, language:LANGNAME[lang], questions:(document.getElementById("qbox").value||"").trim(), when:new Date().toISOString() };
     return fetch("/api/send",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
@@ -781,6 +787,20 @@ function submitConsent(){
   });
 }
 document.getElementById("submitBtn").addEventListener("click",submitConsent);
+var DL_ING = {en:"Preparing…", hi:"तैयार हो रहा है…", pa:"ਤਿਆਰ ਹੋ ਰਿਹਾ ਹੈ…"};
+function downloadConsent(){
+  var btn=document.getElementById("downloadBtn"); if(btn.disabled) return;
+  var p=currentProc; if(!p) return;
+  var name=(document.getElementById("pName").value||"").trim();
+  var g=document.getElementById("gateHint"); g.classList.remove("show");
+  if(!window.jspdf || !window.jspdf.jsPDF || typeof html2canvas==="undefined"){ g.textContent="PDF tools didn't load — check the internet connection or any ad-blocker."; g.classList.add("show"); return; }
+  var orig=btn.innerHTML; btn.disabled=true; btn.innerHTML=DL_ING[lang];
+  Promise.resolve().then(function(){ buildPdfDom(p); return makePdfDoc(); }).then(function(pdf){
+    pdf.save("consent-"+((name.replace(/[^a-z0-9]+/gi,"_"))||"patient")+".pdf");
+    btn.disabled=false; btn.innerHTML=orig;
+  }).catch(function(err){ btn.disabled=false; btn.innerHTML=orig; g.textContent="PDF error: "+((err&&err.message)||err); g.classList.add("show"); });
+}
+document.getElementById("downloadBtn").addEventListener("click",downloadConsent);
 /* =============== end signing =============== */
 
 document.getElementById('langSelect').value = lang;
