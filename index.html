@@ -196,6 +196,7 @@
   .dlbtn{width:100%;margin-top:10px;border:1.5px solid var(--teal);border-radius:12px;padding:13px;font-family:'Plus Jakarta Sans','Noto Sans Devanagari','Noto Sans Gurmukhi',sans-serif;font-size:15px;font-weight:700;color:var(--teal-700);background:#fff;cursor:pointer;transition:.15s}
   .dlbtn:disabled{border-color:#cfe0dc;color:#a9b8b5;cursor:not-allowed}
   .dlbtn:not(:disabled):hover{background:var(--mint-2)}
+  .btncap{text-align:center;font-size:12px;color:var(--muted);margin:6px 0 0}
 </style>
 </head>
 <body class="lang-en">
@@ -296,9 +297,10 @@
             <div class="sigrow"><button type="button" class="clearbtn" id="sigClear" data-en="Clear" data-hi="मिटाएँ" data-pa="ਮਿਟਾਓ"></button></div>
           </div>
           <button type="button" class="submitbtn" id="submitBtn" disabled data-en="Submit signed consent" data-hi="हस्ताक्षरित सहमति भेजें" data-pa="ਦਸਤਖਤ ਕੀਤੀ ਸਹਿਮਤੀ ਭੇਜੋ"></button>
+          <p class="btncap" data-en="Emails the signed PDF to the clinic." data-hi="हस्ताक्षरित PDF क्लिनिक को ईमेल करता है।" data-pa="ਦਸਤਖਤ ਕੀਤੀ PDF ਕਲੀਨਿਕ ਨੂੰ ਈਮੇਲ ਕਰਦਾ ਹੈ।"></p>
           <button type="button" class="dlbtn" id="downloadBtn" disabled data-en="Download signed consent" data-hi="हस्ताक्षरित सहमति डाउनलोड करें" data-pa="ਦਸਤਖਤ ਕੀਤੀ ਸਹਿਮਤੀ ਡਾਊਨਲੋਡ ਕਰੋ"></button>
+          <p class="btncap" data-en="Downloads the PDF for you." data-hi="आपके लिए PDF डाउनलोड करता है।" data-pa="ਤੁਹਾਡੇ ਲਈ PDF ਡਾਊਨਲੋਡ ਕਰਦਾ ਹੈ।"></p>
           <p class="gatehint" id="gateHint" data-en="Please enter your name, tick all the boxes above, and sign to submit." data-hi="कृपया अपना नाम भरें, ऊपर के सभी बॉक्स पर निशान लगाएँ, और भेजने के लिए हस्ताक्षर करें।" data-pa="ਕਿਰਪਾ ਕਰਕੇ ਆਪਣਾ ਨਾਮ ਭਰੋ, ਉੱਪਰਲੇ ਸਾਰੇ ਬਾਕਸਾਂ ਤੇ ਨਿਸ਼ਾਨ ਲਗਾਓ, ਅਤੇ ਭੇਜਣ ਲਈ ਦਸਤਖਤ ਕਰੋ।"></p>
-          <p class="subnote" data-en="Your signed form will be emailed to the clinic." data-hi="आपका हस्ताक्षरित फ़ॉर्म क्लिनिक को ईमेल किया जाएगा।" data-pa="ਤੁਹਾਡਾ ਦਸਤਖਤ ਕੀਤਾ ਫਾਰਮ ਕਲੀਨਿਕ ਨੂੰ ਈਮੇਲ ਕੀਤਾ ਜਾਵੇਗਾ।"></p>
         </div>
         <div class="donecard" id="doneCard">
           <div class="big"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6.5 9.5 17 4 11.5"/></svg></div>
