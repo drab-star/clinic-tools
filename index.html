@@ -759,19 +759,25 @@ function submitConsent(){
   var name=(document.getElementById("pName").value||"").trim();
   var phone=(document.getElementById("pPhone").value||"").trim();
   var origText=btn.innerHTML;
+  var g=document.getElementById("gateHint"); g.classList.remove("show");
+  if(!window.jspdf || !window.jspdf.jsPDF || typeof html2canvas==="undefined"){
+    g.textContent="PDF tools didn't load — check the internet connection or any ad-blocker, then try again."; g.classList.add("show"); return;
+  }
   btn.disabled=true; btn.innerHTML=SENDING[lang];
-  buildPdfDom(p);
-  makePdfBase64().then(function(b64){
+  var step="pdf";
+  Promise.resolve().then(function(){ buildPdfDom(p); return makePdfBase64(); }).then(function(b64){
+    step="send";
     var payload={ pdf:b64, filename:"consent-"+((name.replace(/[^a-z0-9]+/gi,"_"))||"patient")+".pdf",
       patientName:name, phone:phone, procedure:t(p.name), procedureEn:p.name.en, language:LANGNAME[lang], questions:(document.getElementById("qbox").value||"").trim(), when:new Date().toISOString() };
     return fetch("/api/send",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
   }).then(function(res){
-    if(!res || !res.ok) throw new Error("send failed");
+    return res.text().then(function(txt){ if(!res.ok) throw new Error("Server "+res.status+": "+txt); return txt; });
+  }).then(function(){
     document.getElementById("signSection").style.display="none";
     var d=document.getElementById("doneCard"); d.classList.add("show"); d.scrollIntoView({behavior:"smooth",block:"center"});
   }).catch(function(err){
     btn.disabled=false; btn.innerHTML=origText;
-    var g=document.getElementById("gateHint"); g.textContent=SEND_ERR[lang]; g.classList.add("show");
+    g.textContent=(step==="pdf"?"PDF error: ":"Send error: ")+((err&&err.message)||err); g.classList.add("show");
   });
 }
 document.getElementById("submitBtn").addEventListener("click",submitConsent);
