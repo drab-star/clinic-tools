@@ -290,7 +290,7 @@
   .dbop.on::after{content:"";width:9px;height:9px;border-radius:50%;background:#fff}
   .dmiss{color:var(--muted);font-size:14px;padding:18px 0;text-align:center}
   .contour-arch{margin-bottom:16px}
-  .contour-arch .al{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:11px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin:0 0 4px}
+  .contour-arch .al{display:inline-block;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:11px;letter-spacing:.08em;color:#fff;background:var(--teal);text-transform:uppercase;padding:4px 14px;border-radius:999px;margin:0 0 8px}
   .bandlab{font-size:10px;color:var(--muted);font-weight:600;margin:3px 0 1px}
   .toothrow{display:flex}
   .trooth{width:44px;flex:0 0 auto;text-align:center;cursor:pointer;padding:4px 0;border-radius:8px}
@@ -324,7 +324,7 @@
   .tmenu .tck.dis{opacity:.4;cursor:not-allowed}
   .densflex{display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap}
   .dens-arch{margin-bottom:12px}
-  .dens-arch .al{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:11px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin:0 0 5px}
+  .dens-arch .al{display:inline-block;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:11px;letter-spacing:.08em;color:#fff;background:var(--teal);text-transform:uppercase;padding:4px 14px;border-radius:999px;margin:0 0 8px}
   .dens-row{display:flex;gap:2px}
   .dtooth{width:28px;display:flex;flex-direction:column;align-items:center;gap:3px}
   .dpips{display:flex;gap:1.5px}
@@ -1309,7 +1309,7 @@ var PERIO = (function(){
     var rep=document.getElementById("perioReport"); if(!rep) return;
     function sec(title,bodyv){ if(!bodyv) return ""; return '<div class="rep-sec"><h4>'+title+'</h4><p>'+escP(bodyv)+'</p></div>'; }
     rep.innerHTML='<div class="rep-card"><div class="rep-head"><div><div class="rep-title">Periodontal case assessment</div><div class="rep-sub">SOAP &middot; Assessment &amp; plan &middot; '+new Date().toLocaleDateString()+'</div></div><span class="rep-badge">AI draft &mdash; clinician to confirm</span></div>'
-      +sec("Diagnosis",j.diagnosis)+sec("Key findings",j.findings)+sec("Risk &amp; prognosis",j.risk)+sec("Recommended plan",j.plan)+sec("In plain words (for the patient)",j.patient_summary)+'</div>';
+      +sec("Periodontal findings",j.periodontal_findings)+sec("Carious teeth",j.carious_teeth)+sec("Past dental work",j.past_dental_work)+sec("Recommended plan",j.recommended_plan)+'</div>';
   }
   function generateReport(){
     var btn=document.getElementById("perioGen"), rep=document.getElementById("perioReport");
@@ -1322,17 +1322,30 @@ var PERIO = (function(){
   }
   function downloadReportPDF(){
     if(!lastReport){ document.getElementById("perioReport").innerHTML='<div class="rep-card" style="color:var(--muted)">Generate the AI report first, then download.</div>'; return; }
-    if(!window.jspdf||!window.jspdf.jsPDF){ return; }
+    if(!window.jspdf||!window.jspdf.jsPDF||typeof html2canvas==="undefined"){ return; }
+    var btn=document.getElementById("perioPdf"), ot=btn.textContent; btn.disabled=true; btn.textContent="Preparing\u2026";
     var JsPDF=window.jspdf.jsPDF, pdf=new JsPDF({unit:"mm",format:"a4"});
-    var m=16, y=18, w=210-2*m;
+    var m=14, ph=297, pw=210, w=pw-2*m, y=16;
     pdf.setFont("helvetica","bold"); pdf.setFontSize(15); pdf.text("Periodontal case assessment",m,y); y+=7;
     pdf.setFont("helvetica","normal"); pdf.setFontSize(9); pdf.setTextColor(120);
-    pdf.text("SOAP Assessment and plan - "+new Date().toLocaleString()+" - AI-generated, clinician to confirm",m,y); y+=7; pdf.setTextColor(30);
-    function section(title,bodyv){ if(!bodyv) return; if(y>268){pdf.addPage();y=18;} pdf.setFont("helvetica","bold"); pdf.setFontSize(11); pdf.text(title,m,y); y+=5.5; pdf.setFont("helvetica","normal"); pdf.setFontSize(10); var lines=pdf.splitTextToSize(String(bodyv),w); lines.forEach(function(ln){ if(y>284){pdf.addPage();y=18;} pdf.text(ln,m,y); y+=5; }); y+=4; }
+    pdf.text("SOAP Assessment - "+new Date().toLocaleString()+" - AI-generated, clinician to confirm",m,y); y+=7; pdf.setTextColor(30);
+    function section(title,bodyv){ if(!bodyv) return; if(y>ph-24){pdf.addPage();y=16;} pdf.setFont("helvetica","bold"); pdf.setFontSize(11); pdf.text(title,m,y); y+=5.5; pdf.setFont("helvetica","normal"); pdf.setFontSize(10); var lines=pdf.splitTextToSize(String(bodyv),w); lines.forEach(function(ln){ if(y>ph-12){pdf.addPage();y=16;} pdf.text(ln,m,y); y+=5; }); y+=4; }
+    function addCanvas(cv,label){ var iw=w, ih=cv.height*(w/cv.width); if(ih>ph-34){ ih=ph-34; iw=cv.width*(ih/cv.height); } if(label){ if(y>ph-30){pdf.addPage();y=16;} pdf.setFont("helvetica","bold"); pdf.setFontSize(10); pdf.text(label,m,y); y+=4; } if(y+ih>ph-12){ pdf.addPage(); y=16; } pdf.addImage(cv.toDataURL("image/jpeg",0.85),"JPEG",m,y,iw,ih); y+=ih+7; }
     var st=stats();
     section("Objective summary","Teeth present: "+st.teeth+". Bleeding on probing: "+st.bopPct+"%. Sites >=4mm: "+st.p4+", >=6mm: "+st.p6+". Mean PD "+st.meanPd+" mm, mean CAL "+st.meanCal+" mm.");
-    section("Diagnosis",lastReport.diagnosis); section("Key findings",lastReport.findings); section("Risk and prognosis",lastReport.risk); section("Recommended plan",lastReport.plan); section("Patient summary",lastReport.patient_summary);
-    pdf.save("perio-assessment.pdf");
+    var opt={scale:2,backgroundColor:"#ffffff"};
+    html2canvas(document.getElementById("perioContour"),opt).then(function(c1){
+      addCanvas(c1,"Contour");
+      return html2canvas(document.getElementById("perioDensity"),opt);
+    }).then(function(c2){
+      addCanvas(c2,"Postcard");
+      section("Periodontal findings",lastReport.periodontal_findings);
+      section("Carious teeth",lastReport.carious_teeth);
+      section("Past dental work",lastReport.past_dental_work);
+      section("Recommended plan",lastReport.recommended_plan);
+      pdf.save("perio-assessment.pdf");
+      btn.disabled=false; btn.textContent=ot;
+    }).catch(function(e){ btn.disabled=false; btn.textContent=ot; });
   }
   function init(){
     if(!document.getElementById("perioContour")) return;
