@@ -1,4 +1,4 @@
-// Vercel serverless function — generates a periodontal case assessment (SOAP: Assessment) from chart data via OpenAI.
+// Vercel serverless function — structured periodontal case assessment (SOAP Assessment) from chart data via OpenAI.
 // Requires env var OPENAI_API_KEY.
 
 module.exports = async (req, res) => {
@@ -15,15 +15,14 @@ module.exports = async (req, res) => {
     const key = process.env.OPENAI_API_KEY;
     if (!key) return res.status(500).json({ error: "Server AI key not configured" });
 
-    const system = "You are a periodontist writing the ASSESSMENT (and a brief plan) of a SOAP note from periodontal charting data. "
+    const system = "You are a periodontist writing a structured periodontal case assessment (the Assessment section of a SOAP note) from charting data. "
       + "Return ONLY JSON with these string fields: "
-      + '{"diagnosis":"","findings":"","risk":"","plan":"","patient_summary":""}. '
-      + "diagnosis: the periodontal diagnosis using the 2017 AAP/EFP classification with stage (I-IV) and grade (A-C) and a one-line rationale. "
-      + "findings: a concise summary of the key objective findings (bleeding %, number and distribution of deep pockets, attachment loss, notable teeth, caries and restorations). "
-      + "risk: risk factors evident from the data and the overall prognosis. "
-      + "plan: a short recommended periodontal treatment sequence and a recall interval. "
-      + "patient_summary: 2-3 warm, plain-language sentences a patient could read. "
-      + "Be concise and clinical. This is decision support for the treating clinician to review and confirm. Do not invent findings not implied by the input.";
+      + '{"periodontal_findings":"","carious_teeth":"","past_dental_work":"","recommended_plan":""}. '
+      + "periodontal_findings: a concise clinical summary of the periodontal status — the bleeding-on-probing percentage, where the deep pockets are (name teeth/sites), areas of recession and attachment loss, and the general distribution/severity. "
+      + "carious_teeth: list every tooth that has caries and the affected surfaces. If none, write 'No caries recorded.' "
+      + "past_dental_work: list the existing restorative work per tooth — crowns, inlays, onlays and fillings (by class), plus any implants and missing teeth. If none, write 'None recorded.' "
+      + "recommended_plan: a short recommended periodontal treatment sequence and a recall interval. "
+      + "Do NOT include a diagnosis. Be concise and clinical. This is decision support for the treating clinician to review and confirm. Do not invent findings not implied by the input.";
 
     const r = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
