@@ -10,8 +10,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
-  :root{
+      :root{
     --teal:#0E7C7B; --teal-700:#0b605f; --teal-900:#083e3d;
+    --accent:#14b8a6;
     --mint:#e3f1ee; --mint-2:#eef7f4;
     --ink:#132029; --ink-2:#3a4a55; --muted:#6b7b87;
     --bg:#f3f6f4; --card:#ffffff; --line:#e7edea;
@@ -44,11 +45,11 @@
   header.site::after{content:"";position:absolute;right:-80px;top:-90px;width:280px;height:280px;border-radius:50%;background:rgba(255,255,255,.06)}
   .brandrow{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;position:relative;z-index:1}
   .brand{display:flex;align-items:center;gap:13px}
-  .logo{width:46px;height:46px;border-radius:13px;background:rgba(255,255,255,.16);display:grid;place-items:center;font-weight:800;font-size:18px;letter-spacing:-.5px;border:1px solid rgba(255,255,255,.28);font-family:'Plus Jakarta Sans',sans-serif}
+  .logo{width:46px;height:46px;border-radius:10px;background:rgba(255,255,255,.16);display:grid;place-items:center;font-weight:800;font-size:18px;letter-spacing:-.5px;border:1px solid rgba(255,255,255,.28);font-family:'Plus Jakarta Sans',sans-serif}
   .brand h1{font-size:19px;margin:0;font-weight:800;letter-spacing:-.3px}
   .brand p{margin:2px 0 0;font-size:12.5px;opacity:.82;font-weight:400}
-  .langtoggle{display:flex;background:rgba(255,255,255,.14);border-radius:11px;padding:3px;border:1px solid rgba(255,255,255,.22)}
-  .langtoggle button{border:0;background:transparent;color:#fff;font-family:inherit;font-size:13px;font-weight:600;padding:7px 15px;border-radius:8px;cursor:pointer;opacity:.72;transition:.15s}
+  .langtoggle{display:flex;background:rgba(255,255,255,.14);border-radius:10px;padding:3px;border:1px solid rgba(255,255,255,.22)}
+  .langtoggle button{border:0;background:transparent;color:#fff;font-family:inherit;font-size:13px;font-weight:600;padding:7px 15px;border-radius:10px;cursor:pointer;opacity:.72;transition:.15s}
   .langtoggle button.active{background:#fff;color:var(--teal-900);opacity:1}
   .herotag{position:relative;z-index:1;margin:20px 0 0;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:23px;letter-spacing:-.5px;max-width:560px;line-height:1.25}
   .herotag span{color:#bff0e7}
@@ -58,13 +59,13 @@
   nav.tabs{display:flex;gap:6px;overflow-x:auto;padding:9px 0}
   nav.tabs button{
     border:0;background:transparent;color:var(--muted);font-family:'Plus Jakarta Sans',sans-serif;
-    font-size:13.5px;font-weight:700;padding:9px 15px;cursor:pointer;white-space:nowrap;border-radius:11px;
+    font-size:13.5px;font-weight:700;padding:9px 15px;cursor:pointer;white-space:nowrap;border-radius:10px;
     display:inline-flex;align-items:center;gap:8px;transition:.15s;
   }
   nav.tabs button svg{width:16px;height:16px}
   nav.tabs button:hover{background:var(--mint-2);color:var(--teal-700)}
   nav.tabs button.active{background:var(--teal);color:#fff}
-  nav.tabs button .soon{font-size:9.5px;font-weight:800;background:rgba(0,0,0,.08);padding:2px 6px;border-radius:20px;letter-spacing:.4px}
+  nav.tabs button .soon{font-size:9.5px;font-weight:800;background:rgba(0,0,0,.08);padding:2px 6px;border-radius:10px;letter-spacing:.4px}
   nav.tabs button.active .soon{background:rgba(255,255,255,.25)}
 
   main{padding:26px 0 64px}
@@ -75,7 +76,7 @@
   .lead{font-size:15.5px;color:var(--ink-2);max-width:640px;margin:2px 0 20px}
   .lead b{color:var(--ink);font-weight:600}
 
-  .disclaimer{background:#fffaf0;border:1px solid #f6e0b0;color:#8a5a10;border-radius:14px;padding:13px 16px;font-size:13px;margin-bottom:24px;display:flex;gap:11px;align-items:flex-start}
+  .disclaimer{background:#fffaf0;border:1px solid #f6e0b0;color:#8a5a10;border-radius:10px;padding:13px 16px;font-size:13px;margin-bottom:24px;display:flex;gap:11px;align-items:flex-start}
   .disclaimer svg{flex-shrink:0;margin-top:1px;color:#c98a1e}
   .disclaimer b{color:#6f460a}
 
@@ -83,11 +84,11 @@
 
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:13px}
   .proc-card{
-    background:var(--card);border:1px solid var(--line);border-radius:16px;padding:17px 17px 16px;cursor:pointer;
+    background:var(--card);border:1px solid var(--line);border-radius:10px;padding:17px 17px 16px;cursor:pointer;
     text-align:left;font-family:inherit;transition:.18s;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;gap:2px;position:relative;
   }
   .proc-card:hover{border-color:transparent;box-shadow:var(--shadow);transform:translateY(-3px)}
-  .proc-card .badge{width:44px;height:44px;border-radius:13px;background:var(--mint);color:var(--teal);display:grid;place-items:center;margin-bottom:11px}
+  .proc-card .badge{width:44px;height:44px;border-radius:10px;background:var(--mint);color:var(--teal);display:grid;place-items:center;margin-bottom:11px}
   .proc-card .badge svg{width:25px;height:25px}
   .proc-card .nm{font-weight:700;font-size:15px;color:var(--ink);font-family:'Plus Jakarta Sans',sans-serif}
   .proc-card .sub{font-size:12.5px;color:var(--muted);margin-top:1px}
@@ -99,7 +100,7 @@
   .back{background:none;border:0;color:var(--teal-700);font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:13.5px;cursor:pointer;padding:6px 0;margin-bottom:10px;display:inline-flex;align-items:center;gap:6px}
   .back:hover{color:var(--teal-900)}
   .proc-head{display:flex;align-items:center;gap:14px;margin:2px 0 22px}
-  .proc-head .badge{width:52px;height:52px;border-radius:15px;background:var(--mint);color:var(--teal);display:grid;place-items:center;flex-shrink:0}
+  .proc-head .badge{width:52px;height:52px;border-radius:10px;background:var(--mint);color:var(--teal);display:grid;place-items:center;flex-shrink:0}
   .proc-head .badge svg{width:29px;height:29px}
   .proc-title{font-size:25px;font-weight:800;letter-spacing:-.5px;margin:0}
 
@@ -110,7 +111,7 @@
   .infocard ul{margin:2px 0 0;padding-left:6px;list-style:none}
   .infocard li{position:relative;padding-left:20px;margin-bottom:8px}
   .infocard li::before{content:"";position:absolute;left:2px;top:9px;width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.5}
-  .tag{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;flex-shrink:0}
+  .tag{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;flex-shrink:0}
   .tag svg{width:17px;height:17px}
   /* tinted variants */
   .v-what .tag{background:var(--b-what);color:var(--c-what)} .v-what h3{color:var(--c-what)} .v-what li{color:var(--c-what)}
@@ -128,38 +129,38 @@
   .check h3{margin:0 0 3px;font-size:17px;font-family:'Plus Jakarta Sans',sans-serif}
   .check .hint{font-size:13px;color:var(--muted);margin:0 0 16px}
   .prog{display:flex;align-items:center;gap:12px;margin-bottom:16px}
-  .prog .track{flex:1;height:8px;border-radius:99px;background:var(--mint);overflow:hidden}
-  .prog .fill{height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--teal),#18a39c);transition:width .3s ease}
+  .prog .track{flex:1;height:8px;border-radius:10px;background:var(--mint);overflow:hidden}
+  .prog .fill{height:100%;width:0;border-radius:10px;background:linear-gradient(90deg,var(--teal),#18a39c);transition:width .3s ease}
   .prog .ptxt{font-size:12.5px;font-weight:700;color:var(--teal-700);font-family:'Plus Jakarta Sans',sans-serif;white-space:nowrap}
-  .checkitem{display:flex;gap:12px;align-items:flex-start;padding:12px 13px;border:1px solid var(--line);border-radius:12px;margin-bottom:9px;cursor:pointer;transition:.14s}
+  .checkitem{display:flex;gap:12px;align-items:flex-start;padding:12px 13px;border:1px solid var(--line);border-radius:10px;margin-bottom:9px;cursor:pointer;transition:.14s}
   .checkitem:hover{background:var(--mint-2)}
-  .checkitem.done{background:var(--mint-2);border-color:#bfe4dd}
+  .checkitem.done{background:var(--mint-2);border-color:#cfe6e0}
   .checkitem input{margin-top:2px;width:18px;height:18px;accent-color:var(--teal);flex-shrink:0}
   .checkitem span{font-size:14px}
-  .qbox{width:100%;margin-top:14px;border:1px solid var(--line);border-radius:12px;padding:12px 13px;font-family:inherit;font-size:14px;resize:vertical;min-height:70px;background:#fcfdfd}
+  .qbox{width:100%;margin-top:14px;border:1px solid var(--line);border-radius:10px;padding:12px 13px;font-family:inherit;font-size:14px;resize:vertical;min-height:70px;background:#fcfdfd}
   .qbox:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(14,124,123,.13)}
-  .summary{margin-top:16px;padding:16px 18px;border-radius:14px;background:linear-gradient(120deg,var(--mint-2),var(--mint));border:1px solid #bfe4dd;font-size:14px;display:none;align-items:flex-start;gap:12px}
+  .summary{margin-top:16px;padding:16px 18px;border-radius:10px;background:linear-gradient(120deg,var(--mint-2),var(--mint));border:1px solid #cfe6e0;font-size:14px;display:none;align-items:flex-start;gap:12px}
   .summary.show{display:flex;animation:fade .3s}
   .summary svg{flex-shrink:0;color:var(--teal);margin-top:1px}
   .summary b{color:var(--teal-900)}
 
   .soon-panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:52px 30px;text-align:center;box-shadow:var(--shadow-sm)}
-  .soon-panel .ic{width:64px;height:64px;border-radius:18px;background:var(--mint);color:var(--teal);display:grid;place-items:center;margin:0 auto 16px}
+  .soon-panel .ic{width:64px;height:64px;border-radius:10px;background:var(--mint);color:var(--teal);display:grid;place-items:center;margin:0 auto 16px}
   .soon-panel .ic svg{width:34px;height:34px}
   .soon-panel h2{margin:0 0 8px;font-size:21px}
   .soon-panel p{color:var(--muted);font-size:14.5px;max-width:470px;margin:0 auto;line-height:1.6}
   .roadmap{display:flex;gap:9px;justify-content:center;flex-wrap:wrap;margin-top:22px}
-  .chip{background:var(--bg);border:1px solid var(--line);border-radius:99px;padding:7px 14px;font-size:12.5px;font-weight:600;color:var(--ink-2)}
+  .chip{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:7px 14px;font-size:12.5px;font-weight:600;color:var(--ink-2)}
 
   footer{border-top:1px solid var(--line);padding:26px 0;font-size:12.5px;color:var(--muted);text-align:center;line-height:1.6}
   .hidden{display:none!important}
   @media(max-width:560px){.herotag{font-size:20px}.proc-title{font-size:22px}.brand p{display:none}.grid{grid-template-columns:1fr 1fr}}
   @media(max-width:400px){.grid{grid-template-columns:1fr}}
-  .langpick{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 20px;padding:14px 16px;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-sm)}
+  .langpick{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 20px;padding:14px 16px;background:var(--card);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow-sm)}
   .langpick .lbl{font-family:'Plus Jakarta Sans','Noto Sans Devanagari','Noto Sans Gurmukhi',sans-serif;font-weight:700;font-size:13.5px;color:var(--ink);display:flex;align-items:center;gap:9px}
   .langpick .lbl svg{width:18px;height:18px;color:var(--teal)}
   .langpick .selectwrap{position:relative;margin-left:auto}
-  .langpick select{appearance:none;-webkit-appearance:none;font-family:'Inter','Noto Sans Devanagari','Noto Sans Gurmukhi',sans-serif;font-size:14px;font-weight:600;color:var(--ink);background:var(--mint-2);border:1px solid #cfe6e0;border-radius:10px;padding:9px 40px 9px 15px;cursor:pointer}
+  .langpick select{appearance:none;-webkit-appearance:none;font-family:'Plus Jakarta Sans','Noto Sans Devanagari','Noto Sans Gurmukhi',sans-serif;font-size:14px;font-weight:600;color:var(--ink);background:var(--mint-2);border:1px solid #cfe6e0;border-radius:10px;padding:9px 40px 9px 15px;cursor:pointer}
   .langpick select:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(14,124,123,.13)}
   .langpick .selectwrap::after{content:"";position:absolute;right:15px;top:50%;width:8px;height:8px;border-right:2px solid var(--teal-700);border-bottom:2px solid var(--teal-700);transform:translateY(-70%) rotate(45deg);pointer-events:none}
   .signcard{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;margin-top:16px}
@@ -170,33 +171,215 @@
   .field input:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(14,124,123,.13)}
   .field .hint{margin:0 0 8px}
   .sigwrap{position:relative}
-  .sigpad{width:100%;height:180px;border:1.5px dashed #cfe0dc;border-radius:12px;background:#fbfdfc;touch-action:none;display:block;cursor:crosshair}
+  .sigpad{width:100%;height:180px;border:1.5px dashed #cfe6e0;border-radius:10px;background:#fbfdfc;touch-action:none;display:block;cursor:crosshair}
   .sigpad.signed{border-style:solid;border-color:var(--accent)}
   .sigrow{display:flex;justify-content:flex-end;margin-top:8px}
-  .clearbtn{background:none;border:1px solid var(--line);border-radius:9px;padding:7px 14px;font-family:inherit;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer}
+  .clearbtn{background:none;border:1px solid var(--line);border-radius:10px;padding:7px 14px;font-family:inherit;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer}
   .clearbtn:hover{background:var(--mint-2);color:var(--teal-700)}
-  .submitbtn{width:100%;margin-top:18px;border:0;border-radius:12px;padding:15px;font-family:'Plus Jakarta Sans','Noto Sans Devanagari','Noto Sans Gurmukhi',sans-serif;font-size:16px;font-weight:800;color:#fff;background:var(--teal);cursor:pointer;transition:.15s}
+  .submitbtn{width:100%;margin-top:18px;border:0;border-radius:10px;padding:15px;font-family:'Plus Jakarta Sans','Noto Sans Devanagari','Noto Sans Gurmukhi',sans-serif;font-size:16px;font-weight:800;color:#fff;background:var(--teal);cursor:pointer;transition:.15s}
   .submitbtn:disabled{background:#b9cdca;cursor:not-allowed}
   .submitbtn:not(:disabled):hover{background:var(--teal-700)}
   .subnote{text-align:center;font-size:12px;color:var(--muted);margin-top:10px}
   .gatehint{font-size:12.5px;color:var(--risk);margin-top:9px;text-align:center;display:none}
   .gatehint.show{display:block}
-  .donecard{background:linear-gradient(120deg,var(--mint-2),var(--mint));border:1px solid #bfe4dd;border-radius:var(--radius);padding:36px 24px;text-align:center;display:none;margin-top:16px}
+  .donecard{background:linear-gradient(120deg,var(--mint-2),var(--mint));border:1px solid #cfe6e0;border-radius:var(--radius);padding:36px 24px;text-align:center;display:none;margin-top:16px}
   .donecard.show{display:block;animation:fade .3s}
   .donecard .big{width:60px;height:60px;border-radius:50%;background:var(--teal);color:#fff;display:grid;place-items:center;margin:0 auto 14px}
   .donecard .big svg{width:32px;height:32px}
   .donecard h3{margin:0 0 6px;font-size:20px}
   .donecard p{color:var(--ink-2);font-size:14.5px;margin:0}
-  .qrecap{background:#fbfaf3;border:1px solid #f0e6c8;border-radius:12px;padding:13px 15px;margin-bottom:16px}
+  .qrecap{background:#fbfaf3;border:1px solid #f0e6c8;border-radius:10px;padding:13px 15px;margin-bottom:16px}
   .qrecap h4{margin:0 0 7px;font-size:13.5px;font-weight:700;color:#8a5a10;font-family:'Plus Jakarta Sans','Noto Sans Devanagari','Noto Sans Gurmukhi',sans-serif}
   .qrecap ul{margin:0;padding-left:18px}
   .qrecap li{font-size:13.5px;color:#5a4a20;margin-bottom:4px}
   .qrecap .note{margin:9px 0 0;font-size:12px;color:#8a7a45}
-  #pdfDoc{position:fixed;left:-99999px;top:0;width:720px;background:#fff;color:#14212b;font-family:'Inter','Noto Sans Devanagari','Noto Sans Gurmukhi',sans-serif;padding:44px 44px 52px}
-  .dlbtn{width:100%;margin-top:10px;border:1.5px solid var(--teal);border-radius:12px;padding:13px;font-family:'Plus Jakarta Sans','Noto Sans Devanagari','Noto Sans Gurmukhi',sans-serif;font-size:15px;font-weight:700;color:var(--teal-700);background:#fff;cursor:pointer;transition:.15s}
-  .dlbtn:disabled{border-color:#cfe0dc;color:#a9b8b5;cursor:not-allowed}
+  #pdfDoc{position:fixed;left:-99999px;top:0;width:720px;background:#fff;color:#14212b;font-family:'Plus Jakarta Sans','Noto Sans Devanagari','Noto Sans Gurmukhi',sans-serif;padding:44px 44px 52px}
+  .dlbtn{width:100%;margin-top:10px;border:1.5px solid var(--teal);border-radius:10px;padding:13px;font-family:'Plus Jakarta Sans','Noto Sans Devanagari','Noto Sans Gurmukhi',sans-serif;font-size:15px;font-weight:700;color:var(--teal-700);background:#fff;cursor:pointer;transition:.15s}
+  .dlbtn:disabled{border-color:#cfe6e0;color:#a9b8b5;cursor:not-allowed}
   .dlbtn:not(:disabled):hover{background:var(--mint-2)}
   .btncap{text-align:center;font-size:12px;color:var(--muted);margin:6px 0 0}
+  .perio-archlabel{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:12px;color:var(--muted);margin:16px 0 6px;text-transform:uppercase;letter-spacing:.6px}
+  .perio-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:4px 0 14px}
+  .perio-btns{display:flex;gap:8px;flex-wrap:wrap}
+  .pbtn{border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 14px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:13px;color:var(--teal-700);cursor:pointer;transition:.14s}
+  .pbtn:hover{background:var(--mint-2)}
+  .pbtn.primary{background:var(--teal);color:#fff;border-color:var(--teal)}
+  .pbtn.primary:hover{background:var(--teal-700)}
+  .perio-tip{font-size:12px;color:var(--muted);max-width:340px}
+  .perio-summary{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+  .pstat{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;min-width:92px;box-shadow:var(--shadow-sm)}
+  .pstat .n{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:20px;color:var(--ink);line-height:1}
+  .pstat .l{font-size:10.5px;color:var(--muted);margin-top:4px;text-transform:uppercase;letter-spacing:.4px}
+  .perio-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:#fff;padding:10px}
+  .ptable{border-collapse:separate;border-spacing:1px;min-width:max-content}
+  .ptable td,.ptable th{padding:0;text-align:center;vertical-align:middle}
+  .ptable td.lab,.ptable th.lab{position:sticky;left:0;background:#fff;text-align:left;font-size:10px;color:var(--muted);white-space:nowrap;padding-right:10px;font-weight:700;z-index:2;font-family:'Plus Jakarta Sans',sans-serif}
+  .ptn{min-width:44px;height:24px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:12px;color:var(--teal-900);cursor:pointer;background:var(--mint-2);border:0;border-radius:10px}
+  .ptn:hover{background:#d5ebe6}
+  .ptn.missing{background:#eee;color:#aaa;text-decoration:line-through}
+  .ptn.implant{background:#e7e0fb;color:#5b3ea8}
+  .pcell input{width:15px;height:22px;border:1px solid var(--line);border-radius:10px;text-align:center;font-size:11px;padding:0;background:#fff;color:#26333c;-moz-appearance:textfield}
+  .pcell input::-webkit-outer-spin-button,.pcell input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+  .pcell input:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 2px rgba(14,124,123,.22)}
+  .pcell input.amber{background:#fdeccf;border-color:#e6b866}
+  .pcell input.red{background:#fbdcd0;border-color:#dd8a6a;color:#a5300a;font-weight:700}
+  .pcell input.off{background:#f4f4f4;border-color:#eee;pointer-events:none;color:#ccc}
+  .bdot{width:12px;height:12px;border-radius:50%;border:1px solid #d7c7c0;background:#fff;cursor:pointer;padding:0}
+  .bdot.on{background:#e5352b;border-color:#e5352b}
+  .bdot.off{opacity:.25;pointer-events:none}
+  .pgap td{height:7px}
+  .perio-legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;font-size:12px;color:var(--muted);align-items:center}
+  .perio-legend .sw{display:inline-block;width:13px;height:13px;border-radius:10px;vertical-align:middle;margin-right:5px;border:1px solid var(--line)}
+  .pmenu{position:absolute;z-index:100;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);padding:5px;min-width:142px}
+  .pmenu-item{display:flex;align-items:center;gap:9px;width:100%;border:0;background:none;padding:9px 11px;border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;color:var(--ink);cursor:pointer;text-align:left}
+  .pmenu-item:hover{background:var(--mint-2)}
+  .pmenu-item.sel{color:var(--teal-700);background:var(--mint-2)}
+  .ptn svg{vertical-align:middle;margin-right:3px}
+  .pbadges{display:flex;flex-wrap:wrap;gap:2px;justify-content:center;margin-top:3px;max-width:66px;margin-left:auto;margin-right:auto}
+  .pchip{font-family:'Plus Jakarta Sans',sans-serif;font-size:8px;font-weight:700;background:#eaf3f1;color:#0b605f;border:1px solid #cfe6e0;border-radius:10px;padding:0 3px;line-height:14px;white-space:nowrap}
+  .pmenu{position:absolute;z-index:100;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);padding:11px;width:224px;max-height:360px;overflow:auto}
+  .pmenu-sec{font-family:'Plus Jakarta Sans',sans-serif;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:6px 2px 6px}
+  .pmenu-row{display:flex;gap:5px;margin-bottom:4px}
+  .pmenu-st{flex:1;border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 4px;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:600;color:var(--ink);cursor:pointer}
+  .pmenu-st.sel{background:var(--teal);color:#fff;border-color:var(--teal)}
+  .pmenu-checks{display:flex;flex-direction:column;gap:2px}
+  .pmenu-ck{display:flex;align-items:center;gap:9px;border:0;background:none;padding:7px 8px;border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-size:12.5px;color:var(--ink);cursor:pointer;text-align:left}
+  .pmenu-ck:hover{background:var(--mint-2)}
+  .pmenu-ck .ck{width:16px;height:16px;border:1.5px solid var(--line);border-radius:10px;flex-shrink:0;display:inline-block;position:relative}
+  .pmenu-ck.on .ck{background:var(--teal);border-color:var(--teal)}
+  .pmenu-ck.on .ck::after{content:"";position:absolute;left:5px;top:1px;width:4px;height:8px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+  .pmenu-ck.dis{opacity:.4;cursor:not-allowed}
+  .pmenu-done{width:100%;margin-top:9px;border:0;background:var(--mint-2);color:var(--teal-700);border-radius:10px;padding:9px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:13px;cursor:pointer}
+  .pmenu-done:hover{background:#d5ebe6}
+  .perio-strip{display:flex;gap:4px;overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:#fff;padding:8px;margin-bottom:2px}
+  .ptcell{flex:0 0 auto;width:48px;border:1px solid transparent;border-radius:10px;padding:5px 3px 4px;cursor:pointer;background:none;text-align:center;font-family:inherit}
+  .ptcell:hover{background:var(--mint-2);border-color:#cfe6e0}
+  .ptcell.sel{background:var(--mint);border-color:var(--accent)}
+  .ptcell .tn{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:12px;color:var(--teal-900);display:flex;align-items:center;justify-content:center;gap:1px}
+  .ptcell.missing .tn{color:#b3b3b3;text-decoration:line-through}
+  .ptcell.implant .tn{color:#5b3ea8}
+  .spark{display:flex;align-items:flex-end;justify-content:center;gap:2px;height:26px;margin:4px 0 3px}
+  .sbar{width:4px;border-radius:1px}
+  .tind{display:flex;align-items:center;justify-content:center;gap:3px;height:14px}
+  .tind .bdotmini{width:6px;height:6px;border-radius:50%;background:#e5352b}
+  .perio-drawer{margin-top:14px;background:var(--card);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);padding:18px 20px}
+  .dhead{display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap}
+  .dhead .dnum{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:19px;display:flex;align-items:center;gap:3px}
+  .ddeep{font-size:12.5px;color:var(--muted)}
+  .dnav{margin-left:auto;display:flex;gap:6px}
+  .dnav button{border:1px solid var(--line);background:#fff;border-radius:10px;padding:7px 12px;font-size:13px;font-weight:600;cursor:pointer;color:var(--teal-700);font-family:'Plus Jakarta Sans',sans-serif}
+  .dnav button:hover{background:var(--mint-2)}
+  .dsec{font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:16px 0 8px}
+  .dstat{display:flex;gap:6px}
+  .dstat button{flex:1;border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:13px;color:var(--ink);cursor:pointer}
+  .dstat button.sel{background:var(--teal);color:#fff;border-color:var(--teal)}
+  .drests{display:flex;flex-wrap:wrap;gap:6px}
+  .drest{border:1px solid var(--line);background:#fff;border-radius:10px;padding:7px 13px;font-size:12.5px;font-weight:600;color:var(--ink);cursor:pointer}
+  .drest.on{background:var(--mint);border-color:var(--accent);color:var(--teal-900)}
+  .drow{display:flex;align-items:center;gap:14px;margin-bottom:9px;flex-wrap:wrap}
+  .drow .rl{width:80px;font-size:12.5px;color:var(--muted);font-weight:600}
+  .dgroup{display:flex;gap:5px;align-items:center}
+  .dgroup .gl{font-size:10px;color:var(--muted);font-weight:700;width:12px}
+  .dinput{width:34px;height:34px;border:1px solid var(--line);border-radius:10px;text-align:center;font-size:14px;font-family:inherit;background:#fcfdfd;color:#26333c;-moz-appearance:textfield}
+  .dinput::-webkit-outer-spin-button,.dinput::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+  .dinput:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(14,124,123,.15)}
+  .dinput.amber{background:#fdeccf;border-color:#e6b866}
+  .dinput.red{background:#fbdcd0;border-color:#dd8a6a;color:#a5300a;font-weight:700}
+  .dbop{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  .dbop.on{background:#e5352b;border-color:#e5352b}
+  .dbop.on::after{content:"";width:9px;height:9px;border-radius:50%;background:#fff}
+  .dmiss{color:var(--muted);font-size:14px;padding:18px 0;text-align:center}
+  .contour-arch{margin-bottom:16px}
+  .contour-arch .al{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:11px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin:0 0 4px}
+  .bandlab{font-size:10px;color:var(--muted);font-weight:600;margin:3px 0 1px}
+  .toothrow{display:flex}
+  .trooth{width:44px;flex:0 0 auto;text-align:center;cursor:pointer;padding:4px 0;border-radius:8px}
+  .trooth:hover{background:var(--mint-2)}
+  .trooth .tnn{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:11px;color:var(--teal-900)}
+  .trooth.missing .tnn{color:#b3b3b3;text-decoration:line-through}
+  .trooth.implant .tnn{color:#5b3ea8}
+  .trooth .tchips{display:flex;flex-wrap:wrap;gap:1px;justify-content:center;margin-top:2px;min-height:2px}
+  .tchip{font-size:7px;font-weight:700;background:var(--mint);color:var(--teal-900);border-radius:3px;padding:0 2px;line-height:11px}
+  .siteedit{position:absolute;z-index:120;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:13px;width:214px}
+  .siteedit h5{margin:0 0 10px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700}
+  .se-row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+  .se-row label{font-size:12px;color:var(--muted);width:64px}
+  .se-row input{width:46px;height:34px;border:1px solid var(--line);border-radius:8px;text-align:center;font-family:inherit;font-size:14px;background:#fcfdfd}
+  .se-row input:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(14,124,123,.15)}
+  .se-bop{border:1px solid var(--line);border-radius:8px;padding:7px 14px;font-size:12.5px;font-weight:600;cursor:pointer;background:#fff;color:var(--ink);font-family:inherit}
+  .se-bop.on{background:#e5352b;color:#fff;border-color:#e5352b}
+  .se-nav{display:flex;justify-content:space-between;margin-top:6px}
+  .se-nav button{border:1px solid var(--line);border-radius:8px;padding:6px 12px;font-size:12.5px;font-weight:600;cursor:pointer;background:#fff;color:var(--teal-700);font-family:'Plus Jakarta Sans',sans-serif}
+  .se-nav button:hover{background:var(--mint-2)}
+  .tmenu{position:absolute;z-index:120;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:11px;width:224px;max-height:340px;overflow:auto}
+  .tmenu .ts{font-family:'Plus Jakarta Sans',sans-serif;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:6px 2px 6px}
+  .tmenu .trow{display:flex;gap:5px;margin-bottom:4px}
+  .tmenu .tst{flex:1;border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px 4px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:12px;color:var(--ink);cursor:pointer}
+  .tmenu .tst.sel{background:var(--teal);color:#fff;border-color:var(--teal)}
+  .tmenu .tck{display:flex;align-items:center;gap:9px;border:0;background:none;padding:7px 8px;border-radius:7px;font-size:12.5px;color:var(--ink);cursor:pointer;text-align:left;width:100%}
+  .tmenu .tck:hover{background:var(--mint-2)}
+  .tmenu .tck .b{width:16px;height:16px;border:1.5px solid var(--line);border-radius:4px;flex-shrink:0;position:relative}
+  .tmenu .tck.on .b{background:var(--teal);border-color:var(--teal)}
+  .tmenu .tck.on .b::after{content:"";position:absolute;left:5px;top:1px;width:4px;height:8px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+  .tmenu .tck.dis{opacity:.4;cursor:not-allowed}
+  .densflex{display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap}
+  .dens-arch{margin-bottom:12px}
+  .dens-arch .al{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:11px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin:0 0 5px}
+  .dens-row{display:flex;gap:2px}
+  .dtooth{width:28px;display:flex;flex-direction:column;align-items:center;gap:3px}
+  .dpips{display:flex;gap:1.5px}
+  .dpip{width:6px;height:6px;border-radius:2px}
+  .dpip.bleed{box-shadow:inset 0 0 0 1.5px #e5352b}
+  .dtn{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:10px;color:var(--teal-900)}
+  .heatleg{display:flex;align-items:center;gap:7px;margin-top:10px;font-size:11px;color:var(--muted)}
+  .heatleg .hs{width:13px;height:13px;border-radius:3px}
+  .worst{min-width:210px;border-left:2px solid var(--line);padding-left:18px}
+  .worst h4{margin:0 0 8px;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+  .wrow{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--line);font-size:12.5px}
+  .wrow .wf{font-weight:800;width:26px;font-family:'Plus Jakarta Sans',sans-serif}
+  .wrow .wpd{margin-left:auto;font-weight:800;font-family:'Plus Jakarta Sans',sans-serif}
+  .tglyph{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);width:40px;height:40px;margin:0 auto;border:1px solid var(--line);background:#fff}
+  .tglyph.miss{border-style:dashed;opacity:.5}
+  .tglyph>div{min-width:0}
+  .gcorner{background:#fff}
+  .gsurf{cursor:pointer;border:.5px solid #eaeeec;background:#fff}
+  .gsurf:hover{background:#eef5f3}
+  .gsurf.res{background:#0d7377;border-color:#0b605f}
+  .gsurf.car{background:#e5352b;border-color:#c22a22}
+  .trooth .tnn{margin-top:3px}
+  .tglyph.sm{width:24px;height:24px;margin:0}
+  .tglyph.sm.impb{border-color:#5b3ea8}
+  .contour-wrap{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap}
+  .contour-help.top{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:22px 30px;max-width:none;margin:2px 0 12px}
+  .contour-help{flex:1 1 240px;max-width:340px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:15px 17px;box-shadow:var(--shadow-sm)}
+  .contour-help h4{font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--teal-900);margin:0 0 7px}
+  .contour-help h4+ul{margin-top:0}
+  .contour-help ul{margin:0 0 14px;padding-left:16px;font-size:12.5px;color:var(--ink-2);line-height:1.5}
+  .contour-help li{margin-bottom:6px}
+  .contour-help li:last-child{margin-bottom:0}
+  .pbtn.on{background:#e5352b;color:#fff;border-color:#e5352b}
+  .voicebar{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-sm);padding:13px 16px;margin-bottom:16px}
+  .vb-row{display:flex;align-items:center;gap:10px}
+  .vb-dot{width:10px;height:10px;border-radius:50%;background:#e5352b;animation:vbpulse 1s infinite}
+  @keyframes vbpulse{0%,100%{opacity:1}50%{opacity:.3}}
+  .vb-target{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:14px}
+  .vb-stop{margin-left:auto;border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 14px;font-weight:600;font-size:13px;cursor:pointer;color:var(--teal-700);font-family:'Plus Jakarta Sans',sans-serif}
+  .vb-stop:hover{background:var(--mint-2)}
+  .vb-help{font-size:12px;color:var(--muted);margin-top:8px}
+  .vb-help b{color:var(--ink-2)}
+  .vb-tr{margin-top:8px;font-size:13px;color:var(--ink-2);background:var(--mint-2);border-radius:8px;padding:7px 10px;font-style:italic}
+  .pbtn.primary{background:var(--teal);color:#fff;border-color:var(--teal)}
+  .pbtn.primary:hover{background:var(--teal-700)}
+  .perio-report-bar{display:flex;gap:10px;margin:18px 0 0;flex-wrap:wrap}
+  .perio-report{margin-top:16px}
+  .rep-card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow-sm);padding:20px 22px}
+  .rep-head{display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:4px}
+  .rep-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:18px}
+  .rep-sub{font-size:12px;color:var(--muted);margin-top:2px}
+  .rep-badge{margin-left:auto;font-size:11px;font-weight:700;background:#fffbeb;color:#92400e;border:1px solid #fde68a;border-radius:20px;padding:4px 10px}
+  .rep-sec{margin-top:14px}
+  .rep-sec h4{margin:0 0 4px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;color:var(--teal-900)}
+  .rep-sec p{margin:0;font-size:14px;line-height:1.6;color:var(--ink-2)}
 </style>
 </head>
 <body class="lang-en">
@@ -311,18 +494,55 @@
       </div>
     </section>
 
-    <section class="panel" id="panel-perio">
-      <div class="soon-panel">
-        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M6 7v10M10 7v10M14 7v10M18 7v10M4 17h16"/></svg></div>
-        <h2 data-en="Perio Chart — coming next" data-hi="पेरियो चार्ट — जल्द आ रहा है" data-pa="ਪੈਰਿਓ ਚਾਰਟ — ਜਲਦੀ ਆ ਰਿਹਾ ਹੈ"></h2>
-        <p data-en="An interactive periodontal chart: fill 6 points per tooth by tap or voice, auto-flag deep pockets and bleeding, and export a clean chart — without stopping to reach for the keyboard." data-hi="एक इंटरैक्टिव पेरियोडॉन्टल चार्ट: हर दाँत के 6 बिंदु टैप या आवाज़ से भरें, गहरी पॉकेट और ब्लीडिंग अपने-आप चिह्नित करें, और साफ़ चार्ट एक्सपोर्ट करें।" data-pa="ਇੱਕ ਇੰਟਰੈਕਟਿਵ ਪੈਰਿਓਡੌਂਟਲ ਚਾਰਟ: ਹਰ ਦੰਦ ਦੇ 6 ਪੌਇੰਟ ਟੈਪ ਜਾਂ ਆਵਾਜ਼ ਨਾਲ ਭਰੋ, ਡੂੰਘੀਆਂ ਪਾਕਟਾਂ ਅਤੇ ਖ਼ੂਨ ਆਪਣੇ-ਆਪ ਨਿਸ਼ਾਨਬੱਧ ਕਰੋ, ਅਤੇ ਸਾਫ਼ ਚਾਰਟ ਐਕਸਪੋਰਟ ਕਰੋ।"></p>
-        <div class="roadmap">
-          <span class="chip">Interactive chart</span>
-          <span class="chip">Auto pocket/bleeding flags</span>
-          <span class="chip">Voice fill (stretch)</span>
-          <span class="chip">Export</span>
+                <section class="panel" id="panel-perio">
+      <p class="lead">A periodontal chart that reads like terrain. The <b>Contour</b> draws each site's pocket as a cross-section — the teal line is the pocket base, the shading is the pocket, dashed rules mark 3 and 6 mm. Click any site to record its numbers; the <b>Postcard</b> below mirrors the whole mouth, so deep pockets show up as spikes and hot pips at a glance.</p>
+      <div class="perio-bar">
+        <div class="perio-btns">
+          <button type="button" class="pbtn" id="perioNew">New chart</button>
+          <button type="button" class="pbtn" id="perioSave">Save</button>
+          <button type="button" class="pbtn" id="perioLoad">Load saved</button>
+          <button type="button" class="pbtn primary" id="perioVoice">Use AI to input</button>
+        </div>
+        <span class="perio-tip">Click a site on the contour to enter pocket, recession and bleeding. Tap the tooth number for status and restorations, or a tooth surface to mark caries.</span>
+      </div>
+      <div class="perio-summary" id="perioSummary"></div>
+      <div id="perioVoiceBar" class="voicebar" style="display:none"></div>
+      <div class="perio-archlabel">Contour — depth as a cross-section</div>
+      <div class="contour-help top">
+        <div>
+          <h4>How to fill it</h4>
+          <ul>
+            <li>Click any point on a band to record that site's pocket depth, recession and bleeding; use Prev / Next to move along.</li>
+            <li>Tap a tooth number to set its status and tick restorations (crown, inlay, onlay, fillings) — they fill the tooth square in teal.</li>
+            <li>Tap a surface of the tooth square to mark caries in red (tap again to clear).</li>
+          </ul>
+        </div>
+        <div>
+          <h4>How to read it</h4>
+          <ul>
+            <li>Teal line = pocket base, grey line = gum margin; the shading between them is the pocket.</li>
+            <li>Dashed rules = 3 mm and 6 mm — a line past the lower rule is a deep pocket.</li>
+            <li>Red dots = bleeding; the number above each site is pocket depth in mm. The postcard below mirrors it all.</li>
+          </ul>
         </div>
       </div>
+      <div class="perio-scroll"><div id="perioContour"></div></div>
+      <div class="perio-legend" style="margin-top:10px;margin-bottom:6px">
+        <span><span class="sw" style="height:3px;background:var(--ink-2)"></span>Gingival margin</span>
+        <span><span class="sw" style="height:3px;background:var(--teal)"></span>Pocket base</span>
+        <span><span class="sw" style="background:rgba(14,124,123,.16)"></span>Pocket</span>
+        <span><span class="sw" style="background:#e5352b;border-radius:50%"></span>Bleeding</span>
+        <span><span class="sw" style="background:#0d7377"></span>Restoration</span>
+        <span><span class="sw" style="background:#e5352b"></span>Caries</span>
+        <span>Dashed = 3 / 6 mm</span>
+      </div>
+      <div class="perio-archlabel">Postcard — the whole mouth at a glance</div>
+      <div class="perio-scroll"><div id="perioDensity"></div></div>
+      <div class="perio-report-bar">
+        <button type="button" class="pbtn primary" id="perioGen">Generate AI report</button>
+        <button type="button" class="pbtn" id="perioPdf">Download PDF</button>
+      </div>
+      <div id="perioReport" class="perio-report"></div>
     </section>
 
     <section class="panel" id="panel-more">
@@ -723,7 +943,7 @@ function buildPdfDom(p){
   if(p.sutures) h+=sec(t(LABELS.sutures),t(p.sutures));
   h+=sec(t(LABELS.la),ul(LA_NOTE[lang]));
   h+='<div style="margin:4px 0 13px"><div style="font-weight:700;font-size:13.5px;color:#0e7c7b;margin-bottom:3px">'+PDF_L.confirms[lang]+'</div>'+ul(CHECKS[lang])+'</div>';
-  h+='<div style="background:#f0f7f6;border:1px solid #cfe6e0;border-radius:8px;padding:11px 13px;font-size:12px;color:#26333c;margin-bottom:16px">'+PDF_ACK[lang]+'</div>';
+  h+='<div style="background:#f0f7f6;border:1px solid #cfe6e0;border-radius:10px;padding:11px 13px;font-size:12px;color:#26333c;margin-bottom:16px">'+PDF_ACK[lang]+'</div>';
   var qtext=(document.getElementById("qbox").value||"").trim();
   if(qtext){
     var qi=qtext.split(/\n+/).filter(function(x){return x.trim();});
@@ -804,6 +1024,339 @@ function downloadConsent(){
 }
 document.getElementById("downloadBtn").addEventListener("click",downloadConsent);
 /* =============== end signing =============== */
+
+
+/* ================= PERIO CHART ================= */
+var PERIO = (function(){
+  var UPPER=[18,17,16,15,14,13,12,11,21,22,23,24,25,26,27,28];
+  var LOWER=[48,47,46,45,44,43,42,41,31,32,33,34,35,36,37,38];
+  var ORDER=UPPER.concat(LOWER);
+  var REST=[
+    {code:"crown",short:"Cr",label:"Crown"},{code:"inlay",short:"In",label:"Inlay"},{code:"onlay",short:"On",label:"Onlay"},
+    {code:"f1",short:"I",label:"Class I"},{code:"f2mo",short:"II-MO",label:"Class II (MO)"},{code:"f2do",short:"II-DO",label:"Class II (DO)"},
+    {code:"f3m",short:"III-M",label:"Class III (M)"},{code:"f3d",short:"III-D",label:"Class III (D)"},{code:"f4",short:"IV",label:"Class IV"},{code:"f5",short:"V",label:"Class V"}
+  ];
+  var SHORT={}; REST.forEach(function(r){ SHORT[r.code]=r.short; });
+  var RSURF={crown:["m","d","o","b","l"],inlay:["o"],onlay:["o","b","l"],f1:["o"],f2mo:["m","o"],f2do:["d","o"],f3m:["m"],f3d:["d"],f4:["m","o"],f5:["b"]};
+  function restSet(f){ var s={}; data[f].marks.forEach(function(c){ (RSURF[c]||[]).forEach(function(su){ s[su]=true; }); }); return s; }
+  function glyphInner(f){
+    var t=data[f], rs=restSet(f);
+    var ls=quadFlip(f)?"d":"m", rsu=quadFlip(f)?"m":"d";
+    function cell(su){ var st=t.caries[su]?"car":(rs[su]?"res":""); return '<div class="gsurf '+st+'" data-surf="'+su+'"></div>'; }
+    return '<div class="gcorner"></div>'+cell("b")+'<div class="gcorner"></div>'+cell(ls)+cell("o")+cell(rsu)+'<div class="gcorner"></div>'+cell("l")+'<div class="gcorner"></div>';
+  }
+  function glyphHTML(f){ if(data[f].exist==="missing") return '<div class="tglyph miss"></div>'; return '<div class="tglyph">'+glyphInner(f)+'</div>'; }
+  var SITE=["distal","central","mesial"], SITEAB=["DB","B","MB","DP","P","MP"];
+  function quadFlip(f){ var q=Math.floor(f/10); return q===1||q===4; }
+  function siteInfo(f,idx){ var aAb=idx<3?"B":"P", aspect=idx<3?"buccal":"palatal", pos=idx%3;
+    if(pos===1) return {ab:aAb,name:aspect};
+    var md=(pos===0)?(quadFlip(f)?"distal":"mesial"):(quadFlip(f)?"mesial":"distal");
+    return {ab:(md==="distal"?"D":"M")+aAb, name:md+" "+aspect}; }
+  var TW=44, SW=14, MM=5, TOP=10, BH=TOP+12*MM+14, W=16*TW;
+  var data={};
+
+  function blankTooth(){ return {exist:"present",marks:[],caries:{m:false,d:false,o:false,b:false,l:false},pd:[null,null,null,null,null,null],rec:[0,0,0,0,0,0],bop:[false,false,false,false,false,false]}; }
+  function initData(){ data={}; ORDER.forEach(function(f){ data[f]=blankTooth(); }); }
+  function siteX(ti,j){ return ti*TW + (j+0.5)*(TW/3); }
+
+  /* ---------- CONTOUR ---------- */
+  function bandSVG(teeth,base,hi){
+    var g="";
+    [3,6].forEach(function(mm){ var y=TOP+mm*MM; g+='<line x1="0" y1="'+y+'" x2="'+W+'" y2="'+y+'" stroke="#d3ddd9" stroke-width="1" stroke-dasharray="4 4"/>'; });
+    g+='<line x1="0" y1="'+TOP+'" x2="'+W+'" y2="'+TOP+'" stroke="#eef2f0" stroke-width="1"/>';
+    for(var ti=0;ti<=16;ti++){ g+='<line x1="'+(ti*TW)+'" y1="0" x2="'+(ti*TW)+'" y2="'+BH+'" stroke="#f1f4f2" stroke-width="1"/>'; }
+    var segs=[], cur=[];
+    teeth.forEach(function(f,ti){
+      if(data[f].exist==="missing"){ if(cur.length){segs.push(cur);cur=[];} return; }
+      for(var j=0;j<3;j++){ var idx=base+j; var pd=data[f].pd[idx]; var rec=data[f].rec[idx]||0;
+        cur.push({x:siteX(ti,j), mY:TOP+rec*MM, bY:TOP+(rec+(pd==null?0:pd))*MM}); }
+    });
+    if(cur.length) segs.push(cur);
+    var poly="";
+    segs.forEach(function(seg){
+      var m=seg.map(function(p){return p.x+","+p.mY;}).join(" ");
+      var b=seg.map(function(p){return p.x+","+p.bY;}).join(" ");
+      var fp=seg.map(function(p){return p.x+","+p.mY;}).concat(seg.slice().reverse().map(function(p){return p.x+","+p.bY;})).join(" ");
+      poly+='<polygon points="'+fp+'" fill="rgba(14,124,123,0.15)"/>';
+      poly+='<polyline points="'+m+'" fill="none" stroke="#4a5560" stroke-width="1.5"/>';
+      poly+='<polyline points="'+b+'" fill="none" stroke="#0d7377" stroke-width="2"/>';
+    });
+    var extra="";
+    teeth.forEach(function(f,ti){
+      if(data[f].exist==="missing") return;
+      for(var j=0;j<3;j++){ var idx=base+j; var pd=data[f].pd[idx]; var rec=data[f].rec[idx]||0; var x=siteX(ti,j); var bY=TOP+(rec+(pd==null?0:pd))*MM;
+        if(data[f].bop[idx]) extra+='<circle cx="'+x+'" cy="'+bY+'" r="3" fill="#e5352b"/>';
+        if(pd!=null) extra+='<text x="'+x+'" y="'+(bY-5)+'" text-anchor="middle" font-size="9" font-weight="700" fill="#0b4a4c">'+pd+'</text>';
+        extra+='<rect x="'+(x-SW/2)+'" y="0" width="'+SW+'" height="'+BH+'" fill="rgba(0,0,0,0)" style="cursor:pointer" data-f="'+f+'" data-idx="'+idx+'"></rect>';
+      }
+    });
+    var hl="";
+    if(hi && hi.idx>=base && hi.idx<base+3){ var hti=teeth.indexOf(hi.f); if(hti>=0){ var hx=siteX(hti,hi.idx-base); hl='<rect x="'+(hx-SW/2)+'" y="0" width="'+SW+'" height="'+BH+'" fill="rgba(14,124,123,0.14)"></rect><circle cx="'+hx+'" cy="5" r="4" fill="#0d7377"></circle>'; } }
+    return '<svg width="'+W+'" height="'+BH+'" style="display:block">'+g+poly+hl+extra+'</svg>';
+  }
+  function toothRowHTML(teeth){
+    return '<div class="toothrow">'+teeth.map(function(f){
+      var t=data[f];
+      var imp=t.exist==="implant"?'<span style="font-size:7px;color:#5b3ea8;font-weight:700">IMP</span>':"";
+      return '<div class="trooth'+(t.exist!=="present"?" "+t.exist:"")+'" data-tooth="'+f+'">'+glyphHTML(f)+'<div class="tnn">'+f+'</div>'+imp+'</div>';
+    }).join("")+'</div>';
+  }
+  function renderContour(){
+    var host=document.getElementById("perioContour"); if(!host) return;
+    var hi=(listening?voiceCurSite():null);
+    var html="";
+    [["Upper arch",UPPER],["Lower arch",LOWER]].forEach(function(a){
+      html+='<div class="contour-arch"><div class="al">'+a[0]+'</div><div class="bandlab">Buccal</div>'+bandSVG(a[1],0,hi)+toothRowHTML(a[1])+'<div class="bandlab">Palatal</div>'+bandSVG(a[1],3,hi)+'</div>';
+    });
+    host.innerHTML=html;
+  }
+
+  /* ---------- POSTCARD (density) ---------- */
+  function heat(pd){ return pd==null?"#e6ebe9":(pd>=6?"#e5352b":pd>=4?"#EF9F27":"#1D9E75"); }
+  function pipRow(f,base){ var t=data[f], h=""; for(var j=0;j<3;j++){ var idx=base+j; var pd=t.exist==="missing"?null:t.pd[idx]; var bl=(t.bop[idx]&&t.exist!=="missing")?" bleed":""; h+='<div class="dpip'+bl+'" style="background:'+heat(pd)+'"></div>'; } return '<div class="dpips">'+h+'</div>'; }
+  function densGlyph(f){ if(data[f].exist==="missing") return '<div class="tglyph sm miss"></div>'; return '<div class="tglyph sm'+(data[f].exist==="implant"?" impb":"")+'">'+glyphInner(f)+'</div>'; }
+  function worstHTML(){
+    var arr=[]; ORDER.forEach(function(f){ var t=data[f]; if(t.exist==="missing") return; for(var i=0;i<6;i++){ if(t.pd[i]!=null) arr.push({f:f,i:i,pd:t.pd[i],bop:t.bop[i]}); } });
+    arr.sort(function(a,b){return b.pd-a.pd;}); var top=arr.slice(0,3);
+    var prows=top.map(function(w){ var col=w.pd>=6?"#a5300a":w.pd>=4?"#8a5a10":"#0b605f"; return '<div class="wrow"><span class="wf">'+w.f+'</span><span style="color:var(--muted);font-size:11px;flex:1">'+siteInfo(w.f,w.i).ab+'</span>'+(w.bop?'<span style="color:#e5352b;font-weight:700;font-size:11px">B</span>':"")+'<span class="wpd" style="color:'+col+'">'+w.pd+'</span></div>'; }).join("");
+    if(!prows) prows='<div style="color:var(--muted);font-size:12px;padding:6px 0">No pockets recorded.</div>';
+    var SL={m:"M",d:"D",o:"O",b:"B",l:"L"};
+    var car=ORDER.filter(function(f){ var t=data[f]; if(t.exist==="missing") return false; return ["m","d","o","b","l"].some(function(su){return t.caries[su];}); });
+    var crows=car.map(function(f){ var su=["m","d","o","b","l"].filter(function(x){return data[f].caries[x];}).map(function(x){return SL[x];}).join(""); return '<div class="wrow"><span class="wf">'+f+'</span><span style="color:var(--muted);font-size:11px;flex:1">surfaces '+su+'</span><span style="color:#c22a22;font-weight:700">\u25CF</span></div>'; }).join("");
+    if(!crows) crows='<div style="color:var(--muted);font-size:12px;padding:6px 0">None marked.</div>';
+    return '<div class="worst"><h4>3 deepest pockets</h4>'+prows+'<h4 style="margin-top:16px">Carious teeth</h4>'+crows+'</div>';
+  }
+  function renderDensity(){
+    var host=document.getElementById("perioDensity"); if(!host) return;
+    var left="";
+    [["Upper",UPPER],["Lower",LOWER]].forEach(function(a){
+      left+='<div class="dens-arch"><div class="al">'+a[0]+'</div><div class="dens-row">'+a[1].map(function(f){
+        return '<div class="dtooth">'+pipRow(f,0)+densGlyph(f)+pipRow(f,3)+'<div class="dtn">'+f+'</div></div>';
+      }).join("")+'</div></div>';
+    });
+    left+='<div class="heatleg"><span style="font-weight:600">Depth</span><span class="hs" style="background:#1D9E75"></span>1–3<span class="hs" style="background:#EF9F27"></span>4–5<span class="hs" style="background:#e5352b"></span>≥6</div>';
+    host.innerHTML='<div class="densflex"><div>'+left+'</div>'+worstHTML()+'</div>';
+  }
+
+  /* ---------- SITE EDITOR ---------- */
+  var seEl=null, seRef=null;
+  function closeSE(){ if(seEl){ if(seEl.parentNode) seEl.parentNode.removeChild(seEl); seEl=null; seRef=null; document.removeEventListener("mousedown",seDoc,true); } }
+  function seDoc(e){ if(seEl && !seEl.contains(e.target) && !(e.target.getAttribute&&e.target.getAttribute("data-f"))) closeSE(); }
+  function openSiteEditor(f,idx,px,py){
+    closeSE(); closeTM();
+    var asp=idx<3?"Buccal":"Palatal";
+    var m=document.createElement("div"); m.className="siteedit";
+    m.innerHTML='<h5>Tooth '+f+' · '+siteInfo(f,idx).name+' ('+siteInfo(f,idx).ab+')</h5>'
+      +'<div class="se-row"><label>Pocket</label><input id="sePd" inputmode="numeric" maxlength="2" value="'+(data[f].pd[idx]==null?"":data[f].pd[idx])+'"><span style="font-size:11px;color:var(--muted)">mm</span></div>'
+      +'<div class="se-row"><label>Recession</label><input id="seRec" inputmode="numeric" maxlength="2" value="'+(data[f].rec[idx]||0)+'"><span style="font-size:11px;color:var(--muted)">mm</span></div>'
+      +'<div class="se-row"><label>Bleeding</label><button class="se-bop'+(data[f].bop[idx]?" on":"")+'" id="seBop">'+(data[f].bop[idx]?"Yes":"No")+'</button></div>'
+      +'<div class="se-nav"><button id="sePrev">‹ Prev</button><button id="seNext">Next ›</button></div>';
+    document.body.appendChild(m); seEl=m; seRef={f:f,idx:idx};
+    var vw=document.documentElement.clientWidth; var left=px; if(left+224>window.scrollX+vw) left=window.scrollX+vw-224-8;
+    m.style.left=Math.max(8,left)+"px"; m.style.top=(py+8)+"px";
+    var pd=m.querySelector("#sePd"), rec=m.querySelector("#seRec"), bop=m.querySelector("#seBop");
+    pd.addEventListener("input",function(){ var v=pd.value.replace(/[^0-9]/g,"").slice(0,2); pd.value=v; data[f].pd[idx]=(v===""?null:+v); refreshAll(); });
+    rec.addEventListener("input",function(){ var v=rec.value.replace(/[^0-9]/g,"").slice(0,2); rec.value=v; data[f].rec[idx]=(v===""?0:+v); refreshAll(); });
+    bop.onclick=function(){ data[f].bop[idx]=!data[f].bop[idx]; bop.classList.toggle("on"); bop.textContent=data[f].bop[idx]?"Yes":"No"; refreshAll(); };
+    m.querySelector("#sePrev").onclick=function(){ stepSite(-1,px,py); };
+    m.querySelector("#seNext").onclick=function(){ stepSite(1,px,py); };
+    setTimeout(function(){ pd.focus(); pd.select(); document.addEventListener("mousedown",seDoc,true); },0);
+  }
+  function stepSite(dir,px,py){
+    var f=seRef.f, idx=seRef.idx; var ti=ORDER.indexOf(f);
+    idx+=dir;
+    if(idx>5){ if(ti+1<ORDER.length){ f=ORDER[ti+1]; idx=0; } else { idx=5; } }
+    else if(idx<0){ if(ti-1>=0){ f=ORDER[ti-1]; idx=5; } else { idx=0; } }
+    openSiteEditor(f,idx,px,py);
+  }
+
+  /* ---------- TOOTH STATUS / RESTORATION MENU ---------- */
+  var tmEl=null, tmF=null;
+  function closeTM(){ if(tmEl){ if(tmEl.parentNode) tmEl.parentNode.removeChild(tmEl); tmEl=null; tmF=null; document.removeEventListener("mousedown",tmDoc,true); } }
+  function tmDoc(e){ if(tmEl && !tmEl.contains(e.target) && !(e.target.closest&&e.target.closest(".trooth"))) closeTM(); }
+  function tmBody(f){
+    var t=data[f];
+    var h='<div class="ts">Status</div><div class="trow">'+[["present","Present"],["missing","Missing"],["implant","Implant"]].map(function(o){return '<button class="tst'+(t.exist===o[0]?" sel":"")+'" data-st="'+o[0]+'">'+o[1]+'</button>';}).join("")+'</div>';
+    var dis=t.exist==="missing";
+    h+='<div class="ts">Restorations</div>'+REST.map(function(r){return '<button class="tck'+(t.marks.indexOf(r.code)>=0?" on":"")+(dis?" dis":"")+'" data-mk="'+r.code+'"><span class="b"></span>'+r.label+'</button>';}).join("");
+    return h;
+  }
+  function wireTM(f){
+    tmEl.querySelectorAll(".tst").forEach(function(b){ b.onclick=function(){ data[f].exist=b.getAttribute("data-st"); if(data[f].exist==="missing") data[f].marks=[]; tmEl.innerHTML=tmBody(f); wireTM(f); refreshAll(); }; });
+    tmEl.querySelectorAll(".tck").forEach(function(b){ b.onclick=function(){ if(b.classList.contains("dis")) return; var c=b.getAttribute("data-mk"); var m=data[f].marks; var i=m.indexOf(c); if(i>=0) m.splice(i,1); else m.push(c); tmEl.innerHTML=tmBody(f); wireTM(f); refreshAll(); }; });
+  }
+  function openToothMenu(f,px,py){
+    closeTM(); closeSE();
+    var m=document.createElement("div"); m.className="tmenu"; m.innerHTML=tmBody(f);
+    document.body.appendChild(m); tmEl=m; tmF=f; wireTM(f);
+    var vw=document.documentElement.clientWidth; var left=px; if(left+224>window.scrollX+vw) left=window.scrollX+vw-224-8;
+    m.style.left=Math.max(8,left)+"px"; m.style.top=(py+6)+"px";
+    setTimeout(function(){ document.addEventListener("mousedown",tmDoc,true); },0);
+  }
+
+  /* ---------- shared ---------- */
+  function stats(){
+    var sites=0,bop=0,p4=0,p6=0,sumpd=0,sumcal=0,caln=0,teeth=0;
+    ORDER.forEach(function(f){ var t=data[f]; if(t.exist==="missing") return; teeth++;
+      for(var i=0;i<6;i++){ var pd=t.pd[i]; if(pd!=null){ sites++; sumpd+=pd; if(pd>=4)p4++; if(pd>=6)p6++; sumcal+=pd+(t.rec[i]||0); caln++; } if(t.bop[i]) bop++; } });
+    return {teeth:teeth,bopPct:sites?Math.round(bop/sites*100):0,p4:p4,p6:p6,meanPd:sites?(sumpd/sites).toFixed(1):"0.0",meanCal:caln?(sumcal/caln).toFixed(1):"0.0"};
+  }
+  function updateSummary(){ var s=stats(), el=document.getElementById("perioSummary"); if(!el) return;
+    function c(n,l){ return '<div class="pstat"><div class="n">'+n+'</div><div class="l">'+l+'</div></div>'; }
+    el.innerHTML=c(s.bopPct+"%","Bleeding")+c(s.p4,"Sites ≥4mm")+c(s.p6,"Sites ≥6mm")+c(s.meanPd,"Mean PD")+c(s.meanCal,"Mean CAL")+c(s.teeth,"Teeth"); }
+  function refreshAll(){ renderContour(); renderDensity(); updateSummary(); }
+
+  function flash(id,msg){ var b=document.getElementById(id); if(!b) return; var o=b.textContent; b.textContent=msg; setTimeout(function(){ b.textContent=o; },1200); }
+  function migrate(d){ ORDER.forEach(function(f){ if(!d[f]) d[f]=blankTooth(); var t=d[f]; if(!t.exist) t.exist=(t.status||"present"); if(!t.marks) t.marks=[]; if(!t.pd) t.pd=[null,null,null,null,null,null]; if(!t.rec) t.rec=[0,0,0,0,0,0]; if(!t.bop) t.bop=[false,false,false,false,false,false]; if(!t.caries) t.caries={m:false,d:false,o:false,b:false,l:false}; }); return d; }
+  function newChart(){ initData(); refreshAll(); }
+  function save(){ try{ localStorage.setItem("perioChart",JSON.stringify(data)); flash("perioSave","Saved ✓"); }catch(e){ flash("perioSave","Failed"); } }
+  function load(){ try{ var j=localStorage.getItem("perioChart"); if(!j){ flash("perioLoad","None"); return; } data=migrate(JSON.parse(j)); refreshAll(); flash("perioLoad","Loaded ✓"); }catch(e){ flash("perioLoad","Failed"); } }
+
+  var recog=null, listening=false, curList=[], curPos=0, recMode=false, lastFilled=-1, lastUnderstood="";
+  var NUM={zero:0,one:1,won:1,two:2,to:2,too:2,three:3,tree:3,free:3,four:4,for:4,five:5,six:6,seven:7,eight:8,ate:8,nine:9,ten:10,eleven:11,twelve:12};
+  function word2num(w){ if(/^[0-9]{1,2}$/.test(w)){ var n=+w; return (n>=0&&n<=15)?n:null; } return (w in NUM)?NUM[w]:null; }
+  function voiceSupported(){ return !!(window.SpeechRecognition||window.webkitSpeechRecognition); }
+  function buildCurList(){ curList=[]; ORDER.forEach(function(f){ if(data[f].exist==="missing") return; for(var i=0;i<6;i++) curList.push({f:f,idx:i}); }); if(curPos>=curList.length) curPos=Math.max(0,curList.length-1); }
+  function voiceCurSite(){ return curList[curPos]||null; }
+  function advance(){ if(curPos<curList.length-1) curPos++; }
+  function processVoice(text){
+    var words=text.toLowerCase().replace(/[^a-z0-9 ]/g," ").split(/\s+/).filter(Boolean);
+    words.forEach(function(w){
+      if(recMode){ var rn=word2num(w); if(rn!=null){ var rs=curList[lastFilled>=0?lastFilled:curPos]; if(rs) data[rs.f].rec[rs.idx]=rn; } recMode=false; return; }
+      if(w==="recession"||w==="rec"){ recMode=true; return; }
+      if(w==="bleeding"||w==="bleed"||w==="bop"||w==="blood"){ var bs=curList[lastFilled>=0?lastFilled:curPos]; if(bs) data[bs.f].bop[bs.idx]=true; return; }
+      if(w==="skip"||w==="next"){ advance(); return; }
+      if(w==="back"||w==="previous"||w==="undo"){ if(curPos>0) curPos--; lastFilled=curPos-1; return; }
+      if(w==="stop"||w==="pause"||w==="done"||w==="finish"){ stopVoice(); return; }
+      if(w==="missing"){ var ms=voiceCurSite(); if(ms){ data[ms.f].exist="missing"; buildCurList(); } return; }
+      var num=word2num(w);
+      if(num!=null){ var s=voiceCurSite(); if(s){ data[s.f].pd[s.idx]=num; lastFilled=curPos; advance(); } }
+    });
+    refreshAll(); renderVoiceBar("");
+  }
+  function surfKey(n){ n=(n||"").toLowerCase(); var c=n.charAt(0); if(c==="m")return "m"; if(c==="d")return "d"; if(c==="o")return "o"; if(c==="b"||c==="f")return "b"; if(c==="l"||c==="p")return "l"; return null; }
+  function aiSiteIdx(f,aspect,pos){ var base=(aspect&&aspect.charAt(0)==="p")?3:0; pos=(pos||"mid").toLowerCase(); var c=pos.charAt(0); if(c==="c"||pos==="mid"||pos==="middle") return base+1; var mesialPos=quadFlip(f)?2:0; if(c==="m") return base+mesialPos; return base+(mesialPos===2?0:2); }
+  function aspectsOf(o){ return (o.aspect && o.aspect!=="both") ? [o.aspect] : ["buccal","palatal"]; }
+  function applyOps(ops){
+    var out=[]; if(!ops||!ops.length) return out;
+    ops.forEach(function(o){
+      if(o.type==="fill_remaining"){ var v=+o.value; if(isNaN(v)) return; var meas=(o.measure==="recession")?"rec":"pd"; ORDER.forEach(function(ff){ if(data[ff].exist==="missing") return; for(var i=0;i<6;i++){ if(meas==="pd"){ if(data[ff].pd[i]==null) data[ff].pd[i]=v; } else { if(!data[ff].rec[i]) data[ff].rec[i]=v; } } }); out.push("remaining "+(o.measure||"pocket")+" set to "+v+"mm"); return; }
+      var f=+o.tooth; if(!data[f]) return;
+      if(o.type==="pocket"&&o.value!=null){ aspectsOf(o).forEach(function(a){ data[f].pd[aiSiteIdx(f,a,o.position)]=+o.value; }); out.push(o.value+"mm pocket "+(o.position||"mid")+" "+f); }
+      else if(o.type==="recession"&&o.value!=null){ aspectsOf(o).forEach(function(a){ data[f].rec[aiSiteIdx(f,a,o.position)]=+o.value; }); out.push(o.value+"mm recession "+(o.position||"mid")+" "+f); }
+      else if(o.type==="bleeding"){ aspectsOf(o).forEach(function(a){ data[f].bop[aiSiteIdx(f,a,o.position)]=true; }); out.push("bleeding "+(o.position||"")+" "+f); }
+      else if(o.type==="caries"){ var sk=surfKey(o.surface); if(sk){ data[f].caries[sk]=true; out.push((o.surface||"")+" caries "+f); } }
+      else if(o.type==="restoration"&&o.restoration){ var rc=o.restoration; if(data[f].marks.indexOf(rc)<0) data[f].marks.push(rc); out.push(rc+" on "+f); }
+      else if(o.type==="status"&&o.status){ data[f].exist=o.status; if(o.status==="missing") data[f].marks=[]; out.push(f+" "+o.status); }
+    });
+    return out;
+  }
+  function aiParse(text){
+    renderVoiceBar(text,true);
+    fetch("/api/perio-voice",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({transcript:text})})
+      .then(function(r){ return r.text().then(function(t){ if(!r.ok) throw new Error(t||r.status); return JSON.parse(t); }); })
+      .then(function(j){ var applied=applyOps((j&&j.ops)||[]); lastUnderstood=applied.length?applied.join("; "):"(nothing recognised)"; refreshAll(); renderVoiceBar(""); })
+      .catch(function(err){ lastUnderstood="couldn\u2019t reach the AI \u2014 check the key and connection"; renderVoiceBar(""); });
+  }
+  function onVoiceResult(e){ var interim="", finals=""; for(var i=e.resultIndex;i<e.results.length;i++){ var r=e.results[i]; if(r.isFinal) finals+=r[0].transcript+" "; else interim+=r[0].transcript; } if(finals) aiParse(finals); if(interim) renderVoiceBar(interim); }
+  function renderVoiceBar(interim,thinking){
+    var vb=document.getElementById("perioVoiceBar"); if(!vb) return;
+    if(!voiceSupported()){ vb.innerHTML='<div class="vb-row"><span class="vb-target" style="color:#a5300a">Voice input needs Chrome or Edge on a computer.</span><button class="vb-stop" id="voiceStopBtn">Close</button></div>'; document.getElementById("voiceStopBtn").onclick=stopVoice; return; }
+    vb.innerHTML='<div class="vb-row"><span class="vb-dot"></span><span class="vb-target">'+(thinking?"Understanding\u2026":"Listening\u2026")+'</span><button class="vb-stop" id="voiceStopBtn">Stop</button></div>'
+      +'<div class="vb-help">Say natural commands \u2014 e.g. <b>5 mm pocket mesial of 26</b>, <b>distal caries on 36</b>, <b>crown on 11</b>, <b>class 2 MO on 16</b>, <b>bleeding mesial 24</b>, <b>36 missing</b>.</div>'
+      +(interim?'<div class="vb-tr">'+interim+'</div>':"")
+      +(lastUnderstood?'<div class="vb-tr" style="font-style:normal;background:#eef7f4;color:#0b605f">Understood: '+lastUnderstood+'</div>':"");
+    document.getElementById("voiceStopBtn").onclick=stopVoice;
+  }
+  function startVoice(){
+    var vbEl=document.getElementById("perioVoiceBar"); vbEl.style.display="block";
+    if(!voiceSupported()){ renderVoiceBar(""); return; }
+    buildCurList(); curPos=0; lastFilled=-1; recMode=false;
+    var SR=window.SpeechRecognition||window.webkitSpeechRecognition; recog=new SR();
+    recog.continuous=true; recog.interimResults=true; recog.lang="en-IN";
+    recog.onresult=onVoiceResult; recog.onerror=function(){};
+    recog.onend=function(){ if(listening){ try{ recog.start(); }catch(e){} } };
+    listening=true;
+    var b=document.getElementById("perioVoice"); if(b){ b.classList.remove("primary"); b.classList.add("on"); b.textContent="Stop"; }
+    renderVoiceBar(""); refreshAll();
+    try{ recog.start(); }catch(e){}
+  }
+  function stopVoice(){ listening=false; if(recog){ try{ recog.stop(); }catch(e){} recog=null; } var b=document.getElementById("perioVoice"); if(b){ b.classList.remove("on"); b.classList.add("primary"); b.textContent="Use AI to input"; } var vb=document.getElementById("perioVoiceBar"); if(vb) vb.style.display="none"; refreshAll(); }
+  var lastReport=null;
+  function escP(x){ return (x||"").replace(/[&<>]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;"}[c];}).replace(/\n/g,"<br>"); }
+  function buildChartText(){
+    var st=stats(), L=[];
+    L.push("Overall: "+st.teeth+" teeth present, BOP "+st.bopPct+"%, sites >=4mm "+st.p4+", >=6mm "+st.p6+", mean PD "+st.meanPd+"mm, mean CAL "+st.meanCal+"mm.");
+    var miss=[],imp=[]; ORDER.forEach(function(f){ if(data[f].exist==="missing") miss.push(f); else if(data[f].exist==="implant") imp.push(f); });
+    if(miss.length) L.push("Missing teeth: "+miss.join(", ")+".");
+    if(imp.length) L.push("Implants: "+imp.join(", ")+".");
+    ORDER.forEach(function(f){ var t=data[f]; if(t.exist==="missing") return;
+      var hasPd=t.pd.some(function(x){return x!=null;});
+      var car=["m","d","o","b","l"].filter(function(k){return t.caries[k];});
+      var anyBop=t.bop.some(function(x){return x;});
+      if(!hasPd && !t.marks.length && !car.length && !anyBop) return;
+      var parts=["Tooth "+f+":"];
+      if(hasPd) parts.push("PD(DB,B,MB,DP,P,MP)="+t.pd.map(function(x){return x==null?"-":x;}).join(","));
+      var bops=[]; for(var i=0;i<6;i++){ if(t.bop[i]) bops.push(siteInfo(f,i).ab); } if(bops.length) parts.push("BOP@"+bops.join("/"));
+      var recs=[]; for(var i2=0;i2<6;i2++){ if(t.rec[i2]>0) recs.push(siteInfo(f,i2).ab+t.rec[i2]); } if(recs.length) parts.push("recession "+recs.join("/"));
+      if(t.marks.length) parts.push("restorations "+t.marks.join(","));
+      if(car.length) parts.push("caries surfaces "+car.join(",").toUpperCase());
+      L.push(parts.join(" "));
+    });
+    return L.join("\n");
+  }
+  function renderReport(j){
+    var rep=document.getElementById("perioReport"); if(!rep) return;
+    function sec(title,bodyv){ if(!bodyv) return ""; return '<div class="rep-sec"><h4>'+title+'</h4><p>'+escP(bodyv)+'</p></div>'; }
+    rep.innerHTML='<div class="rep-card"><div class="rep-head"><div><div class="rep-title">Periodontal case assessment</div><div class="rep-sub">SOAP &middot; Assessment &amp; plan &middot; '+new Date().toLocaleDateString()+'</div></div><span class="rep-badge">AI draft &mdash; clinician to confirm</span></div>'
+      +sec("Diagnosis",j.diagnosis)+sec("Key findings",j.findings)+sec("Risk &amp; prognosis",j.risk)+sec("Recommended plan",j.plan)+sec("In plain words (for the patient)",j.patient_summary)+'</div>';
+  }
+  function generateReport(){
+    var btn=document.getElementById("perioGen"), rep=document.getElementById("perioReport");
+    var o=btn.textContent; btn.disabled=true; btn.textContent="Generating\u2026";
+    rep.innerHTML='<div class="rep-card" style="color:var(--muted)">Analysing the chart\u2026</div>';
+    fetch("/api/perio-report",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({summary:buildChartText()})})
+      .then(function(r){ return r.text().then(function(t){ if(!r.ok) throw new Error(t); return JSON.parse(t); }); })
+      .then(function(j){ lastReport=j; renderReport(j); btn.disabled=false; btn.textContent=o; })
+      .catch(function(err){ rep.innerHTML='<div class="rep-card" style="color:#a5300a">Couldn\u2019t generate the report \u2014 check the AI key and connection.</div>'; btn.disabled=false; btn.textContent=o; });
+  }
+  function downloadReportPDF(){
+    if(!lastReport){ document.getElementById("perioReport").innerHTML='<div class="rep-card" style="color:var(--muted)">Generate the AI report first, then download.</div>'; return; }
+    if(!window.jspdf||!window.jspdf.jsPDF){ return; }
+    var JsPDF=window.jspdf.jsPDF, pdf=new JsPDF({unit:"mm",format:"a4"});
+    var m=16, y=18, w=210-2*m;
+    pdf.setFont("helvetica","bold"); pdf.setFontSize(15); pdf.text("Periodontal case assessment",m,y); y+=7;
+    pdf.setFont("helvetica","normal"); pdf.setFontSize(9); pdf.setTextColor(120);
+    pdf.text("SOAP Assessment and plan - "+new Date().toLocaleString()+" - AI-generated, clinician to confirm",m,y); y+=7; pdf.setTextColor(30);
+    function section(title,bodyv){ if(!bodyv) return; if(y>268){pdf.addPage();y=18;} pdf.setFont("helvetica","bold"); pdf.setFontSize(11); pdf.text(title,m,y); y+=5.5; pdf.setFont("helvetica","normal"); pdf.setFontSize(10); var lines=pdf.splitTextToSize(String(bodyv),w); lines.forEach(function(ln){ if(y>284){pdf.addPage();y=18;} pdf.text(ln,m,y); y+=5; }); y+=4; }
+    var st=stats();
+    section("Objective summary","Teeth present: "+st.teeth+". Bleeding on probing: "+st.bopPct+"%. Sites >=4mm: "+st.p4+", >=6mm: "+st.p6+". Mean PD "+st.meanPd+" mm, mean CAL "+st.meanCal+" mm.");
+    section("Diagnosis",lastReport.diagnosis); section("Key findings",lastReport.findings); section("Risk and prognosis",lastReport.risk); section("Recommended plan",lastReport.plan); section("Patient summary",lastReport.patient_summary);
+    pdf.save("perio-assessment.pdf");
+  }
+  function init(){
+    if(!document.getElementById("perioContour")) return;
+    initData(); refreshAll();
+    var host=document.getElementById("perioContour");
+    host.addEventListener("click",function(e){
+      var r=e.target.closest("rect[data-f]");
+      if(r){ openSiteEditor(+r.getAttribute("data-f"),+r.getAttribute("data-idx"),e.pageX,e.pageY); return; }
+      var gs=e.target.closest(".gsurf");
+      if(gs){ var g2=gs.closest(".trooth"); if(g2){ var gf=+g2.getAttribute("data-tooth"); if(data[gf].exist!=="missing"){ var su=gs.getAttribute("data-surf"); data[gf].caries[su]=!data[gf].caries[su]; refreshAll(); } } return; }
+      var tt=e.target.closest(".trooth");
+      if(tt){ openToothMenu(+tt.getAttribute("data-tooth"),e.pageX,e.pageY); }
+    });
+    document.getElementById("perioNew").onclick=function(){ if(confirm("Start a new blank chart? Unsaved entries will be cleared.")) newChart(); };
+    document.getElementById("perioSave").onclick=save;
+    document.getElementById("perioLoad").onclick=load;
+    var pv=document.getElementById("perioVoice"); if(pv) pv.onclick=function(){ listening?stopVoice():startVoice(); };
+    var pg=document.getElementById("perioGen"); if(pg) pg.onclick=generateReport;
+    var pp=document.getElementById("perioPdf"); if(pp) pp.onclick=downloadReportPDF;
+  }
+  return {init:init, getData:function(){return data;}, stats:stats, REST:REST};
+})();
+PERIO.init();
+/* =============== end perio =============== */
 
 document.getElementById('langSelect').value = lang;
 applyStaticLang();
