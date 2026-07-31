@@ -83,6 +83,8 @@
   .section-label{font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--muted);margin:0 0 13px;font-family:'Plus Jakarta Sans',sans-serif}
 
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:13px}
+  .grouphd{grid-column:1/-1;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin:12px 2px -3px}
+  .grouphd:first-child{margin-top:0}
   .proc-card{
     background:var(--card);border:1px solid var(--line);border-radius:10px;padding:17px 17px 16px;cursor:pointer;
     text-align:left;font-family:inherit;transition:.18s;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;gap:2px;position:relative;
@@ -603,7 +605,7 @@
       <div class="rev-or">and / or</div>
       <div class="rev-block">
         <label class="rev-label">Paste reviews (Justdial, or anywhere)</label>
-        <textarea id="revInput" class="rev-input" placeholder="Paste any other reviews here — they'll be analysed together with the fetched ones."></textarea>
+        <textarea id="revInput" class="rev-input" placeholder="Paste any other reviews here — they'll be analysed together with the fetched ones. (You can paste multiple reviews at once — no need to format or clean them up. Just paste, and the AI will organise and go through them for you.)"></textarea>
       </div>
       <div style="margin-top:14px"><button type="button" class="pbtn primary" id="revBtn">Analyse reviews</button></div>
       <div id="revOut"></div>
@@ -744,6 +746,56 @@ const PROC = [
     rec:{en:"You'll usually wear a temporary crown or veneer between visits. Mild sensitivity is normal at first. Avoid very hard or sticky foods on it. The final one is fitted over a couple of visits once it's made to match your bite and smile.",
          hi:"विज़िट के बीच आमतौर पर अस्थायी क्राउन या विनियर लगा रहता है। शुरू में हल्की संवेदनशीलता सामान्य है। उस पर बहुत कड़ी या चिपचिपी चीज़ें न खाएँ। आपकी बाइट और मुस्कान से मिलाकर बनने के बाद अंतिम क्राउन कुछ विज़िट में फिट किया जाता है।",
          pa:"ਮੁਲਾਕਾਤਾਂ ਦੇ ਵਿਚਕਾਰ ਆਮ ਤੌਰ ਤੇ ਅਸਥਾਈ ਕ੍ਰਾਊਨ ਜਾਂ ਵਿਨੀਅਰ ਲੱਗਾ ਰਹਿੰਦਾ ਹੈ। ਸ਼ੁਰੂ ਵਿੱਚ ਹਲਕੀ ਸੰਵੇਦਨਸ਼ੀਲਤਾ ਆਮ ਹੈ। ਉਸ ਤੇ ਬਹੁਤ ਸਖ਼ਤ ਜਾਂ ਚਿਪਕਣ ਵਾਲੀਆਂ ਚੀਜ਼ਾਂ ਨਾ ਖਾਓ। ਤੁਹਾਡੀ ਬਾਈਟ ਅਤੇ ਮੁਸਕਾਨ ਨਾਲ ਮਿਲਾ ਕੇ ਬਣਨ ਤੋਂ ਬਾਅਦ ਅੰਤਿਮ ਕ੍ਰਾਊਨ ਕੁਝ ਮੁਲਾਕਾਤਾਂ ਵਿੱਚ ਫਿੱਟ ਕੀਤਾ ਜਾਂਦਾ ਹੈ।"}
+  },
+  {
+    id:"ortho_pre", group:"ortho",
+    name:{en:"Orthodontic – Before Treatment", hi:"ऑर्थोडॉन्टिक – इलाज से पहले", pa:"ਆਰਥੋਡੌਂਟਿਕ – ਇਲਾਜ ਤੋਂ ਪਹਿਲਾਂ"},
+    sub:{en:"Braces & clear aligners (Invisalign)", hi:"ब्रेसेस और क्लियर अलाइनर (इनविज़लाइन)", pa:"ਬ੍ਰੇਸਿਜ਼ ਅਤੇ ਕਲੀਅਰ ਅਲਾਈਨਰ (ਇਨਵਿਜ਼ਲਾਈਨ)"},
+    custom:[
+      {v:"v-what", ic:"what", label:{en:"What it is", hi:"यह क्या है", pa:"ਇਹ ਕੀ ਹੈ"},
+        p:{en:"Teeth are moved slowly with gentle pressure — either with fixed braces (brackets and wires bonded to the teeth) or with clear aligners (Invisalign), a series of custom removable transparent trays you change at set intervals. Treatment usually takes about 6 months to 2 years, depending on your case and how well you follow the plan.",
+           hi:"दाँतों को हल्के दबाव से धीरे-धीरे हिलाया जाता है — या तो फिक्स्ड ब्रेसेस (दाँतों पर लगे ब्रैकेट और तार) से, या क्लियर अलाइनर (इनविज़लाइन) से, जो कस्टम बनी पारदर्शी ट्रे की एक श्रृंखला होती है जिन्हें आप तय अंतराल पर बदलते हैं। इलाज में आमतौर पर करीब 6 महीने से 2 साल लगते हैं, जो आपके केस और नियम पालन पर निर्भर करता है।",
+           pa:"ਦੰਦਾਂ ਨੂੰ ਹਲਕੇ ਦਬਾਅ ਨਾਲ ਹੌਲੀ-ਹੌਲੀ ਹਿਲਾਇਆ ਜਾਂਦਾ ਹੈ — ਜਾਂ ਤਾਂ ਫਿਕਸਡ ਬ੍ਰੇਸਿਜ਼ (ਦੰਦਾਂ ਤੇ ਲੱਗੇ ਬ੍ਰੈਕਟ ਅਤੇ ਤਾਰ) ਨਾਲ, ਜਾਂ ਕਲੀਅਰ ਅਲਾਈਨਰ (ਇਨਵਿਜ਼ਲਾਈਨ) ਨਾਲ, ਜੋ ਕਸਟਮ ਬਣੀਆਂ ਪਾਰਦਰਸ਼ੀ ਟ੍ਰੇਆਂ ਦੀ ਇੱਕ ਲੜੀ ਹੁੰਦੀ ਹੈ ਜਿਨ੍ਹਾਂ ਨੂੰ ਤੁਸੀਂ ਤੈਅ ਵਕ਼ਫ਼ੇ ਤੇ ਬਦਲਦੇ ਹੋ। ਇਲਾਜ ਵਿੱਚ ਆਮ ਤੌਰ ਤੇ ਲਗਭਗ 6 ਮਹੀਨੇ ਤੋਂ 2 ਸਾਲ ਲੱਗਦੇ ਹਨ, ਜੋ ਤੁਹਾਡੇ ਕੇਸ ਅਤੇ ਨਿਯਮ ਪਾਲਣ ਤੇ ਨਿਰਭਰ ਕਰਦਾ ਹੈ।"}},
+      {v:"v-why", ic:"why", label:{en:"Why it's advised", hi:"यह क्यों बताई गई है", pa:"ਇਹ ਕਿਉਂ ਦੱਸੀ ਗਈ ਹੈ"},
+        p:{en:"Straightening the teeth improves your bite and how your teeth meet, makes them easier to clean, and gives you a more even smile. Aligners and braces can both achieve this — your dentist will advise which suits your case.",
+           hi:"दाँतों को सीधा करने से आपका काटना (बाइट) और दाँतों का मिलना बेहतर होता है, उन्हें साफ़ करना आसान होता है, और मुस्कान अधिक सम होती है। अलाइनर और ब्रेसेस दोनों यह कर सकते हैं — आपके डॉक्टर बताएंगे कि आपके केस के लिए कौन-सा सही है।",
+           pa:"ਦੰਦਾਂ ਨੂੰ ਸਿੱਧਾ ਕਰਨ ਨਾਲ ਤੁਹਾਡੀ ਬਾਈਟ ਅਤੇ ਦੰਦਾਂ ਦਾ ਮਿਲਣਾ ਬਿਹਤਰ ਹੁੰਦਾ ਹੈ, ਉਹਨਾਂ ਨੂੰ ਸਾਫ਼ ਕਰਨਾ ਸੌਖਾ ਹੁੰਦਾ ਹੈ, ਅਤੇ ਮੁਸਕਾਨ ਵਧੇਰੇ ਇੱਕਸਾਰ ਹੁੰਦੀ ਹੈ। ਅਲਾਈਨਰ ਅਤੇ ਬ੍ਰੇਸਿਜ਼ ਦੋਵੇਂ ਇਹ ਕਰ ਸਕਦੇ ਹਨ — ਤੁਹਾਡਾ ਡਾਕਟਰ ਦੱਸੇਗਾ ਕਿ ਤੁਹਾਡੇ ਕੇਸ ਲਈ ਕਿਹੜਾ ਸਹੀ ਹੈ।"}},
+      {v:"v-la", ic:"alg", label:{en:"Clear aligners (Invisalign)", hi:"क्लियर अलाइनर (इनविज़लाइन)", pa:"ਕਲੀਅਰ ਅਲਾਈਨਰ (ਇਨਵਿਜ਼ਲਾਈਨ)"},
+        list:{en:["Wear your aligners 20–22 hours a day. Take them out only to eat, to drink anything other than plain water, and to brush. Not wearing them enough will slow down or spoil the result.","Small tooth-coloured attachments may be bonded to some teeth to help them move, and are removed at the end.","A little enamel may be gently smoothed between some teeth to make space — this is normal.","You may need to wear elastics (small rubber bands) with your aligners.","You change to a new set every 1–2 weeks as advised, and extra ‘refinement’ aligners are often needed at the end to fine-tune the result.","Remove aligners before hot or coloured drinks so they don’t warp or stain, and keep them in their case when not worn. If a set is lost, wear the previous set and contact us."],
+              hi:["अपने अलाइनर दिन में 20–22 घंटे पहनें। इन्हें सिर्फ़ खाने, सादे पानी के अलावा कुछ भी पीने, और ब्रश करने के लिए निकालें। पर्याप्त न पहनने पर नतीजा धीमा या खराब होगा।","कुछ दाँतों पर उन्हें हिलाने में मदद के लिए छोटे दाँत के रंग के अटैचमेंट लगाए जा सकते हैं, जो अंत में हटा दिए जाते हैं।","जगह बनाने के लिए कुछ दाँतों के बीच हल्का इनेमल घिसा जा सकता है — यह सामान्य है।","आपको अलाइनर के साथ इलास्टिक (छोटे रबर बैंड) पहनने पड़ सकते हैं।","आप हर 1–2 हफ़्ते में बताए अनुसार नया सेट बदलते हैं, और नतीजा ठीक करने के लिए अंत में अक्सर अतिरिक्त ‘रिफाइनमेंट’ अलाइनर की ज़रूरत होती है।","गरम या रंगीन पेय से पहले अलाइनर निकाल दें ताकि वे मुड़ें या दाग न लगें, और न पहनने पर उन्हें उनके केस में रखें। सेट खो जाने पर पिछला सेट पहनें और हमें बताएं।"],
+              pa:["ਆਪਣੇ ਅਲਾਈਨਰ ਦਿਨ ਵਿੱਚ 20–22 ਘੰਟੇ ਪਹਿਨੋ। ਇਹਨਾਂ ਨੂੰ ਸਿਰਫ਼ ਖਾਣ, ਸਾਦੇ ਪਾਣੀ ਤੋਂ ਇਲਾਵਾ ਕੁਝ ਵੀ ਪੀਣ, ਅਤੇ ਬੁਰਸ਼ ਕਰਨ ਲਈ ਕੱਢੋ। ਕਾਫ਼ੀ ਨਾ ਪਹਿਨਣ ਨਾਲ ਨਤੀਜਾ ਹੌਲੀ ਜਾਂ ਖ਼ਰਾਬ ਹੋਵੇਗਾ।","ਕੁਝ ਦੰਦਾਂ ਤੇ ਉਹਨਾਂ ਨੂੰ ਹਿਲਾਉਣ ਵਿੱਚ ਮਦਦ ਲਈ ਛੋਟੇ ਦੰਦ-ਰੰਗ ਦੇ ਅਟੈਚਮੈਂਟ ਲਗਾਏ ਜਾ ਸਕਦੇ ਹਨ, ਜੋ ਅੰਤ ਵਿੱਚ ਹਟਾ ਦਿੱਤੇ ਜਾਂਦੇ ਹਨ।","ਥਾਂ ਬਣਾਉਣ ਲਈ ਕੁਝ ਦੰਦਾਂ ਦੇ ਵਿਚਕਾਰ ਹਲਕਾ ਇਨੈਮਲ ਘਸਾਇਆ ਜਾ ਸਕਦਾ ਹੈ — ਇਹ ਆਮ ਗੱਲ ਹੈ।","ਤੁਹਾਨੂੰ ਅਲਾਈਨਰ ਨਾਲ ਇਲਾਸਟਿਕ (ਛੋਟੇ ਰਬੜ ਬੈਂਡ) ਪਹਿਨਣੇ ਪੈ ਸਕਦੇ ਹਨ।","ਤੁਸੀਂ ਹਰ 1–2 ਹਫ਼ਤੇ ਵਿੱਚ ਦੱਸੇ ਅਨੁਸਾਰ ਨਵਾਂ ਸੈੱਟ ਬਦਲਦੇ ਹੋ, ਅਤੇ ਨਤੀਜਾ ਠੀਕ ਕਰਨ ਲਈ ਅੰਤ ਵਿੱਚ ਅਕਸਰ ਵਾਧੂ ‘ਰਿਫਾਈਨਮੈਂਟ’ ਅਲਾਈਨਰ ਦੀ ਲੋੜ ਹੁੰਦੀ ਹੈ।","ਗਰਮ ਜਾਂ ਰੰਗਦਾਰ ਪੀਣ ਤੋਂ ਪਹਿਲਾਂ ਅਲਾਈਨਰ ਕੱਢ ਦਿਓ ਤਾਂ ਜੋ ਉਹ ਮੁੜਨ ਜਾਂ ਦਾਗ਼ ਨਾ ਲੱਗਣ, ਅਤੇ ਨਾ ਪਹਿਨਣ ਤੇ ਉਹਨਾਂ ਨੂੰ ਉਹਨਾਂ ਦੇ ਕੇਸ ਵਿੱਚ ਰੱਖੋ। ਸੈੱਟ ਗੁਆਚਣ ਤੇ ਪਿਛਲਾ ਸੈੱਟ ਪਹਿਨੋ ਅਤੇ ਸਾਨੂੰ ਦੱਸੋ।"]}},
+      {v:"v-risk", ic:"risks", label:{en:"Risks & limitations", hi:"जोखिम और सीमाएँ", pa:"ਖ਼ਤਰੇ ਅਤੇ ਸੀਮਾਵਾਂ"},
+        list:{en:["Minor shortening of the tooth roots can happen; it is usually small.","Teeth can drift back (relapse) if retainers are not worn after treatment.","Poor cleaning during treatment can cause decay, permanent white marks, or gum problems — especially with fixed braces.","Some temporary jaw or tooth discomfort, and a short-lived lisp or extra saliva when starting new aligners.","In some cases, tooth removal or extra treatment may be needed, and the exact final result cannot be guaranteed."],
+              hi:["दाँतों की जड़ों का हल्का छोटा होना हो सकता है; आमतौर पर यह मामूली होता है।","इलाज के बाद रिटेनर न पहनने पर दाँत वापस अपनी जगह खिसक सकते हैं (रिलैप्स)।","इलाज के दौरान ठीक से साफ़ न करने पर सड़न, स्थायी सफ़ेद निशान या मसूड़ों की दिक्कत हो सकती है — खासकर फिक्स्ड ब्रेसेस के साथ।","जबड़े या दाँत में कुछ समय की तकलीफ़, और नया अलाइनर शुरू करते समय थोड़ी देर की तुतलाहट या ज़्यादा लार।","कुछ मामलों में दाँत निकालना या अतिरिक्त इलाज ज़रूरी हो सकता है, और सटीक अंतिम नतीजे की गारंटी नहीं दी जा सकती।"],
+              pa:["ਦੰਦਾਂ ਦੀਆਂ ਜੜ੍ਹਾਂ ਦਾ ਹਲਕਾ ਛੋਟਾ ਹੋਣਾ ਹੋ ਸਕਦਾ ਹੈ; ਆਮ ਤੌਰ ਤੇ ਇਹ ਮਾਮੂਲੀ ਹੁੰਦਾ ਹੈ।","ਇਲਾਜ ਤੋਂ ਬਾਅਦ ਰਿਟੇਨਰ ਨਾ ਪਹਿਨਣ ਤੇ ਦੰਦ ਵਾਪਸ ਆਪਣੀ ਥਾਂ ਖਿਸਕ ਸਕਦੇ ਹਨ (ਰਿਲੈਪਸ)।","ਇਲਾਜ ਦੌਰਾਨ ਠੀਕ ਤਰ੍ਹਾਂ ਸਾਫ਼ ਨਾ ਕਰਨ ਤੇ ਸੜਨ, ਸਥਾਈ ਸਫ਼ੈਦ ਨਿਸ਼ਾਨ ਜਾਂ ਮਸੂੜਿਆਂ ਦੀ ਸਮੱਸਿਆ ਹੋ ਸਕਦੀ ਹੈ — ਖ਼ਾਸਕਰ ਫਿਕਸਡ ਬ੍ਰੇਸਿਜ਼ ਨਾਲ।","ਜਬਾੜੇ ਜਾਂ ਦੰਦ ਵਿੱਚ ਕੁਝ ਸਮੇਂ ਦੀ ਤਕਲੀਫ਼, ਅਤੇ ਨਵਾਂ ਅਲਾਈਨਰ ਸ਼ੁਰੂ ਕਰਨ ਵੇਲੇ ਥੋੜ੍ਹੀ ਦੇਰ ਦੀ ਤੁਤਲਾਹਟ ਜਾਂ ਵੱਧ ਲਾਰ।","ਕੁਝ ਮਾਮਲਿਆਂ ਵਿੱਚ ਦੰਦ ਕੱਢਣਾ ਜਾਂ ਵਾਧੂ ਇਲਾਜ ਜ਼ਰੂਰੀ ਹੋ ਸਕਦਾ ਹੈ, ਅਤੇ ਸਹੀ ਅੰਤਿਮ ਨਤੀਜੇ ਦੀ ਗਾਰੰਟੀ ਨਹੀਂ ਦਿੱਤੀ ਜਾ ਸਕਦੀ।"]}},
+      {v:"v-alt", ic:"alt", label:{en:"Your alternatives", hi:"आपके विकल्प", pa:"ਤੁਹਾਡੇ ਬਦਲ"},
+        list:{en:["Fixed braces — brackets and wires, good for a wide range of cases.","Clear aligners (Invisalign) — removable and less visible, suited to many but not all cases.","No treatment — leaving the teeth as they are."],
+              hi:["फिक्स्ड ब्रेसेस — ब्रैकेट और तार, कई तरह के केस के लिए अच्छे।","क्लियर अलाइनर (इनविज़लाइन) — निकालने योग्य और कम दिखने वाले, कई केस के लिए उपयुक्त पर सभी के लिए नहीं।","कोई इलाज नहीं — दाँतों को वैसे ही छोड़ देना।"],
+              pa:["ਫਿਕਸਡ ਬ੍ਰੇਸਿਜ਼ — ਬ੍ਰੈਕਟ ਅਤੇ ਤਾਰ, ਕਈ ਤਰ੍ਹਾਂ ਦੇ ਕੇਸਾਂ ਲਈ ਚੰਗੇ।","ਕਲੀਅਰ ਅਲਾਈਨਰ (ਇਨਵਿਜ਼ਲਾਈਨ) — ਕੱਢਣ ਯੋਗ ਅਤੇ ਘੱਟ ਦਿੱਸਣ ਵਾਲੇ, ਕਈ ਕੇਸਾਂ ਲਈ ਢੁੱਕਵੇਂ ਪਰ ਸਾਰਿਆਂ ਲਈ ਨਹੀਂ।","ਕੋਈ ਇਲਾਜ ਨਹੀਂ — ਦੰਦਾਂ ਨੂੰ ਉਵੇਂ ਹੀ ਛੱਡ ਦੇਣਾ।"]}},
+      {v:"v-rec", ic:"rec", label:{en:"Visits & retention", hi:"विज़िट और रिटेंशन", pa:"ਮੁਲਾਕਾਤਾਂ ਅਤੇ ਰਿਟੈਂਸ਼ਨ"},
+        p:{en:"You'll need regular visits — usually every 2 to 8 weeks — for adjustments or new aligners; missing them or repeated breakages can lengthen treatment. When your teeth are straight, you must wear a retainer (a thin wire behind the teeth, a removable retainer, or both) to hold them in place, and attend check-ups every six months. Fees depend on the treatment time, materials and lab or aligner charges.",
+           hi:"समायोजन या नए अलाइनर के लिए आपको नियमित विज़िट की ज़रूरत होगी — आमतौर पर हर 2 से 8 हफ़्ते — इन्हें छोड़ना या बार-बार टूटना इलाज को लंबा कर सकता है। दाँत सीधे होने पर, उन्हें अपनी जगह थामे रखने के लिए आपको रिटेनर पहनना ज़रूरी है (दाँतों के पीछे एक पतला तार, निकालने योग्य रिटेनर, या दोनों), और हर छह महीने में जाँच के लिए आना चाहिए। फ़ीस इलाज के समय, सामग्री और लैब या अलाइनर शुल्क पर निर्भर करती है।",
+           pa:"ਸਮਾਯੋਜਨ ਜਾਂ ਨਵੇਂ ਅਲਾਈਨਰ ਲਈ ਤੁਹਾਨੂੰ ਨਿਯਮਿਤ ਮੁਲਾਕਾਤਾਂ ਦੀ ਲੋੜ ਹੋਵੇਗੀ — ਆਮ ਤੌਰ ਤੇ ਹਰ 2 ਤੋਂ 8 ਹਫ਼ਤੇ — ਇਹਨਾਂ ਨੂੰ ਛੱਡਣਾ ਜਾਂ ਵਾਰ-ਵਾਰ ਟੁੱਟਣਾ ਇਲਾਜ ਨੂੰ ਲੰਮਾ ਕਰ ਸਕਦਾ ਹੈ। ਦੰਦ ਸਿੱਧੇ ਹੋਣ ਤੇ, ਉਹਨਾਂ ਨੂੰ ਆਪਣੀ ਥਾਂ ਥਾਮੇ ਰੱਖਣ ਲਈ ਤੁਹਾਨੂੰ ਰਿਟੇਨਰ ਪਹਿਨਣਾ ਜ਼ਰੂਰੀ ਹੈ (ਦੰਦਾਂ ਦੇ ਪਿੱਛੇ ਇੱਕ ਪਤਲਾ ਤਾਰ, ਕੱਢਣ ਯੋਗ ਰਿਟੇਨਰ, ਜਾਂ ਦੋਵੇਂ), ਅਤੇ ਹਰ ਛੇ ਮਹੀਨੇ ਜਾਂਚ ਲਈ ਆਉਣਾ ਚਾਹੀਦਾ ਹੈ। ਫ਼ੀਸ ਇਲਾਜ ਦੇ ਸਮੇਂ, ਸਮੱਗਰੀ ਅਤੇ ਲੈਬ ਜਾਂ ਅਲਾਈਨਰ ਖ਼ਰਚੇ ਤੇ ਨਿਰਭਰ ਕਰਦੀ ਹੈ।"}}
+    ]
+  },
+  {
+    id:"ortho_post", group:"ortho",
+    name:{en:"Orthodontic – Completion", hi:"ऑर्थोडॉन्टिक – समापन", pa:"ਆਰਥੋਡੌਂਟਿਕ – ਸਮਾਪਤੀ"},
+    sub:{en:"Finishing treatment & retention", hi:"इलाज पूरा होना और रिटेंशन", pa:"ਇਲਾਜ ਪੂਰਾ ਹੋਣਾ ਅਤੇ ਰਿਟੈਂਸ਼ਨ"},
+    custom:[
+      {v:"v-what", ic:"what", label:{en:"What this is", hi:"यह क्या है", pa:"ਇਹ ਕੀ ਹੈ"},
+        p:{en:"This confirms your orthodontic treatment — with braces or clear aligners (Invisalign) — is complete and that you're happy to move into the retention stage. Before your braces are removed or your aligner case is closed, it's important you are satisfied with the final result.",
+           hi:"यह पुष्टि करता है कि आपका ऑर्थोडॉन्टिक इलाज — ब्रेसेस या क्लियर अलाइनर (इनविज़लाइन) से — पूरा हो गया है और आप रिटेंशन चरण में जाने के लिए तैयार हैं। आपके ब्रेसेस हटाने या अलाइनर केस बंद करने से पहले, यह ज़रूरी है कि आप अंतिम नतीजे से संतुष्ट हों।",
+           pa:"ਇਹ ਪੁਸ਼ਟੀ ਕਰਦਾ ਹੈ ਕਿ ਤੁਹਾਡਾ ਆਰਥੋਡੌਂਟਿਕ ਇਲਾਜ — ਬ੍ਰੇਸਿਜ਼ ਜਾਂ ਕਲੀਅਰ ਅਲਾਈਨਰ (ਇਨਵਿਜ਼ਲਾਈਨ) ਨਾਲ — ਪੂਰਾ ਹੋ ਗਿਆ ਹੈ ਅਤੇ ਤੁਸੀਂ ਰਿਟੈਂਸ਼ਨ ਪੜਾਅ ਵਿੱਚ ਜਾਣ ਲਈ ਤਿਆਰ ਹੋ। ਤੁਹਾਡੇ ਬ੍ਰੇਸਿਜ਼ ਹਟਾਉਣ ਜਾਂ ਅਲਾਈਨਰ ਕੇਸ ਬੰਦ ਕਰਨ ਤੋਂ ਪਹਿਲਾਂ, ਇਹ ਜ਼ਰੂਰੀ ਹੈ ਕਿ ਤੁਸੀਂ ਅੰਤਿਮ ਨਤੀਜੇ ਤੋਂ ਸੰਤੁਸ਼ਟ ਹੋ।"}},
+      {v:"v-rec", ic:"rec", label:{en:"Retention & aftercare", hi:"रिटेंशन और देखभाल", pa:"ਰਿਟੈਂਸ਼ਨ ਅਤੇ ਦੇਖਭਾਲ"},
+        p:{en:"Teeth naturally tend to drift back, so you must wear your retainer as instructed to hold them in place. Retainers can wear or break — if yours is damaged and not repaired your teeth can move, so contact us straight away. After fixed braces are removed a little bonding may remain and can stain; we'll polish it off if needed. Please attend check-ups every six months.",
+           hi:"दाँत स्वाभाविक रूप से वापस खिसकते हैं, इसलिए उन्हें अपनी जगह थामे रखने के लिए आपको बताए अनुसार रिटेनर पहनना ज़रूरी है। रिटेनर घिस या टूट सकते हैं — अगर आपका खराब हो और उसकी मरम्मत न हो तो दाँत खिसक सकते हैं, इसलिए तुरंत हमसे संपर्क करें। फिक्स्ड ब्रेसेस हटाने के बाद थोड़ा बॉन्डिंग रह सकता है और उस पर दाग लग सकता है; ज़रूरत होने पर हम उसे पॉलिश कर देंगे। कृपया हर छह महीने में जाँच के लिए आएं।",
+           pa:"ਦੰਦ ਕੁਦਰਤੀ ਤੌਰ ਤੇ ਵਾਪਸ ਖਿਸਕਦੇ ਹਨ, ਇਸ ਲਈ ਉਹਨਾਂ ਨੂੰ ਆਪਣੀ ਥਾਂ ਥਾਮੇ ਰੱਖਣ ਲਈ ਤੁਹਾਨੂੰ ਦੱਸੇ ਅਨੁਸਾਰ ਰਿਟੇਨਰ ਪਹਿਨਣਾ ਜ਼ਰੂਰੀ ਹੈ। ਰਿਟੇਨਰ ਘਸ ਜਾਂ ਟੁੱਟ ਸਕਦੇ ਹਨ — ਜੇ ਤੁਹਾਡਾ ਖ਼ਰਾਬ ਹੋਵੇ ਅਤੇ ਉਸ ਦੀ ਮੁਰੰਮਤ ਨਾ ਹੋਵੇ ਤਾਂ ਦੰਦ ਖਿਸਕ ਸਕਦੇ ਹਨ, ਇਸ ਲਈ ਤੁਰੰਤ ਸਾਡੇ ਨਾਲ ਸੰਪਰਕ ਕਰੋ। ਫਿਕਸਡ ਬ੍ਰੇਸਿਜ਼ ਹਟਾਉਣ ਤੋਂ ਬਾਅਦ ਥੋੜ੍ਹਾ ਬਾਂਡਿੰਗ ਰਹਿ ਸਕਦਾ ਹੈ ਅਤੇ ਉਸ ਤੇ ਦਾਗ਼ ਲੱਗ ਸਕਦਾ ਹੈ; ਲੋੜ ਪੈਣ ਤੇ ਅਸੀਂ ਉਸ ਨੂੰ ਪਾਲਿਸ਼ ਕਰ ਦੇਵਾਂਗੇ। ਕਿਰਪਾ ਕਰਕੇ ਹਰ ਛੇ ਮਹੀਨੇ ਜਾਂਚ ਲਈ ਆਓ।"}},
+      {v:"v-why", ic:"why", label:{en:"Completion agreement", hi:"समापन सहमति", pa:"ਸਮਾਪਤੀ ਸਹਿਮਤੀ"},
+        list:{en:["I am satisfied with the position of my teeth.","I give permission to close my case on the Invisalign / aligner portal.","I am happy to have my braces, brackets or appliances removed.","I agree to return immediately if my retainer breaks or any teeth move.","I agree to attend six-monthly follow-up check-ups."],
+              hi:["मैं अपने दाँतों की स्थिति से संतुष्ट हूँ।","मैं इनविज़लाइन / अलाइनर पोर्टल पर अपना केस बंद करने की अनुमति देता/देती हूँ।","मैं अपने ब्रेसेस, ब्रैकेट या उपकरण हटवाने के लिए तैयार हूँ।","अगर मेरा रिटेनर टूटे या कोई दाँत खिसके तो मैं तुरंत लौटने के लिए सहमत हूँ।","मैं हर छह महीने में फ़ॉलो-अप जाँच के लिए आने के लिए सहमत हूँ।"],
+              pa:["ਮੈਂ ਆਪਣੇ ਦੰਦਾਂ ਦੀ ਸਥਿਤੀ ਤੋਂ ਸੰਤੁਸ਼ਟ ਹਾਂ।","ਮੈਂ ਇਨਵਿਜ਼ਲਾਈਨ / ਅਲਾਈਨਰ ਪੋਰਟਲ ਤੇ ਆਪਣਾ ਕੇਸ ਬੰਦ ਕਰਨ ਦੀ ਇਜਾਜ਼ਤ ਦਿੰਦਾ/ਦਿੰਦੀ ਹਾਂ।","ਮੈਂ ਆਪਣੇ ਬ੍ਰੇਸਿਜ਼, ਬ੍ਰੈਕਟ ਜਾਂ ਉਪਕਰਣ ਹਟਵਾਉਣ ਲਈ ਤਿਆਰ ਹਾਂ।","ਜੇ ਮੇਰਾ ਰਿਟੇਨਰ ਟੁੱਟੇ ਜਾਂ ਕੋਈ ਦੰਦ ਖਿਸਕੇ ਤਾਂ ਮੈਂ ਤੁਰੰਤ ਵਾਪਸ ਆਉਣ ਲਈ ਸਹਿਮਤ ਹਾਂ।","ਮੈਂ ਹਰ ਛੇ ਮਹੀਨੇ ਫਾਲੋ-ਅੱਪ ਜਾਂਚ ਲਈ ਆਉਣ ਲਈ ਸਹਿਮਤ ਹਾਂ।"]}}
+    ]
   }
 ];
 
@@ -780,7 +832,7 @@ const PROG = {en:"Understood", hi:"समझा", pa:"ਸਮਝਿਆ"};
 
 let lang = "en";
 let currentProc = null;
-function t(o){ return o[lang]; }
+function t(o){ return (o&&(o[lang]||o.en))||""; }
 
 /* ---- SVG icons ---- */
 function svg(inner){ return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'+inner+'</svg>'; }
@@ -790,7 +842,9 @@ const PIC = {
   rct: svg(tooth+'<path d="M12 8.5v7"/>'),
   extraction: svg(tooth+'<path d="M18 15v6M15.5 18.5 18 21l2.5-2.5"/>'),
   flap: svg('<path d="M3.5 20.5c3-3 6.5-6.5 10-10M14 6l1.6-1.6a2 2 0 0 1 2.8 0l1.2 1.2a2 2 0 0 1 0 2.8L18 10"/><path d="M6 15l1.5 1.5M9 12l1.5 1.5"/>'),
-  crown: svg('<path d="M3 8l4 3.5L12 4l5 7.5L21 8l-2 11H5L3 8Z"/>')
+  crown: svg('<path d="M3 8l4 3.5L12 4l5 7.5L21 8l-2 11H5L3 8Z"/>'),
+  ortho_pre: svg('<path d="M4 9c0-1.5 3-2.6 8-2.6S20 7.5 20 9"/><path d="M5.6 9.1v2.7M9 9.1v2.7M12 9.1v2.7M15 9.1v2.7M18.4 9.1v2.7"/><path d="M4 11.9c1.6 3 4.4 4.7 8 4.7s6.4-1.7 8-4.7"/>'),
+  ortho_post: svg('<path d="M4 9c0-1.5 3-2.6 8-2.6S20 7.5 20 9"/><path d="M4 11.9c1.6 3 4.4 4.7 8 4.7 1.1 0 2.2-.2 3.1-.5"/><path d="M14.5 13.6l2 2 4-4"/>')
 };
 const SEC = {
   what: svg('<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>'),
@@ -800,7 +854,8 @@ const SEC = {
   rec:  svg('<circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 2"/>'),
   sut:  svg('<path d="M3 12h18"/><path d="M7 8l-2 8M11 8l-2 8M15 8l-2 8M19 8l-2 8"/>'),
   wis:  svg('<path d="M12 3.2c-1.6 0-2.6.8-4 .8S5 3.4 5 5.6c0 2.4.9 3.3 1.4 5.6.4 1.7.4 4.6 1.7 4.6 1 0 1-2 1.3-3.6"/><path d="M12 3.2c1.6 0 2.6.8 4 .8S19 3.4 19 5.6c0 2.4-.9 3.3-1.4 5.6-.4 1.7-.4 4.6-1.7 4.6-1 0-1-2-1.3-3.6"/><path d="M9.5 16v3M14.5 16v3"/>'),
-  la:   svg('<path d="M12 3s6 6.4 6 10.5a6 6 0 0 1-12 0C6 9.4 12 3 12 3Z"/>')
+  la:   svg('<path d="M12 3s6 6.4 6 10.5a6 6 0 0 1-12 0C6 9.4 12 3 12 3Z"/>'),
+  alg:  svg('<path d="M6.5 7.5c1.2-1 9.8-1 11 0 1.3 3.8-1 9-5.5 9S5.2 11.3 6.5 7.5Z"/><path d="M8 9.5h8"/>')
 };
 
 function applyStaticLang(){
@@ -813,16 +868,28 @@ function applyStaticLang(){
   if(typeof applyDisclaimer==="function") applyDisclaimer();
 }
 
+var GROUP_LABEL = {
+  general:{en:"General & surgical", hi:"सामान्य और सर्जिकल", pa:"ਆਮ ਅਤੇ ਸਰਜੀਕਲ"},
+  ortho:{en:"Orthodontic treatment", hi:"ऑर्थोडॉन्टिक इलाज", pa:"ਆਰਥੋਡੌਂਟਿਕ ਇਲਾਜ"}
+};
+var GROUP_ORDER = ["general","ortho"];
 function renderPicker(){
   var g = document.getElementById("procGrid"); g.innerHTML = "";
-  PROC.forEach(function(p){
-    var b = document.createElement("button");
-    b.className = "proc-card";
-    b.innerHTML = '<span class="badge">'+(PIC[p.id]||PIC.crown)+'</span>'+
-      '<span class="nm">'+t(p.name)+'</span><span class="sub">'+t(p.sub)+'</span>'+
-      '<span class="go"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>';
-    b.onclick = function(){ openProc(p.id); };
-    g.appendChild(b);
+  GROUP_ORDER.forEach(function(gk){
+    var items = PROC.filter(function(p){ return (p.group||"general")===gk; });
+    if(!items.length) return;
+    var hd = document.createElement("div");
+    hd.className = "grouphd"; hd.textContent = t(GROUP_LABEL[gk]);
+    g.appendChild(hd);
+    items.forEach(function(p){
+      var b = document.createElement("button");
+      b.className = "proc-card";
+      b.innerHTML = '<span class="badge">'+(PIC[p.id]||PIC.crown)+'</span>'+
+        '<span class="nm">'+t(p.name)+'</span><span class="sub">'+t(p.sub)+'</span>'+
+        '<span class="go"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>';
+      b.onclick = function(){ openProc(p.id); };
+      g.appendChild(b);
+    });
   });
 }
 
@@ -838,16 +905,24 @@ function openProc(id){
   document.getElementById("explainer").classList.add("active");
   document.getElementById("procTitle").textContent = t(p.name);
   document.getElementById("procBadge").innerHTML = PIC[p.id]||PIC.crown;
-  var h =
+  var h;
+  if(p.custom){
+    h = p.custom.map(function(s){
+      var body = s.list ? list(t(s.list)) : '<p>'+t(s.p)+'</p>';
+      return card(s.v||"v-what", SEC[s.ic]||SEC.what, t(s.label), body);
+    }).join("");
+  } else {
+    h =
     card("v-what",SEC.what,t(LABELS.what),'<p>'+t(p.what)+'</p>') +
     card("v-why",SEC.why,t(LABELS.why),'<p>'+t(p.why)+'</p>');
-  if(p.extra) h += card("v-wis",SEC.wis,t(LABELS.wis),list(t(p.extra)));
-  h +=
+    if(p.extra) h += card("v-wis",SEC.wis,t(LABELS.wis),list(t(p.extra)));
+    h +=
     card("v-risk",SEC.risks,t(LABELS.risks),list(t(p.risks))) +
     card("v-alt",SEC.alt,t(LABELS.alt),list(t(p.alt))) +
     card("v-rec",SEC.rec,t(LABELS.rec),'<p>'+t(p.rec)+'</p>');
-  if(p.sutures) h += card("v-sut",SEC.sut,t(LABELS.sutures),'<p>'+t(p.sutures)+'</p>');
-  h += card("v-la",SEC.la,t(LABELS.la),list(LA_NOTE[lang]));
+    if(p.sutures) h += card("v-sut",SEC.sut,t(LABELS.sutures),'<p>'+t(p.sutures)+'</p>');
+    h += card("v-la",SEC.la,t(LABELS.la),list(LA_NOTE[lang]));
+  }
   document.getElementById("sections").innerHTML = h;
   renderChecks();
   document.getElementById("summary").classList.remove("show");
@@ -997,6 +1072,9 @@ function buildPdfDom(p){
   h+='<tr><td style="padding:3px 0;color:#5b6b7a">'+PDF_L.proc[lang]+'</td><td style="font-weight:600">'+t(p.name)+'</td></tr>';
   h+='<tr><td style="padding:3px 0;color:#5b6b7a">'+PDF_L.lang[lang]+'</td><td>'+LANGNAME[lang]+'</td></tr>';
   h+='<tr><td style="padding:3px 0;color:#5b6b7a">'+PDF_L.datetime[lang]+'</td><td>'+when+'</td></tr></table>';
+  if(p.custom){
+    p.custom.forEach(function(cs){ h+=sec(t(cs.label), cs.list?ul(t(cs.list)):t(cs.p)); });
+  } else {
   h+=sec(t(LABELS.what),t(p.what));
   h+=sec(t(LABELS.why),t(p.why));
   if(p.extra) h+=sec(t(LABELS.wis),ul(t(p.extra)));
@@ -1005,6 +1083,7 @@ function buildPdfDom(p){
   h+=sec(t(LABELS.rec),t(p.rec));
   if(p.sutures) h+=sec(t(LABELS.sutures),t(p.sutures));
   h+=sec(t(LABELS.la),ul(LA_NOTE[lang]));
+  }
   h+='<div style="margin:4px 0 13px"><div style="font-weight:700;font-size:13.5px;color:#0e7c7b;margin-bottom:3px">'+PDF_L.confirms[lang]+'</div>'+ul(CHECKS[lang])+'</div>';
   h+='<div style="background:#f0f7f6;border:1px solid #cfe6e0;border-radius:10px;padding:11px 13px;font-size:12px;color:#26333c;margin-bottom:16px">'+PDF_ACK[lang]+'</div>';
   var qtext=(document.getElementById("qbox").value||"").trim();
