@@ -373,6 +373,14 @@
   .pbtn.primary{background:var(--teal);color:#fff;border-color:var(--teal)}
   .pbtn.primary:hover{background:var(--teal-700)}
   .perio-report-bar{display:flex;gap:10px;margin:18px 0 0;flex-wrap:wrap}
+  .perio-textfill,.perio-notes{margin:16px 0 4px}
+  .perio-textfill label,.perio-notes label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px;line-height:1.55}
+  .perio-textarea{width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font:inherit;font-size:14px;color:var(--ink);background:#fff;resize:vertical;min-height:64px}
+  .perio-textarea:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(13,115,119,.12)}
+  .perio-text-row{display:flex;align-items:center;gap:12px;margin-top:8px;flex-wrap:wrap}
+  .perio-text-status{font-size:13px;color:var(--muted)}
+  .perio-text-status.ok{color:#0b605f}
+  .perio-text-status.warn{color:#a5300a}
   .perio-report{margin-top:16px}
   .rep-card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow-sm);padding:20px 22px}
   .rep-head{display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:4px}
@@ -560,6 +568,11 @@
           </ul>
         </div>
       </div>
+      <div class="perio-textfill">
+        <label for="perioTextIn"><b>Or type / paste findings for AI to fill</b> — write naturally, one or many at once, e.g. &ldquo;5 mm pocket distal of 36, distal caries on 36, 2 mm pocket in the rest of the teeth, crown on 11&rdquo;.</label>
+        <textarea id="perioTextIn" class="perio-textarea" rows="3" placeholder="Type or paste the chart findings here…"></textarea>
+        <div class="perio-text-row"><button type="button" class="pbtn primary" id="perioTextBtn">Analyse text &amp; fill chart</button><span id="perioTextStatus" class="perio-text-status"></span></div>
+      </div>
       <div class="perio-scroll"><div id="perioContour"></div></div>
       <div class="perio-legend" style="margin-top:10px;margin-bottom:6px">
         <span><span class="sw" style="height:3px;background:var(--ink-2)"></span>Gingival margin</span>
@@ -572,6 +585,10 @@
       </div>
       <div class="perio-archlabel">Postcard — the whole mouth at a glance</div>
       <div class="perio-scroll"><div id="perioDensity"></div></div>
+      <div class="perio-notes">
+        <label for="perioNotes"><b>Other clinical notes</b> — anything not captured above (chief complaint, medical history, occlusion, mobility, notes for the plan). Included in the AI report and the PDF.</label>
+        <textarea id="perioNotes" class="perio-textarea" rows="3" placeholder="Add any other clinical notes here…"></textarea>
+      </div>
       <div class="perio-report-bar">
         <button type="button" class="pbtn primary" id="perioGen">Generate AI report</button>
         <button type="button" class="pbtn" id="perioPdf">Download PDF</button>
@@ -1451,13 +1468,14 @@ var PERIO = (function(){
     var rep=document.getElementById("perioReport"); if(!rep) return;
     function sec(title,bodyv){ if(!bodyv) return ""; return '<div class="rep-sec"><h4>'+title+'</h4><p>'+escP(bodyv)+'</p></div>'; }
     rep.innerHTML='<div class="rep-card"><div class="rep-head"><div><div class="rep-title">Periodontal case assessment</div><div class="rep-sub">SOAP &middot; Assessment &amp; plan &middot; '+new Date().toLocaleDateString()+'</div></div><span class="rep-badge">AI draft &mdash; clinician to confirm</span></div>'
-      +sec("Periodontal findings",j.periodontal_findings)+sec("Carious teeth",j.carious_teeth)+sec("Past dental work",j.past_dental_work)+sec("Recommended plan",j.recommended_plan)+'</div>';
+      +sec("Periodontal findings",j.periodontal_findings)+sec("Carious teeth",j.carious_teeth)+sec("Past dental work",j.past_dental_work)+sec("Recommended plan",j.recommended_plan)+sec("Clinical notes",clinicalNotes())+'</div>';
   }
   function generateReport(){
     var btn=document.getElementById("perioGen"), rep=document.getElementById("perioReport");
     var o=btn.textContent; btn.disabled=true; btn.textContent="Generating\u2026";
     rep.innerHTML='<div class="rep-card" style="color:var(--muted)">Analysing the chart\u2026</div>';
-    fetch("/api/perio-report",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({summary:buildChartText()})})
+    var _sum=buildChartText(); var _nt=clinicalNotes(); if(_nt) _sum+="\n\nClinician notes: "+_nt;
+    fetch("/api/perio-report",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({summary:_sum})})
       .then(function(r){ return r.text().then(function(t){ if(!r.ok) throw new Error(t); return JSON.parse(t); }); })
       .then(function(j){ lastReport=j; renderReport(j); btn.disabled=false; btn.textContent=o; })
       .catch(function(err){ rep.innerHTML='<div class="rep-card" style="color:#a5300a">Couldn\u2019t generate the report \u2014 check the AI key and connection.</div>'; btn.disabled=false; btn.textContent=o; });
@@ -1485,9 +1503,24 @@ var PERIO = (function(){
       section("Carious teeth",lastReport.carious_teeth);
       section("Past dental work",lastReport.past_dental_work);
       section("Recommended plan",lastReport.recommended_plan);
+      section("Clinical notes",clinicalNotes());
       pdf.save("perio-assessment.pdf");
       btn.disabled=false; btn.textContent=ot;
     }).catch(function(e){ btn.disabled=false; btn.textContent=ot; });
+  }
+  function clinicalNotes(){ var n=document.getElementById("perioNotes"); return n?(n.value||"").trim():""; }
+  function aiFillFromText(){
+    var ta=document.getElementById("perioTextIn"); if(!ta) return;
+    var text=(ta.value||"").trim();
+    var st=document.getElementById("perioTextStatus");
+    if(!text){ if(st){ st.className="perio-text-status warn"; st.textContent="Type or paste some findings first."; } return; }
+    var btn=document.getElementById("perioTextBtn"); var o=btn?btn.textContent:"";
+    if(btn){ btn.disabled=true; btn.textContent="Analysing\u2026"; }
+    if(st){ st.className="perio-text-status"; st.textContent="Analysing\u2026"; }
+    fetch("/api/perio-voice",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({transcript:text})})
+      .then(function(r){ return r.text().then(function(t){ if(!r.ok) throw new Error(t||r.status); return JSON.parse(t); }); })
+      .then(function(j){ var applied=applyOps((j&&j.ops)||[]); refreshAll(); if(st){ if(applied.length){ st.className="perio-text-status ok"; st.textContent="Filled: "+applied.join("; "); } else { st.className="perio-text-status warn"; st.textContent="Nothing recognised \u2014 try rephrasing, e.g. \u201c5 mm pocket distal of 36\u201d."; } } if(btn){ btn.disabled=false; btn.textContent=o; } })
+      .catch(function(err){ if(st){ st.className="perio-text-status warn"; st.textContent="Couldn\u2019t reach the AI \u2014 check the key and connection."; } if(btn){ btn.disabled=false; btn.textContent=o; } });
   }
   function init(){
     if(!document.getElementById("perioContour")) return;
@@ -1507,6 +1540,7 @@ var PERIO = (function(){
     var pv=document.getElementById("perioVoice"); if(pv) pv.onclick=function(){ listening?stopVoice():startVoice(); };
     var pg=document.getElementById("perioGen"); if(pg) pg.onclick=generateReport;
     var pp=document.getElementById("perioPdf"); if(pp) pp.onclick=downloadReportPDF;
+    var ptb=document.getElementById("perioTextBtn"); if(ptb) ptb.onclick=aiFillFromText;
   }
   return {init:init, getData:function(){return data;}, stats:stats, REST:REST};
 })();
