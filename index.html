@@ -380,6 +380,29 @@
   .rep-sec{margin-top:14px}
   .rep-sec h4{margin:0 0 4px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;color:var(--teal-900)}
   .rep-sec p{margin:0;font-size:14px;line-height:1.6;color:var(--ink-2)}
+  .rev-label{display:block;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:6px 0 6px}
+  .rev-input{width:100%;min-height:180px;border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-family:inherit;font-size:14px;background:#fcfdfd;resize:vertical;line-height:1.5}
+  .rev-input:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(14,124,123,.13)}
+  .rev-card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow-sm);padding:20px 22px;margin-top:16px}
+  .rev-sum{font-size:14.5px;line-height:1.6;color:var(--ink-2);margin:0}
+  .rev-sec{margin-top:16px;border-top:1px solid var(--line);padding-top:14px}
+  .rev-sec h4{margin:0 0 9px;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px}
+  .rev-sec.love h4{color:#0f766e}
+  .rev-sec.bad h4{color:#b45309}
+  .rev-sec.open h4{color:var(--teal-900)}
+  .rev-list{margin:0;padding:0;list-style:none}
+  .rev-list li{margin-bottom:11px}
+  .rev-list .rp{display:block;font-weight:600;font-size:14px;color:var(--ink)}
+  .rev-list .rq{display:block;font-size:13px;color:var(--muted);font-style:italic;margin-top:2px}
+  .rev-block{margin-bottom:4px}
+  .rev-urlrow{display:flex;gap:10px;flex-wrap:wrap}
+  .rev-url{flex:1;min-width:220px;border:1px solid var(--line);border-radius:12px;padding:11px 14px;font-family:inherit;font-size:14px;background:#fcfdfd}
+  .rev-url:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(14,124,123,.13)}
+  .rev-note{font-size:12.5px;color:var(--muted);margin:9px 0 0}
+  .rev-or{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.1em;margin:18px 0}
+  .rev-or::before,.rev-or::after{content:"";flex:1;height:1px;background:var(--line)}
+  .rev-conf-name{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:17px}
+  .rev-conf-addr{font-size:13px;color:var(--muted);margin-top:2px}
 </style>
 </head>
 <body class="lang-en">
@@ -403,6 +426,7 @@
       <button data-tab="consent" data-mode="read" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12h6M9 16h4M8 3h8a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M9 3v3h6V3"/></svg>Consent Explainer</button>
       <button data-tab="consent" data-mode="sign"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Sign Consent</button>
       <button data-tab="perio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M6 7v10M18 7v10M4 17h16M9 7v10M14 7v10"/></svg>Perio Chart</button>
+      <button data-tab="reviews"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5M4 19h16M8 16v-6M13 16V8M18 16v-3"/></svg>Review Radar</button>
       <button data-tab="more"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>More Tools<span class="soon">SOON</span></button>
     </nav>
   </div>
@@ -547,6 +571,22 @@
       <div id="perioReport" class="perio-report"></div>
     </section>
 
+    <section class="panel" id="panel-reviews">
+      <p class="lead">Your competitor's patients already told you what works and what doesn't — in their reviews. Point this at a rival clinic down the road and AI finds the pattern: what patients love, what frustrates them, and the gap you can fill.</p>
+      <div class="rev-block">
+        <label class="rev-label">Auto-fetch from a Practo link</label>
+        <div class="rev-urlrow"><input id="revUrl" class="rev-url" placeholder="Paste the competitor's Practo listing link"><button type="button" class="pbtn primary" id="revFetch">Fetch reviews</button></div>
+        <p class="rev-note">Google and Justdial block automated reading, so for those, copy and paste the reviews below instead.</p>
+      </div>
+      <div id="revConfirm"></div>
+      <div class="rev-or">or paste</div>
+      <div class="rev-block">
+        <label class="rev-label">Paste reviews (Google, Justdial, anywhere)</label>
+        <textarea id="revInput" class="rev-input" placeholder="Paste the competitor's reviews here — a dozen or more gives the best read."></textarea>
+        <div style="margin-top:10px"><button type="button" class="pbtn" id="revBtn">Analyse pasted reviews</button></div>
+      </div>
+      <div id="revOut"></div>
+    </section>
     <section class="panel" id="panel-more">
       <div class="soon-panel">
         <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div>
@@ -1372,6 +1412,47 @@ var PERIO = (function(){
 })();
 PERIO.init();
 /* =============== end perio =============== */
+
+  function escR(x){ return (x||"").replace(/[&<>]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;"}[c];}); }
+  function renderReviews(j){
+    var out=document.getElementById("revOut"); if(!out) return;
+    function list(arr){ if(!arr||!arr.length) return '<p style="color:var(--muted);font-size:13px;margin:0">None found.</p>'; return '<ul class="rev-list">'+arr.map(function(x){ var pt=x.point||(typeof x==="string"?x:""); var q=x.quote||x.action||""; return '<li><span class="rp">'+escR(pt)+'</span>'+(q?'<span class="rq">'+escR(q)+'</span>':"")+'</li>'; }).join("")+'</ul>'; }
+    out.innerHTML='<div class="rev-card">'
+      +(j.summary?'<p class="rev-sum">'+escR(j.summary)+'</p>':"")
+      +'<div class="rev-sec love"><h4>What patients love</h4>'+list(j.love)+'</div>'
+      +'<div class="rev-sec bad"><h4>What frustrates them</h4>'+list(j.frustrations)+'</div>'
+      +'<div class="rev-sec open"><h4>Your opening</h4>'+list(j.opening)+'</div></div>';
+  }
+  var _revReviews="";
+  function reviewsAnalyzeText(text,btn){
+    var out=document.getElementById("revOut");
+    if(!text||text.trim().length<40){ out.innerHTML='<div class="rev-card" style="color:var(--muted)">Not enough review text to analyse.</div>'; return; }
+    var o=btn?btn.textContent:""; if(btn){ btn.disabled=true; btn.textContent="Analysing\u2026"; }
+    out.innerHTML='<div class="rev-card" style="color:var(--muted)">Reading the reviews\u2026</div>';
+    fetch("/api/reviews",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({reviews:text})})
+      .then(function(r){ return r.text().then(function(t){ if(!r.ok) throw new Error(t); return JSON.parse(t); }); })
+      .then(function(j){ renderReviews(j); if(btn){ btn.disabled=false; btn.textContent=o; } })
+      .catch(function(e){ out.innerHTML='<div class="rev-card" style="color:#a5300a">Couldn\u2019t analyse \u2014 check the AI key and connection.</div>'; if(btn){ btn.disabled=false; btn.textContent=o; } });
+  }
+  function revFetch(){
+    var url=(document.getElementById("revUrl").value||"").trim();
+    var conf=document.getElementById("revConfirm"), btn=document.getElementById("revFetch");
+    if(!url){ conf.innerHTML='<div class="rev-card" style="color:var(--muted)">Paste a Practo listing link first.</div>'; return; }
+    var o=btn.textContent; btn.disabled=true; btn.textContent="Fetching\u2026";
+    conf.innerHTML='<div class="rev-card" style="color:var(--muted)">Reading that page\u2026</div>';
+    fetch("/api/fetch-reviews",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({url:url})})
+      .then(function(r){ return r.text().then(function(t){ if(!r.ok) throw new Error(t); return JSON.parse(t); }); })
+      .then(function(j){
+        btn.disabled=false; btn.textContent=o;
+        if(j.error || !j.reviews){ conf.innerHTML='<div class="rev-card" style="color:#8a5a10">Couldn\u2019t auto-read that link'+(j.name?' ('+escR(j.name)+')':"")+' \u2014 the site may block automated reading. Please paste the reviews below instead.</div>'; return; }
+        _revReviews=j.reviews;
+        conf.innerHTML='<div class="rev-card"><div style="font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Confirm the clinic</div><div class="rev-conf-name">'+escR(j.name||"This clinic")+'</div>'+(j.address?'<div class="rev-conf-addr">'+escR(j.address)+'</div>':"")+'<div style="font-size:13px;color:var(--muted);margin:10px 0 12px">Found about '+(j.count||"several")+' reviews. Is this the clinic you mean?</div><button type="button" class="pbtn primary" id="revYes">Yes, analyse these</button> <button type="button" class="pbtn" id="revNo">Not this one</button></div>';
+        document.getElementById("revYes").onclick=function(){ conf.innerHTML=""; reviewsAnalyzeText(_revReviews,null); };
+        document.getElementById("revNo").onclick=function(){ conf.innerHTML=""; };
+      })
+      .catch(function(e){ btn.disabled=false; btn.textContent=o; conf.innerHTML='<div class="rev-card" style="color:#a5300a">Couldn\u2019t fetch that link \u2014 check it, or paste the reviews below.</div>'; });
+  }
+  (function(){ var rf=document.getElementById("revFetch"); if(rf) rf.onclick=revFetch; var rb=document.getElementById("revBtn"); if(rb) rb.onclick=function(){ reviewsAnalyzeText((document.getElementById("revInput").value||""),rb); }; })();
 
 document.getElementById('langSelect').value = lang;
 applyStaticLang();
