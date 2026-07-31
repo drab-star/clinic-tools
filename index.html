@@ -403,6 +403,8 @@
   .rev-or::before,.rev-or::after{content:"";flex:1;height:1px;background:var(--line)}
   .rev-conf-name{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:17px}
   .rev-conf-addr{font-size:13px;color:var(--muted);margin-top:2px}
+  .rev-inc{background:var(--mint-2);border:1px solid var(--line);border-radius:10px;padding:9px 13px;font-size:13px;color:var(--teal-900);margin-top:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .rev-x{background:none;border:0;color:#8a5a10;font-size:12px;text-decoration:underline;cursor:pointer;padding:0}
 </style>
 </head>
 <body class="lang-en">
@@ -571,20 +573,27 @@
       <div id="perioReport" class="perio-report"></div>
     </section>
 
-    <section class="panel" id="panel-reviews">
-      <p class="lead">Your competitor's patients already told you what works and what doesn't — in their reviews. Point this at a rival clinic down the road and AI finds the pattern: what patients love, what frustrates them, and the gap you can fill.</p>
+        <section class="panel" id="panel-reviews">
+      <p class="lead">Your competitor's patients already told you what works and what doesn't — in their reviews. Pull a rival clinic's reviews from Google and Practo (and paste any others), and AI finds the pattern: what patients love, what frustrates them, and the gap you can fill.</p>
       <div class="rev-block">
-        <label class="rev-label">Auto-fetch from a Practo link</label>
-        <div class="rev-urlrow"><input id="revUrl" class="rev-url" placeholder="Paste the competitor's Practo listing link"><button type="button" class="pbtn primary" id="revFetch">Fetch reviews</button></div>
-        <p class="rev-note">Google and Justdial block automated reading, so for those, copy and paste the reviews below instead.</p>
+        <label class="rev-label">Auto-fetch from Google</label>
+        <div class="rev-urlrow"><input id="revGUrl" class="rev-url" placeholder="Paste the competitor's Google Maps link"><button type="button" class="pbtn primary" id="revGFetch">Fetch Google reviews</button></div>
+        <p class="rev-note">Pulls up to ~80 of the competitor's Google reviews automatically (can take up to a minute).</p>
       </div>
+      <div class="rev-or">and / or</div>
+      <div class="rev-block">
+        <label class="rev-label">Auto-fetch from Practo</label>
+        <div class="rev-urlrow"><input id="revUrl" class="rev-url" placeholder="Paste the competitor's Practo listing link"><button type="button" class="pbtn primary" id="revFetch">Fetch Practo reviews</button></div>
+        <p class="rev-note">Practo shows only its top ~10–15 patient stories on the page. <b>Justdial blocks automated reading, so paste those below.</b></p>
+      </div>
+      <div class="rev-or">and / or</div>
+      <div class="rev-block">
+        <label class="rev-label">Paste reviews (Justdial, or anywhere)</label>
+        <textarea id="revInput" class="rev-input" placeholder="Paste any other reviews here — they'll be analysed together with the fetched ones."></textarea>
+      </div>
+      <div id="revIncluded"></div>
       <div id="revConfirm"></div>
-      <div class="rev-or">or paste</div>
-      <div class="rev-block">
-        <label class="rev-label">Paste reviews (Google, Justdial, anywhere)</label>
-        <textarea id="revInput" class="rev-input" placeholder="Paste the competitor's reviews here — a dozen or more gives the best read."></textarea>
-        <div style="margin-top:10px"><button type="button" class="pbtn" id="revBtn">Analyse pasted reviews</button></div>
-      </div>
+      <div style="margin-top:14px"><button type="button" class="pbtn primary" id="revBtn">Analyse reviews</button></div>
       <div id="revOut"></div>
     </section>
     <section class="panel" id="panel-more">
@@ -1423,10 +1432,10 @@ PERIO.init();
       +'<div class="rev-sec bad"><h4>What frustrates them</h4>'+list(j.frustrations)+'</div>'
       +'<div class="rev-sec open"><h4>Your opening</h4>'+list(j.opening)+'</div></div>';
   }
-  var _revReviews="";
+  var _inc={};
   function reviewsAnalyzeText(text,btn){
     var out=document.getElementById("revOut");
-    if(!text||text.trim().length<40){ out.innerHTML='<div class="rev-card" style="color:var(--muted)">Not enough review text to analyse.</div>'; return; }
+    if(!text||text.trim().length<40){ out.innerHTML='<div class="rev-card" style="color:var(--muted)">Fetch some reviews or paste them first.</div>'; return; }
     var o=btn?btn.textContent:""; if(btn){ btn.disabled=true; btn.textContent="Analysing\u2026"; }
     out.innerHTML='<div class="rev-card" style="color:var(--muted)">Reading the reviews\u2026</div>';
     fetch("/api/reviews",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({reviews:text})})
@@ -1434,25 +1443,32 @@ PERIO.init();
       .then(function(j){ renderReviews(j); if(btn){ btn.disabled=false; btn.textContent=o; } })
       .catch(function(e){ out.innerHTML='<div class="rev-card" style="color:#a5300a">Couldn\u2019t analyse \u2014 check the AI key and connection.</div>'; if(btn){ btn.disabled=false; btn.textContent=o; } });
   }
-  function revFetch(){
-    var url=(document.getElementById("revUrl").value||"").trim();
-    var conf=document.getElementById("revConfirm"), btn=document.getElementById("revFetch");
-    if(!url){ conf.innerHTML='<div class="rev-card" style="color:var(--muted)">Paste a Practo listing link first.</div>'; return; }
+  function combinedReviews(){ var parts=[]; Object.keys(_inc).forEach(function(k){ if(_inc[k].reviews) parts.push(_inc[k].reviews); }); var pasted=(document.getElementById("revInput").value||"").trim(); if(pasted) parts.push(pasted); return parts.join("\n\n"); }
+  function revChips(){ var box=document.getElementById("revIncluded"); var keys=Object.keys(_inc); if(!keys.length){ box.innerHTML=""; return; } box.innerHTML=keys.map(function(k){ var it=_inc[k]; return '<div class="rev-inc"><span>Included from '+it.label+': <b>'+escR(it.name||"clinic")+'</b> — <b>'+it.count+' reviews</b></span><button type="button" class="rev-x" data-k="'+k+'">remove</button></div>'; }).join(""); [].slice.call(box.querySelectorAll(".rev-x")).forEach(function(bx){ bx.onclick=function(){ delete _inc[bx.getAttribute("data-k")]; revChips(); }; }); }
+  function analyseAll(btn){ reviewsAnalyzeText(combinedReviews(),btn); }
+  function doFetch(endpoint,urlId,btn,label,key){
+    var url=(document.getElementById(urlId).value||"").trim();
+    var conf=document.getElementById("revConfirm");
+    if(!url){ conf.innerHTML='<div class="rev-card" style="color:var(--muted)">Paste a link first.</div>'; return; }
     var o=btn.textContent; btn.disabled=true; btn.textContent="Fetching\u2026";
-    conf.innerHTML='<div class="rev-card" style="color:var(--muted)">Reading that page\u2026</div>';
-    fetch("/api/fetch-reviews",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({url:url})})
+    conf.innerHTML='<div class="rev-card" style="color:var(--muted)">Reading '+label+' \u2014 this can take up to a minute\u2026</div>';
+    fetch(endpoint,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({url:url})})
       .then(function(r){ return r.text().then(function(t){ if(!r.ok) throw new Error(t); return JSON.parse(t); }); })
       .then(function(j){
         btn.disabled=false; btn.textContent=o;
-        if(j.error || !j.reviews){ conf.innerHTML='<div class="rev-card" style="color:#8a5a10">Couldn\u2019t auto-read that link'+(j.name?' ('+escR(j.name)+')':"")+' \u2014 the site may block automated reading. Please paste the reviews below instead.</div>'; return; }
-        _revReviews=j.reviews;
-        conf.innerHTML='<div class="rev-card"><div style="font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Confirm the clinic</div><div class="rev-conf-name">'+escR(j.name||"This clinic")+'</div>'+(j.address?'<div class="rev-conf-addr">'+escR(j.address)+'</div>':"")+'<div style="font-size:13px;color:var(--muted);margin:10px 0 12px">Found about '+(j.count||"several")+' reviews. Is this the clinic you mean?</div><button type="button" class="pbtn primary" id="revYes">Yes, analyse these</button> <button type="button" class="pbtn" id="revNo">Not this one</button></div>';
-        document.getElementById("revYes").onclick=function(){ conf.innerHTML=""; reviewsAnalyzeText(_revReviews,null); };
+        if(j.error || !j.reviews){ conf.innerHTML='<div class="rev-card" style="color:#8a5a10">Couldn\u2019t auto-read that '+label+' link'+(j.name?' ('+escR(j.name)+')':"")+'. Try again, or paste the reviews below.</div>'; return; }
+        var name=j.name||"This clinic", count=j.count||0, reviews=j.reviews;
+        conf.innerHTML='<div class="rev-card"><div style="font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Confirm the clinic ('+label+')</div><div class="rev-conf-name">'+escR(name)+'</div>'+(j.address?'<div class="rev-conf-addr">'+escR(j.address)+'</div>':"")+'<div style="font-size:13px;color:var(--muted);margin:10px 0 12px">Found <b>'+count+' reviews</b>. Add these to the analysis?</div><button type="button" class="pbtn primary" id="revYes">Yes, add these</button> <button type="button" class="pbtn" id="revNo">Not this one</button></div>';
+        document.getElementById("revYes").onclick=function(){ _inc[key]={reviews:reviews,name:name,count:count,label:label}; conf.innerHTML=""; revChips(); };
         document.getElementById("revNo").onclick=function(){ conf.innerHTML=""; };
       })
-      .catch(function(e){ btn.disabled=false; btn.textContent=o; conf.innerHTML='<div class="rev-card" style="color:#a5300a">Couldn\u2019t fetch that link \u2014 check it, or paste the reviews below.</div>'; });
+      .catch(function(e){ btn.disabled=false; btn.textContent=o; conf.innerHTML='<div class="rev-card" style="color:#a5300a">Couldn\u2019t fetch that '+label+' link \u2014 it may have timed out. Try again, or paste the reviews below.</div>'; });
   }
-  (function(){ var rf=document.getElementById("revFetch"); if(rf) rf.onclick=revFetch; var rb=document.getElementById("revBtn"); if(rb) rb.onclick=function(){ reviewsAnalyzeText((document.getElementById("revInput").value||""),rb); }; })();
+  (function(){
+    var gf=document.getElementById("revGFetch"); if(gf) gf.onclick=function(){ doFetch("/api/google-reviews","revGUrl",gf,"Google","google"); };
+    var pf=document.getElementById("revFetch"); if(pf) pf.onclick=function(){ doFetch("/api/fetch-reviews","revUrl",pf,"Practo","practo"); };
+    var rb=document.getElementById("revBtn"); if(rb) rb.onclick=function(){ analyseAll(rb); };
+  })();
 
 document.getElementById('langSelect').value = lang;
 applyStaticLang();
