@@ -439,8 +439,7 @@
 <div class="tabbar">
   <div class="wrap">
     <nav class="tabs" id="tabs">
-      <button data-tab="consent" data-mode="read" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12h6M9 16h4M8 3h8a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M9 3v3h6V3"/></svg>Consent Explainer</button>
-      <button data-tab="consent" data-mode="sign"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Sign Consent</button>
+      <button data-tab="consent" data-mode="sign" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Sign Consent</button>
       <button data-tab="perio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M6 7v10M18 7v10M4 17h16M9 7v10M14 7v10"/></svg>Perio Chart</button>
       <button data-tab="reviews"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5M4 19h16M8 16v-6M13 16V8M18 16v-3"/></svg>Review Radar</button>
       <button data-tab="more"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>More Tools<span class="soon">SOON</span></button>
@@ -996,7 +995,7 @@ document.getElementById("langSelect").addEventListener("change",function(e){
 
 document.getElementById("backBtn").onclick = backToPicker;
 
-var signMode = false;
+var signMode = true;
 var DISC = {
   read: {en:"For understanding only — not a legal consent form. Your final consent is signed with your doctor in the clinic.", hi:"सिर्फ़ समझने के लिए — यह कानूनी सहमति फॉर्म नहीं है। अंतिम सहमति क्लिनिक में आपके डॉक्टर के साथ हस्ताक्षरित होती है।", pa:"ਸਿਰਫ਼ ਸਮਝਣ ਲਈ — ਇਹ ਕਾਨੂੰਨੀ ਸਹਿਮਤੀ ਫਾਰਮ ਨਹੀਂ ਹੈ। ਅੰਤਿਮ ਸਹਿਮਤੀ ਕਲੀਨਿਕ ਵਿੱਚ ਤੁਹਾਡੇ ਡਾਕਟਰ ਨਾਲ ਹੁੰਦੀ ਹੈ।"},
   sign: {en:"By signing, you confirm you have read and understood this information. This is a pre-visit acknowledgment — your doctor will review it and complete the final consent with you at the clinic.", hi:"हस्ताक्षर करके आप पुष्टि करते हैं कि आपने यह जानकारी पढ़ और समझ ली है। यह एक विज़िट-पूर्व स्वीकृति है — आपके डॉक्टर इसकी समीक्षा करेंगे और क्लिनिक में आपके साथ अंतिम सहमति पूरी करेंगे।", pa:"ਦਸਤਖਤ ਕਰਕੇ ਤੁਸੀਂ ਪੁਸ਼ਟੀ ਕਰਦੇ ਹੋ ਕਿ ਤੁਸੀਂ ਇਹ ਜਾਣਕਾਰੀ ਪੜ੍ਹ ਅਤੇ ਸਮਝ ਲਈ ਹੈ। ਇਹ ਇੱਕ ਮੁਲਾਕਾਤ ਤੋਂ ਪਹਿਲਾਂ ਦੀ ਸਵੀਕ੍ਰਿਤੀ ਹੈ — ਤੁਹਾਡਾ ਡਾਕਟਰ ਇਸ ਦੀ ਸਮੀਖਿਆ ਕਰੇਗਾ ਅਤੇ ਕਲੀਨਿਕ ਵਿੱਚ ਤੁਹਾਡੇ ਨਾਲ ਅੰਤਿਮ ਸਹਿਮਤੀ ਪੂਰੀ ਕਰੇਗਾ।"}
