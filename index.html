@@ -419,6 +419,27 @@
   .rev-help h4{margin:0 0 8px;font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--teal-900)}
   .rev-help ol{margin:0;padding-left:18px;font-size:13px;color:var(--ink-2);line-height:1.55}
   .rev-help li{margin-bottom:5px}
+  .pg-note{background:#fffaf0;border:1px solid #f6e0b0;color:#8a5a10;border-radius:10px;padding:12px 15px;font-size:13px;margin:0 0 22px;display:flex;gap:10px;align-items:flex-start;line-height:1.5}
+  .pg-note svg{flex-shrink:0;margin-top:1px}
+  .pg-pick{margin:0 0 4px}
+  .pg-pick label{display:block;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:7px}
+  .pg-selectwrap{position:relative;max-width:540px}
+  .pg-selectwrap::after{content:"";position:absolute;right:16px;top:50%;width:8px;height:8px;border-right:2px solid var(--teal-700);border-bottom:2px solid var(--teal-700);transform:translateY(-70%) rotate(45deg);pointer-events:none}
+  .pg-select{width:100%;-webkit-appearance:none;appearance:none;border:1px solid var(--line);border-radius:10px;padding:11px 40px 11px 14px;font:inherit;font-size:15px;font-weight:600;color:var(--ink);background:#fff;cursor:pointer}
+  .pg-select:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(13,115,119,.12)}
+  .pg-desc{font-size:13.5px;color:var(--muted);margin:14px 0 16px;line-height:1.55}
+  .pg-field{margin:0 0 14px}
+  .pg-field label{display:block;font-size:13px;font-weight:600;color:var(--ink);margin-bottom:6px}
+  .pg-field .hint{font-size:12px;color:var(--muted);font-weight:400;margin-left:5px}
+  .pg-input,.pg-textarea,.pg-fselect{width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font:inherit;font-size:14px;color:var(--ink);background:#fff}
+  .pg-textarea{resize:vertical;min-height:96px}
+  .pg-fselect{-webkit-appearance:none;appearance:none;cursor:pointer}
+  .pg-input:focus,.pg-textarea:focus,.pg-fselect:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(13,115,119,.12)}
+  .pg-actions{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0 0}
+  .pg-out-wrap{margin:22px 0 0;display:none}
+  .pg-out-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+  .pg-out-head h4{margin:0;font-size:14px;color:var(--ink)}
+  .pg-out{white-space:pre-wrap;background:#f7fbfa;border:1px solid var(--line);border-radius:12px;padding:16px 18px;font-size:13px;line-height:1.6;color:#26333c;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
 </style>
 </head>
 <body class="lang-en">
@@ -442,6 +463,7 @@
       <button data-tab="consent" data-mode="sign" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Sign Consent</button>
       <button data-tab="perio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M6 7v10M18 7v10M4 17h16M9 7v10M14 7v10"/></svg>Dental Chart</button>
       <button data-tab="reviews"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5M4 19h16M8 16v-6M13 16V8M18 16v-3"/></svg>Review Radar</button>
+      <button data-tab="prompt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.6 4.4L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9l4.4-1.6L12 3Z"/><path d="M18 14l.7 1.9 1.8.6-1.8.6L18 19l-.7-1.9-1.8-.6 1.8-.6L18 14Z"/></svg>Prompt Generator</button>
       <button data-tab="more"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>More Tools<span class="soon">SOON</span></button>
     </nav>
   </div>
@@ -625,6 +647,27 @@
       </div>
       <div style="margin-top:14px"><button type="button" class="pbtn primary" id="revBtn">Analyse reviews</button></div>
       <div id="revOut"></div>
+    </section>
+    <section class="panel" id="panel-prompt">
+      <p class="lead">Eleven ready-made AI prompts for the everyday clinic. Pick one, fill in the blanks, and copy a polished prompt straight into ChatGPT, Claude or Gemini &mdash; no prompt-writing skills needed.</p>
+      <div class="pg-note">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+        <span><b>One rule &mdash; strip patient details first.</b> Remove names, phone numbers, IDs and dates of birth before pasting anything into an AI. Use initials or [Patient] instead.</span>
+      </div>
+      <div class="pg-pick">
+        <label for="pgSelect">Choose a prompt</label>
+        <div class="pg-selectwrap"><select id="pgSelect" class="pg-select"></select></div>
+      </div>
+      <div id="pgDesc" class="pg-desc"></div>
+      <div id="pgFields"></div>
+      <div class="pg-actions">
+        <button type="button" class="pbtn primary" id="pgGen">Generate prompt</button>
+        <button type="button" class="pbtn" id="pgClear">Clear</button>
+      </div>
+      <div class="pg-out-wrap" id="pgOutWrap">
+        <div class="pg-out-head"><h4>Your prompt &mdash; copy &amp; paste into any AI</h4><button type="button" class="pbtn" id="pgCopy">Copy</button></div>
+        <div class="pg-out" id="pgOut"></div>
+      </div>
     </section>
     <section class="panel" id="panel-more">
       <div class="soon-panel">
@@ -1594,6 +1637,268 @@ PERIO.init();
     var pf=document.getElementById("revFetch"); if(pf) pf.onclick=function(){ doFetch("/api/fetch-reviews","revUrl",pf,"Practo","practo"); };
     var rb=document.getElementById("revBtn"); if(rb) rb.onclick=function(){ analyseAll(rb); };
   })();
+
+
+/* ================= PROMPT GENERATOR ================= */
+var PROMPTGEN=(function(){
+  var PROMPTS=[
+  {key:"soap", group:"Clinical documentation", name:"SOAP Note Generator",
+   desc:"Turn rough consultation notes into a clean, structured SOAP note.",
+   fields:[
+     {id:"specialty", label:"Specialty / context", type:"text", optional:true, ph:"e.g. periodontics, general dentistry", blank:"general clinical"},
+     {id:"notes", label:"Your rough consultation notes", type:"textarea", ph:"Paste your messy notes here…", blank:"[paste your consultation notes here]"}
+   ],
+   template:`You are an experienced clinical scribe. Convert the rough consultation notes below into a clean, well-structured SOAP note.
+
+Rules:
+- Use four clearly labelled sections: Subjective, Objective, Assessment, Plan.
+- Keep it concise and professional and use standard clinical terminology.
+- Do not invent findings that aren't in the notes. If something important is missing, add a short "To confirm" line instead of guessing.
+- Keep all measurements, tooth numbers and drug names exactly as written.
+
+Specialty / context: {specialty}
+
+Rough notes:
+{notes}`},
+
+  {key:"plan", group:"Clinical documentation", name:"Treatment Plan Builder",
+   desc:"Turn findings into a clear, phased treatment plan with options.",
+   fields:[
+     {id:"goals", label:"Patient goals / preferences", type:"text", optional:true, ph:"e.g. wants to keep costs down, dislikes removable options", blank:"not specified"},
+     {id:"constraints", label:"Constraints (budget / time)", type:"text", optional:true, ph:"e.g. limited budget, wants it done in 3 months", blank:"none specified"},
+     {id:"findings", label:"Clinical findings", type:"textarea", ph:"Charting summary, missing teeth, caries, perio status…", blank:"[the clinical findings]"}
+   ],
+   template:`You are an experienced clinician creating a clear treatment plan from the findings below. Produce a phased plan.
+
+Rules:
+- Organise into phases (e.g., Phase 1: stabilise / urgent care, Phase 2: definitive treatment, Phase 3: maintenance).
+- For each item, give: what, why, and rough sequence or visit. Where reasonable, offer 1-2 alternative options so the patient can choose.
+- Write it so it can be explained to the patient. Do not invent findings that aren't listed.
+- Patient goals: {goals}. Constraints: {constraints}.
+
+Clinical findings:
+{findings}`},
+
+  {key:"referral", group:"Clinical documentation", name:"Instant Referral Letter",
+   desc:"Turn consult notes into a professional referral letter.",
+   fields:[
+     {id:"referTo", label:"Refer to", type:"text", ph:"e.g. oral & maxillofacial surgeon, orthodontist", blank:"[specialist / department]"},
+     {id:"urgency", label:"Urgency", type:"select", opts:["Routine","Urgent","Emergency"]},
+     {id:"reason", label:"Reason / consultation notes", type:"textarea", ph:"Why you're referring, key findings, what's been done…", blank:"[reason for referral and relevant findings]"}
+   ],
+   template:`You are a doctor writing a professional referral letter to a {referTo}. Using the consultation notes below, draft a concise, formal referral letter.
+
+Rules:
+- Structure: greeting, reason for referral, relevant history and findings, what has been done so far, and the specific question or assistance you are requesting.
+- Professional, courteous tone.
+- Use clearly marked blanks like [Patient name], [DOB], [Your name / clinic] for details to fill in. Do NOT invent patient identifiers.
+- Urgency: {urgency}.
+
+Consultation notes / reason:
+{reason}`},
+
+  {key:"explainer", group:"Patient communication", name:"Patient Explainer",
+   desc:"Explain a diagnosis or finding in simple words a patient will understand.",
+   fields:[
+     {id:"language", label:"Language", type:"text", optional:true, ph:"e.g. English, Hindi, Punjabi", blank:"English"},
+     {id:"level", label:"Reading level", type:"select", opts:["Simple everyday language","For an elderly patient","For a teenager","For a worried / anxious patient"]},
+     {id:"diagnosis", label:"Diagnosis or finding to explain", type:"textarea", ph:"e.g. moderate chronic periodontitis with 6mm pockets…", blank:"[the diagnosis or finding to explain]"}
+   ],
+   template:`You are a caring doctor explaining things to a patient who has no medical background. Explain the diagnosis or finding below in plain, reassuring language.
+
+Rules:
+- Avoid jargon. If you must use a medical term, explain it in one short line.
+- Cover: what it is, why it happens, what it means for them, and what happens next - in short paragraphs.
+- Warm, calm tone. No frightening wording. Keep it under about 200 words.
+- Write it in {language}, pitched as: {level}.
+
+Diagnosis / finding:
+{diagnosis}`},
+
+  {key:"aftercare", group:"Patient communication", name:"After-Care in Any Language",
+   desc:"Rewrite after-care instructions into the patient's language so they actually follow them.",
+   fields:[
+     {id:"procedure", label:"Procedure", type:"text", ph:"e.g. tooth extraction, flap surgery", blank:"[the procedure]"},
+     {id:"language", label:"Language", type:"text", optional:true, ph:"e.g. Hindi, Punjabi", blank:"English"},
+     {id:"instructions", label:"Your after-care points", type:"textarea", optional:true, ph:"List your usual points - or leave blank and let the AI draft standard ones…", blank:"[list your usual after-care points, or ask for the standard ones for this procedure]"}
+   ],
+   template:`You are helping a patient follow their after-care after a {procedure}. Rewrite the after-care guidance below into clear, friendly, step-by-step instructions the patient will actually follow.
+
+Rules:
+- Write in {language}, in simple everyday words.
+- Group into: "Today", "The next few days", and "Call us if...".
+- Use short numbered steps. Say clearly what to do and what to avoid, and the warning signs that need a call.
+- Keep a caring, encouraging tone.
+
+After-care points to rewrite / expand:
+{instructions}`},
+
+  {key:"results", group:"Patient communication", name:"Lab / Scan Result Explainer",
+   desc:"Explain a lab or scan result - for the patient, or as a quick summary for you.",
+   fields:[
+     {id:"audience", label:"Explain it for", type:"select", opts:["The patient (plain language)","My own quick summary"]},
+     {id:"language", label:"Language (if for patient)", type:"text", optional:true, ph:"e.g. English, Hindi", blank:"English"},
+     {id:"result", label:"The result", type:"textarea", ph:"Paste the report values / findings…", blank:"[paste the lab or scan result]"}
+   ],
+   template:`Explain the lab or scan result below.
+
+Audience: {audience}.
+
+Rules:
+- Say what the result shows, whether it is normal or a concern, and what it means in practical terms.
+- If for the patient: warm and non-alarming, written in {language}, ending with "what happens next". If for the clinician: a crisp bullet summary of the key values and any flags.
+- Do not over-interpret beyond the data. Note if anything needs clinical correlation or a repeat test.
+
+Result:
+{result}`},
+
+  {key:"cost", group:"Patient communication", name:"Cost / Estimate Message",
+   desc:"A warm message explaining a treatment's cost and why it's worth it.",
+   fields:[
+     {id:"treatment", label:"Treatment", type:"text", ph:"e.g. root canal + crown on 36", blank:"[the treatment]"},
+     {id:"price", label:"Price (if sharing)", type:"text", optional:true, ph:"e.g. ₹18,000", blank:"[price]"},
+     {id:"tone", label:"Tone", type:"select", opts:["Warm & friendly","Professional & concise"]},
+     {id:"included", label:"What's included / benefits", type:"textarea", optional:true, ph:"e.g. includes follow-ups, materials, warranty…", blank:"[what's included and the main benefits]"}
+   ],
+   template:`Write a short message to a patient explaining the cost of their recommended treatment and why it is worthwhile, to help them decide with confidence.
+
+Rules:
+- Cover: what the treatment is, what's included, the benefit to them, and the price if given.
+- {tone} tone, no pressure. Make it easy to reply with a yes or a question. Keep it WhatsApp-friendly and short.
+- Use [Patient first name] and [Clinic name] placeholders rather than real details.
+
+Treatment: {treatment}
+Price: {price}
+What's included / benefits:
+{included}`},
+
+  {key:"recall", group:"Patient communication", name:"Recall / Reactivation Message",
+   desc:"A friendly nudge to bring a patient back to the clinic.",
+   fields:[
+     {id:"reason", label:"Reason for recall", type:"select", opts:["Check-up / hygiene due","Incomplete treatment","Missed appointment","Long time since last visit"]},
+     {id:"gap", label:"How long it's been", type:"text", optional:true, ph:"e.g. 8 months", blank:"a while"},
+     {id:"offer", label:"Optional gentle offer / nudge", type:"text", optional:true, ph:"e.g. free check-up this month", blank:"none"}
+   ],
+   template:`Write a warm, short recall message to bring a patient back to the clinic.
+
+Rules:
+- Reason for recall: {reason}. It's been about: {gap}.
+- Friendly and caring, not salesy. Remind them why it matters for their health, make booking easy, and keep it to 2-4 short lines (WhatsApp / SMS length).
+- Optional gentle nudge to include: {offer}.
+- Use [Patient first name] and [Clinic name] placeholders rather than real details.
+
+Write 2 variations.`},
+
+  {key:"review", group:"Patient communication", name:"Review Request Message",
+   desc:"Ask a happy patient for a review, warmly and without pressure.",
+   fields:[
+     {id:"platform", label:"Platform", type:"select", opts:["Google","Practo","Justdial"]},
+     {id:"context", label:"What they had done", type:"text", optional:true, ph:"e.g. their smile makeover", blank:"their recent visit"},
+     {id:"tone", label:"Tone", type:"select", opts:["Warm & personal","Short & simple"]}
+   ],
+   template:`Write a short, genuine message asking a happy patient to leave a review on {platform}.
+
+Rules:
+- Warm and appreciative, never pushy. Briefly reference {context}.
+- Make it effortless: thank them, ask for a quick honest review, and mention you'll share the link.
+- {tone}. Keep it to 2-3 lines, WhatsApp-friendly. Use [Patient first name] and [Clinic name] placeholders.
+
+Write 2 variations.`},
+
+  {key:"preauth", group:"Practice & admin", name:"Insurance Pre-Auth Letter",
+   desc:"Draft a medical insurance pre-authorization request.",
+   fields:[
+     {id:"procedure", label:"Proposed treatment / procedure", type:"text", ph:"e.g. dental implant with bone graft", blank:"[proposed treatment]"},
+     {id:"insurer", label:"Insurer / TPA", type:"text", optional:true, ph:"e.g. Star Health", blank:"[insurer]"},
+     {id:"justification", label:"Clinical justification / notes", type:"textarea", ph:"Findings, why it's needed, why alternatives fall short…", blank:"[clinical justification and relevant findings]"}
+   ],
+   template:`You are drafting a medical insurance pre-authorization request letter for the treatment below. Write a clear, formal letter that supports approval.
+
+Rules:
+- Include: the proposed treatment, the clinical justification / medical necessity, relevant findings, and why simpler alternatives are insufficient.
+- Professional tone suitable for an insurer.
+- Use bracketed blanks like [Patient name], [Policy no.], [Provider details]. Do NOT fabricate identifiers or policy numbers.
+
+Proposed treatment: {procedure}
+Insurer / TPA: {insurer}
+
+Clinical justification / notes:
+{justification}`},
+
+  {key:"sop", group:"Practice & admin", name:"SOP / Protocol Writer",
+   desc:"Write a clear standard operating procedure for your clinic.",
+   fields:[
+     {id:"topic", label:"SOP topic", type:"text", ph:"e.g. instrument sterilization, medical emergency, new-patient flow", blank:"[the SOP topic]"},
+     {id:"setting", label:"Setting", type:"text", optional:true, ph:"e.g. 3-chair dental clinic", blank:"a dental clinic"},
+     {id:"points", label:"Key points to include", type:"textarea", optional:true, ph:"Anything specific you want covered…", blank:"[any specific points - or use standard best practice]"}
+   ],
+   template:`You are writing a clear Standard Operating Procedure (SOP) for a clinic.
+
+Topic: {topic}
+Setting: {setting}
+
+Rules:
+- Structure: Purpose, Scope, Responsibilities, Step-by-step Procedure (numbered), Materials / Equipment, Safety & Compliance notes, and a Review date.
+- Practical and easy for staff to follow - suitable to print and put on the wall.
+- Base it on standard best practice, and flag anything that should be checked against local regulations.
+
+Key points to include:
+{points}`}
+  ];
+
+  function esc(x){ return (x||"").replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+  function currentPrompt(){ var k=document.getElementById("pgSelect").value; return PROMPTS.find(function(p){return p.key===k;}); }
+  function renderFields(p){
+    if(!p) return;
+    document.getElementById("pgDesc").textContent=p.desc;
+    var host=document.getElementById("pgFields"); var h="";
+    p.fields.forEach(function(f){
+      var lab='<label for="pg_'+f.id+'">'+esc(f.label)+(f.optional?' <span class="hint">(optional)</span>':'')+'</label>';
+      var ctrl;
+      if(f.type==="textarea") ctrl='<textarea id="pg_'+f.id+'" class="pg-textarea" placeholder="'+esc(f.ph||"")+'"></textarea>';
+      else if(f.type==="select") ctrl='<select id="pg_'+f.id+'" class="pg-fselect">'+f.opts.map(function(o){return '<option value="'+esc(o)+'">'+esc(o)+'</option>';}).join("")+'</select>';
+      else ctrl='<input id="pg_'+f.id+'" type="text" class="pg-input" placeholder="'+esc(f.ph||"")+'">';
+      h+='<div class="pg-field">'+lab+ctrl+'</div>';
+    });
+    host.innerHTML=h;
+    document.getElementById("pgOutWrap").style.display="none";
+  }
+  function generate(){
+    var p=currentPrompt(); if(!p) return;
+    var vals={};
+    p.fields.forEach(function(f){ var e=document.getElementById("pg_"+f.id); var v=e?(e.value||"").trim():""; vals[f.id]=v||f.blank||("["+f.label+"]"); });
+    var out=p.template.replace(/\{(\w+)\}/g,function(m,k){ return (vals[k]!=null?vals[k]:m); });
+    document.getElementById("pgOut").textContent=out;
+    document.getElementById("pgOutWrap").style.display="block";
+    var cp=document.getElementById("pgCopy"); if(cp) cp.textContent="Copy";
+    document.getElementById("pgOutWrap").scrollIntoView({behavior:"smooth",block:"nearest"});
+  }
+  function fallbackCopy(txt,done){ var ta=document.createElement("textarea"); ta.value=txt; ta.style.position="fixed"; ta.style.left="-9999px"; document.body.appendChild(ta); ta.select(); try{document.execCommand("copy");}catch(e){} document.body.removeChild(ta); done(); }
+  function copyOut(){
+    var txt=document.getElementById("pgOut").textContent; if(!txt) return;
+    var cp=document.getElementById("pgCopy");
+    function done(){ if(cp){ cp.textContent="Copied ✓"; setTimeout(function(){ cp.textContent="Copy"; },1800); } }
+    if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done,function(){ fallbackCopy(txt,done); });
+    else fallbackCopy(txt,done);
+  }
+  function clearAll(){
+    var p=currentPrompt(); if(p){ p.fields.forEach(function(f){ var e=document.getElementById("pg_"+f.id); if(e){ if(e.tagName==="SELECT") e.selectedIndex=0; else e.value=""; } }); }
+    document.getElementById("pgOutWrap").style.display="none";
+  }
+  function init(){
+    var sel=document.getElementById("pgSelect"); if(!sel) return;
+    var groups=[]; PROMPTS.forEach(function(p){ if(groups.indexOf(p.group)<0) groups.push(p.group); });
+    sel.innerHTML=groups.map(function(g){ return '<optgroup label="'+esc(g)+'">'+PROMPTS.filter(function(p){return p.group===g;}).map(function(p){return '<option value="'+esc(p.key)+'">'+esc(p.name)+'</option>';}).join("")+'</optgroup>'; }).join("");
+    sel.onchange=function(){ renderFields(currentPrompt()); };
+    var g=document.getElementById("pgGen"); if(g) g.onclick=generate;
+    var c=document.getElementById("pgCopy"); if(c) c.onclick=copyOut;
+    var cl=document.getElementById("pgClear"); if(cl) cl.onclick=clearAll;
+    renderFields(PROMPTS[0]);
+  }
+  return {init:init, _prompts:PROMPTS};
+})();
+PROMPTGEN.init();
+/* ================= end prompt generator ================= */
 
 document.getElementById('langSelect').value = lang;
 applyStaticLang();
