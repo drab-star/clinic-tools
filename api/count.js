@@ -15,8 +15,10 @@ const EVENTS = ["visit", "consent", "prompt", "perio", "review", "suggestion"];
 function ym(d) { return d.getUTCFullYear() + "-" + String(d.getUTCMonth() + 1).padStart(2, "0"); }
 
 module.exports = async (req, res) => {
-  const url = process.env.UPSTASH_REDIS_REST_URL;
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN;
+  // Tolerate values pasted with surrounding quotes/spaces or a trailing slash.
+  const clean = (v) => String(v || "").trim().replace(/^["']+|["']+$/g, "").trim();
+  const url = clean(process.env.UPSTASH_REDIS_REST_URL).replace(/\/+$/, "");
+  const token = clean(process.env.UPSTASH_REDIS_REST_TOKEN);
 
   const now = new Date();
   const curM = ym(now);
