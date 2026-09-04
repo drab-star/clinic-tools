@@ -4,6 +4,20 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>AI in Practice — Clinic Tools</title>
+<meta name="description" content="Free AI tools for the modern clinic — trilingual patient consent, dental charting, competitor review analysis, and copy-paste AI prompts for doctors. By Dr. Abhinav Kathuria (AI in Practice).">
+<link rel="canonical" href="https://clinic-tools.vercel.app/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="AI in Practice">
+<meta property="og:title" content="Free Clinic Tools — AI in Practice">
+<meta property="og:description" content="Free AI tools for the modern clinic: trilingual consent, dental charting, review analysis, and ready-to-use AI prompts. Built by Dr. Abhinav Kathuria.">
+<meta property="og:url" content="https://clinic-tools.vercel.app/">
+<meta property="og:image" content="https://clinic-tools.vercel.app/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Free Clinic Tools — AI in Practice">
+<meta name="twitter:description" content="Free AI tools for the modern clinic, by Dr. Abhinav Kathuria.">
+<meta name="twitter:image" content="https://clinic-tools.vercel.app/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans+Gurmukhi:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -156,7 +170,7 @@
 
   footer{border-top:1px solid var(--line);padding:26px 0;font-size:12.5px;color:var(--muted);text-align:center;line-height:1.6}
   .hidden{display:none!important}
-  @media(max-width:560px){.herotag{font-size:20px}.proc-title{font-size:22px}.brand p{display:none}.grid{grid-template-columns:1fr 1fr}}
+  @media(max-width:560px){.herotag{font-size:20px}.proc-title{font-size:22px}.grid{grid-template-columns:1fr 1fr}}
   @media(max-width:400px){.grid{grid-template-columns:1fr}}
   .langpick{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 20px;padding:14px 16px;background:var(--card);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow-sm)}
   .langpick .lbl{font-family:'Plus Jakarta Sans','Noto Sans Devanagari','Noto Sans Gurmukhi',sans-serif;font-weight:700;font-size:13.5px;color:var(--ink);display:flex;align-items:center;gap:9px}
@@ -440,6 +454,20 @@
   .pg-out-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
   .pg-out-head h4{margin:0;font-size:14px;color:var(--ink)}
   .pg-out{white-space:pre-wrap;background:#f7fbfa;border:1px solid var(--line);border-radius:12px;padding:16px 18px;font-size:13px;line-height:1.6;color:#26333c;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  .sharebtn{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(255,255,255,.32);background:rgba(255,255,255,.15);color:#fff;border-radius:10px;padding:8px 14px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:13px;cursor:pointer;transition:.15s}
+  .sharebtn:hover{background:rgba(255,255,255,.26)}
+  .sharebtn svg{width:16px;height:16px}
+  .pg-status{font-size:13px;color:var(--muted)}
+  .pg-status.ok{color:#0b605f}
+  .pg-status.warn{color:#a5300a}
+  .reqbox{max-width:620px;margin:24px auto 0;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;box-shadow:var(--shadow)}
+  .reqbox h3{margin:0 0 4px;font-size:16px;color:var(--ink);font-family:'Plus Jakarta Sans',sans-serif}
+  .reqbox p{margin:0 0 12px;font-size:13px;color:var(--muted);line-height:1.5}
+  .foot-links{display:flex;gap:18px;justify-content:center;margin-bottom:10px}
+  .foot-links a{color:var(--teal-700);font-weight:600;text-decoration:none;font-size:13px}
+  .foot-links a:hover{text-decoration:underline}
+  .foot-by{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+  .foot-dis{display:block;max-width:600px;margin:0 auto}
 </style>
 </head>
 <body class="lang-en">
@@ -450,9 +478,10 @@
         <div class="logo">AiP</div>
         <div>
           <h1>AI in Practice</h1>
-          <p>Practical AI tools for the modern clinic</p>
+          <p>Free AI tools by Dr. Abhinav Kathuria</p>
         </div>
       </div>
+      <button type="button" class="sharebtn" id="shareBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg><span>Share</span></button>
     </div>
     <p class="herotag" data-en="Tools to help you <span>run tomorrow's clinic, today.</span>" data-hi="कल का क्लिनिक <span>आज चलाने</span> में मदद करने वाले टूल।" data-pa="ਤੁਹਾਡੀ ਮਦਦ ਲਈ ਟੂਲ — <span>ਕੱਲ੍ਹ ਦਾ ਕਲੀਨਿਕ, ਅੱਜ ਚਲਾਓ।</span>"></p>
   </div>
@@ -675,11 +704,18 @@
         <h2 data-en="More tools on the way" data-hi="और उपकरण जल्द ही" data-pa="ਹੋਰ ਟੂਲ ਜਲਦੀ ਹੀ"></h2>
         <p data-en="This hub grows over time. Each new tool from the channel gets its own tab here — one link to share, everything in one place." data-hi="यह हब समय के साथ बढ़ेगा। चैनल का हर नया टूल यहाँ अपने टैब में आएगा — शेयर करने के लिए एक ही लिंक, सब कुछ एक जगह।" data-pa="ਇਹ ਹੱਬ ਸਮੇਂ ਨਾਲ ਵਧੇਗਾ। ਚੈਨਲ ਦਾ ਹਰ ਨਵਾਂ ਟੂਲ ਇੱਥੇ ਆਪਣੇ ਟੈਬ ਵਿੱਚ ਆਵੇਗਾ — ਸਾਂਝਾ ਕਰਨ ਲਈ ਇੱਕੋ ਲਿੰਕ, ਸਭ ਕੁਝ ਇੱਕ ਥਾਂ।"></p>
         <div class="roadmap">
-          <span class="chip">Explain It Like They're Twelve</span>
           <span class="chip">Review Responder</span>
-          <span class="chip">Recall / Reactivation</span>
           <span class="chip">Pre-Op Instructions</span>
+          <span class="chip">Smart Recall Scheduler</span>
+          <span class="chip">Your idea here &rarr;</span>
         </div>
+      </div>
+      <div class="reqbox">
+        <h3>Have an idea? Request a tool</h3>
+        <p>Tell me what would make your clinic day easier. I read every one — and the best become the next tool (and a video).</p>
+        <textarea id="reqMsg" class="pg-textarea" rows="3" placeholder="e.g. a tool that drafts recall messages for overdue patients…"></textarea>
+        <input id="reqFrom" type="text" class="pg-input" placeholder="Your name or how to reach you (optional)" style="margin-top:10px">
+        <div class="pg-actions" style="margin-top:12px"><button type="button" class="pbtn primary" id="reqBtn">Send request</button><span id="reqStatus" class="pg-status"></span></div>
       </div>
     </section>
 
@@ -688,7 +724,12 @@
 
 <footer>
   <div class="wrap">
-    <span data-en="AI in Practice · An educational aid, not a legal consent form — always confirm the details with your own dentist." data-hi="AI in Practice · एक शैक्षिक सहायता, कानूनी सहमति फॉर्म नहीं — विवरण अपने डॉक्टर से ज़रूर पुष्टि करें।" data-pa="AI in Practice · ਇੱਕ ਵਿੱਦਿਅਕ ਸਹਾਇਤਾ, ਕਾਨੂੰਨੀ ਸਹਿਮਤੀ ਫਾਰਮ ਨਹੀਂ — ਵੇਰਵੇ ਆਪਣੇ ਡਾਕਟਰ ਤੋਂ ਜ਼ਰੂਰ ਪੁਸ਼ਟੀ ਕਰੋ।"></span>
+    <div class="foot-links">
+      <a href="https://www.instagram.com/dr.aiinpractice" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://www.youtube.com/@dr.aiinpractice" target="_blank" rel="noopener">YouTube</a>
+    </div>
+    <div class="foot-by">Built by <b>Dr. Abhinav Kathuria</b> &middot; <b>AI in Practice</b> — free tools for the modern clinic.</div>
+    <span class="foot-dis" data-en="An educational aid, not a legal consent form — always confirm the details with your own dentist. No patient data is stored on this site." data-hi="एक शैक्षिक सहायता, कानूनी सहमति फॉर्म नहीं — विवरण अपने डॉक्टर से ज़रूर पुष्टि करें। इस साइट पर कोई मरीज़ जानकारी सेव नहीं होती।" data-pa="ਇੱਕ ਵਿੱਦਿਅਕ ਸਹਾਇਤਾ, ਕਾਨੂੰਨੀ ਸਹਿਮਤੀ ਫਾਰਮ ਨਹੀਂ — ਵੇਰਵੇ ਆਪਣੇ ਡਾਕਟਰ ਤੋਂ ਜ਼ਰੂਰ ਪੁਸ਼ਟੀ ਕਰੋ। ਇਸ ਸਾਈਟ ਤੇ ਕੋਈ ਮਰੀਜ਼ ਜਾਣਕਾਰੀ ਸੇਵ ਨਹੀਂ ਹੁੰਦੀ।"></span>
   </div>
 </footer>
 
@@ -1899,6 +1940,42 @@ Key points to include:
 })();
 PROMPTGEN.init();
 /* ================= end prompt generator ================= */
+
+
+/* ================= SHARE + REQUEST-A-TOOL ================= */
+(function(){
+  var sb=document.getElementById("shareBtn");
+  if(sb){
+    var shareUrl=(location.href.split("#")[0]) || "https://clinic-tools.vercel.app/";
+    var shareTitle="Free Clinic Tools — AI in Practice";
+    var shareText="Free AI tools for the modern clinic — consent, dental charting, review analysis & AI prompts. By Dr. Abhinav Kathuria.";
+    sb.onclick=function(){
+      if(navigator.share){ navigator.share({title:shareTitle,text:shareText,url:shareUrl}).catch(function(){}); return; }
+      var label=sb.querySelector("span");
+      function flash(t){ if(label){ var o=label.textContent; label.textContent=t; setTimeout(function(){label.textContent=o;},1800);} }
+      function ok(){ flash("Link copied"); }
+      if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(shareUrl).then(ok,function(){ fallback(shareUrl,ok); });
+      else fallback(shareUrl,ok);
+    };
+  }
+  function fallback(txt,done){ var ta=document.createElement("textarea"); ta.value=txt; ta.style.position="fixed"; ta.style.left="-9999px"; document.body.appendChild(ta); ta.select(); try{document.execCommand("copy");}catch(e){} document.body.removeChild(ta); done(); }
+
+  var rb=document.getElementById("reqBtn");
+  if(rb){
+    rb.onclick=function(){
+      var msg=(document.getElementById("reqMsg").value||"").trim();
+      var from=(document.getElementById("reqFrom").value||"").trim();
+      var st=document.getElementById("reqStatus");
+      if(!msg){ if(st){ st.className="pg-status warn"; st.textContent="Type your idea first."; } return; }
+      var o=rb.textContent; rb.disabled=true; rb.textContent="Sending…"; if(st){ st.className="pg-status"; st.textContent=""; }
+      fetch("/api/request-tool",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:msg,from:from,when:new Date().toISOString()})})
+        .then(function(r){ return r.text().then(function(t){ if(!r.ok) throw new Error(t||r.status); return t; }); })
+        .then(function(){ rb.disabled=false; rb.textContent=o; document.getElementById("reqMsg").value=""; document.getElementById("reqFrom").value=""; if(st){ st.className="pg-status ok"; st.textContent="Thanks — your idea has been sent."; } })
+        .catch(function(e){ rb.disabled=false; rb.textContent=o; if(st){ st.className="pg-status warn"; st.textContent="Couldn’t send just now — please try again."; } });
+    };
+  }
+})();
+/* ================= end share + request ================= */
 
 document.getElementById('langSelect').value = lang;
 applyStaticLang();
