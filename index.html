@@ -464,10 +464,18 @@
   .reqbox h3{margin:0 0 4px;font-size:16px;color:var(--ink);font-family:'Plus Jakarta Sans',sans-serif}
   .reqbox p{margin:0 0 12px;font-size:13px;color:var(--muted);line-height:1.5}
   .foot-links{display:flex;gap:18px;justify-content:center;margin-bottom:10px}
-  .foot-links a{color:var(--teal-700);font-weight:600;text-decoration:none;font-size:13px}
+  .foot-links a{display:inline-flex;align-items:center;gap:6px;color:var(--teal-700);font-weight:600;text-decoration:none;font-size:13px}
+  .foot-links a svg{display:block;flex-shrink:0}
   .foot-links a:hover{text-decoration:underline}
   .foot-by{font-size:13px;color:var(--ink-2);margin-bottom:6px}
   .foot-dis{display:block;max-width:600px;margin:0 auto}
+  .suggestbar{margin:16px 0 2px}
+  .suggest-toggle{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:9px 16px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:13.5px;color:var(--teal-700);cursor:pointer;box-shadow:var(--shadow);transition:.15s}
+  .suggest-toggle:hover{border-color:var(--teal)}
+  .suggest-toggle .chev{transition:transform .2s}
+  .suggest-toggle[aria-expanded="true"] .chev{transform:rotate(180deg)}
+  .suggest-panel{margin-top:12px;max-width:620px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;box-shadow:var(--shadow)}
+  .suggest-panel p{margin:0 0 12px;font-size:13px;color:var(--muted);line-height:1.5}
 </style>
 </head>
 <body class="lang-en">
@@ -486,6 +494,21 @@
     <p class="herotag" data-en="Tools to help you <span>run tomorrow's clinic, today.</span>" data-hi="कल का क्लिनिक <span>आज चलाने</span> में मदद करने वाले टूल।" data-pa="ਤੁਹਾਡੀ ਮਦਦ ਲਈ ਟੂਲ — <span>ਕੱਲ੍ਹ ਦਾ ਕਲੀਨਿਕ, ਅੱਜ ਚਲਾਓ।</span>"></p>
   </div>
 </header>
+<div class="suggestbar">
+  <div class="wrap">
+    <button type="button" class="suggest-toggle" id="suggestToggle" aria-expanded="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.5.4.8.9.9 1.5l.1.7h5.2l.1-.7c.1-.6.4-1.1.9-1.5A6 6 0 0 0 12 3Z"/></svg>
+      <span>Suggestions / new idea</span>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="suggest-panel" id="suggestPanel" hidden>
+      <p>Spotted something to improve, or have an idea for a new tool? Tell me &mdash; I read every message, and the best ideas become the next tool (and a video).</p>
+      <textarea id="reqMsg" class="pg-textarea" rows="3" placeholder="Your suggestion, or a new tool idea…"></textarea>
+      <input id="reqFrom" type="text" class="pg-input" placeholder="Your name or how to reach you (optional)" style="margin-top:10px">
+      <div class="pg-actions" style="margin-top:12px"><button type="button" class="pbtn primary" id="reqBtn">Send</button><span id="reqStatus" class="pg-status"></span></div>
+    </div>
+  </div>
+</div>
 <div class="tabbar">
   <div class="wrap">
     <nav class="tabs" id="tabs">
@@ -707,15 +730,8 @@
           <span class="chip">Review Responder</span>
           <span class="chip">Pre-Op Instructions</span>
           <span class="chip">Smart Recall Scheduler</span>
-          <span class="chip">Your idea here &rarr;</span>
+          <span class="chip">&hellip; and more</span>
         </div>
-      </div>
-      <div class="reqbox">
-        <h3>Have an idea? Request a tool</h3>
-        <p>Tell me what would make your clinic day easier. I read every one — and the best become the next tool (and a video).</p>
-        <textarea id="reqMsg" class="pg-textarea" rows="3" placeholder="e.g. a tool that drafts recall messages for overdue patients…"></textarea>
-        <input id="reqFrom" type="text" class="pg-input" placeholder="Your name or how to reach you (optional)" style="margin-top:10px">
-        <div class="pg-actions" style="margin-top:12px"><button type="button" class="pbtn primary" id="reqBtn">Send request</button><span id="reqStatus" class="pg-status"></span></div>
       </div>
     </section>
 
@@ -725,8 +741,8 @@
 <footer>
   <div class="wrap">
     <div class="foot-links">
-      <a href="https://www.instagram.com/dr.aiinpractice" target="_blank" rel="noopener">Instagram</a>
-      <a href="https://www.youtube.com/@dr.aiinpractice" target="_blank" rel="noopener">YouTube</a>
+      <a href="https://www.instagram.com/dr.aiinpractice" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5" stroke="#E1306C" stroke-width="2"/><circle cx="12" cy="12" r="4.6" stroke="#E1306C" stroke-width="2"/><circle cx="17.6" cy="6.4" r="1.5" fill="#E1306C"/></svg>Instagram</a>
+      <a href="https://www.youtube.com/@dr.aiinpractice" target="_blank" rel="noopener"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="4.5" fill="#FF0000"/><path d="M10 8.6v6.8l6-3.4z" fill="#fff"/></svg>YouTube</a>
     </div>
     <div class="foot-by">Built by <b>Dr. Abhinav Kathuria</b> &middot; <b>AI in Practice</b> — free tools for the modern clinic.</div>
     <span class="foot-dis" data-en="An educational aid, not a legal consent form — always confirm the details with your own dentist. No patient data is stored on this site." data-hi="एक शैक्षिक सहायता, कानूनी सहमति फॉर्म नहीं — विवरण अपने डॉक्टर से ज़रूर पुष्टि करें। इस साइट पर कोई मरीज़ जानकारी सेव नहीं होती।" data-pa="ਇੱਕ ਵਿੱਦਿਅਕ ਸਹਾਇਤਾ, ਕਾਨੂੰਨੀ ਸਹਿਮਤੀ ਫਾਰਮ ਨਹੀਂ — ਵੇਰਵੇ ਆਪਣੇ ਡਾਕਟਰ ਤੋਂ ਜ਼ਰੂਰ ਪੁਸ਼ਟੀ ਕਰੋ। ਇਸ ਸਾਈਟ ਤੇ ਕੋਈ ਮਰੀਜ਼ ਜਾਣਕਾਰੀ ਸੇਵ ਨਹੀਂ ਹੁੰਦੀ।"></span>
@@ -1974,6 +1990,10 @@ PROMPTGEN.init();
         .catch(function(e){ rb.disabled=false; rb.textContent=o; if(st){ st.className="pg-status warn"; st.textContent="Couldn’t send just now — please try again."; } });
     };
   }
+})();
+(function(){
+  var t=document.getElementById("suggestToggle"), p=document.getElementById("suggestPanel");
+  if(t&&p){ t.onclick=function(){ if(p.hasAttribute("hidden")){ p.removeAttribute("hidden"); t.setAttribute("aria-expanded","true"); var m=document.getElementById("reqMsg"); if(m) m.focus(); } else { p.setAttribute("hidden",""); t.setAttribute("aria-expanded","false"); } }; }
 })();
 /* ================= end share + request ================= */
 
