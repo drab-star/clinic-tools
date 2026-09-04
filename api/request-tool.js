@@ -31,7 +31,7 @@ module.exports = async (req, res) => {
     }
 
     const html =
-      "<h2 style='font-family:sans-serif'>New tool request</h2>" +
+      "<h2 style='font-family:sans-serif'>New suggestion / idea</h2>" +
       "<p style='font-family:sans-serif;font-size:14px;white-space:pre-wrap'>" + escapeHtml(message) + "</p>" +
       (from ? "<p style='font-family:sans-serif;font-size:13px;color:#555'><b>From:</b> " + escapeHtml(from) + "</p>" : "") +
       (when ? "<p style='font-family:sans-serif;font-size:12px;color:#999'>" + escapeHtml(when) + "</p>" : "");
@@ -42,7 +42,7 @@ module.exports = async (req, res) => {
       body: JSON.stringify({
         from: fromAddr,
         to: [to],
-        subject: "Tool request — AI in Practice",
+        subject: "Suggestion / idea — AI in Practice",
         html: html
       })
     });
