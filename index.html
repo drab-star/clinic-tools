@@ -476,6 +476,17 @@
   .suggest-toggle[aria-expanded="true"] .chev{transform:rotate(180deg)}
   .suggest-panel{margin-top:12px;max-width:620px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;box-shadow:var(--shadow)}
   .suggest-panel p{margin:0 0 12px;font-size:13px;color:var(--muted);line-height:1.5}
+  .pubstat{display:block;margin:14px 0 0;font-size:13px;font-weight:600;color:rgba(255,255,255,.9);letter-spacing:.2px}
+  .pubstat b{color:#fff;font-weight:800}
+  .statswrap{position:fixed;inset:0;background:rgba(6,30,30,.55);display:none;align-items:flex-start;justify-content:center;padding:44px 16px;z-index:60;overflow:auto}
+  .statswrap.show{display:flex}
+  .statscard{background:#fff;border-radius:16px;max-width:560px;width:100%;padding:26px 28px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+  .statscard h2{margin:0 0 2px;font-size:20px;color:var(--ink);font-family:'Plus Jakarta Sans',sans-serif}
+  .statscard .subt{color:var(--muted);font-size:13px;margin:0 0 16px}
+  .stat-row{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:11px 0;border-bottom:1px solid var(--line)}
+  .stat-row .lbl{font-size:14px;color:var(--ink);font-weight:600}
+  .stat-row .nums{font-size:12.5px;color:var(--muted);text-align:right}
+  .stat-row .nums b{color:var(--teal-700);font-size:16px}
 </style>
 </head>
 <body class="lang-en">
@@ -492,6 +503,7 @@
       <button type="button" class="sharebtn" id="shareBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg><span>Share</span></button>
     </div>
     <p class="herotag" data-en="Tools to help you <span>run tomorrow's clinic, today.</span>" data-hi="कल का क्लिनिक <span>आज चलाने</span> में मदद करने वाले टूल।" data-pa="ਤੁਹਾਡੀ ਮਦਦ ਲਈ ਟੂਲ — <span>ਕੱਲ੍ਹ ਦਾ ਕਲੀਨਿਕ, ਅੱਜ ਚਲਾਓ।</span>"></p>
+    <div class="pubstat" id="pubStat" hidden></div>
   </div>
 </header>
 <div class="suggestbar">
@@ -748,6 +760,14 @@
     <span class="foot-dis" data-en="An educational aid, not a legal consent form — always confirm the details with your own dentist. No patient data is stored on this site." data-hi="एक शैक्षिक सहायता, कानूनी सहमति फॉर्म नहीं — विवरण अपने डॉक्टर से ज़रूर पुष्टि करें। इस साइट पर कोई मरीज़ जानकारी सेव नहीं होती।" data-pa="ਇੱਕ ਵਿੱਦਿਅਕ ਸਹਾਇਤਾ, ਕਾਨੂੰਨੀ ਸਹਿਮਤੀ ਫਾਰਮ ਨਹੀਂ — ਵੇਰਵੇ ਆਪਣੇ ਡਾਕਟਰ ਤੋਂ ਜ਼ਰੂਰ ਪੁਸ਼ਟੀ ਕਰੋ। ਇਸ ਸਾਈਟ ਤੇ ਕੋਈ ਮਰੀਜ਼ ਜਾਣਕਾਰੀ ਸੇਵ ਨਹੀਂ ਹੁੰਦੀ।"></span>
   </div>
 </footer>
+<div class="statswrap" id="statsWrap">
+  <div class="statscard">
+    <h2>Usage stats</h2>
+    <p class="subt">Private overview — counts only, no patient data.</p>
+    <div id="statsBody"></div>
+    <button type="button" class="pbtn stats-close" id="statsClose" style="margin-top:20px">Close</button>
+  </div>
+</div>
 
 <script>
 const PROC = [
@@ -1260,7 +1280,7 @@ function submitConsent(){
     return res.text().then(function(txt){ if(!res.ok) throw new Error("Server "+res.status+": "+txt); return txt; });
   }).then(function(){
     document.getElementById("signSection").style.display="none";
-    var d=document.getElementById("doneCard"); d.classList.add("show"); d.scrollIntoView({behavior:"smooth",block:"center"});
+    bump("consent"); var d=document.getElementById("doneCard"); d.classList.add("show"); d.scrollIntoView({behavior:"smooth",block:"center"});
   }).catch(function(err){
     btn.disabled=false; btn.innerHTML=origText;
     g.textContent=(step==="pdf"?"PDF error: ":"Send error: ")+((err&&err.message)||err); g.classList.add("show");
@@ -1576,7 +1596,7 @@ var PERIO = (function(){
     var _sum=buildChartText(); var _nt=clinicalNotes(); if(_nt) _sum+="\n\nClinician notes: "+_nt;
     fetch("/api/perio-report",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({summary:_sum})})
       .then(function(r){ return r.text().then(function(t){ if(!r.ok) throw new Error(t); return JSON.parse(t); }); })
-      .then(function(j){ lastReport=j; renderReport(j); btn.disabled=false; btn.textContent=o; })
+      .then(function(j){ lastReport=j; renderReport(j); bump("perio"); btn.disabled=false; btn.textContent=o; })
       .catch(function(err){ rep.innerHTML='<div class="rep-card" style="color:#a5300a">Couldn\u2019t generate the report \u2014 check the AI key and connection.</div>'; btn.disabled=false; btn.textContent=o; });
   }
   function downloadReportPDF(){
@@ -1664,7 +1684,7 @@ PERIO.init();
     out.innerHTML='<div class="rev-card" style="color:var(--muted)">Reading the reviews\u2026</div>';
     fetch("/api/reviews",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({reviews:text})})
       .then(function(r){ return r.text().then(function(t){ if(!r.ok) throw new Error(t); return JSON.parse(t); }); })
-      .then(function(j){ renderReviews(j); if(btn){ btn.disabled=false; btn.textContent=o; } })
+      .then(function(j){ renderReviews(j); bump("review"); if(btn){ btn.disabled=false; btn.textContent=o; } })
       .catch(function(e){ out.innerHTML='<div class="rev-card" style="color:#a5300a">Couldn\u2019t analyse \u2014 check the AI key and connection.</div>'; if(btn){ btn.disabled=false; btn.textContent=o; } });
   }
   function combinedReviews(){ var parts=[]; Object.keys(_inc).forEach(function(k){ if(_inc[k].reviews) parts.push(_inc[k].reviews); }); var pasted=(document.getElementById("revInput").value||"").trim(); if(pasted) parts.push(pasted); return parts.join("\n\n"); }
@@ -1925,7 +1945,7 @@ Key points to include:
     var vals={};
     p.fields.forEach(function(f){ var e=document.getElementById("pg_"+f.id); var v=e?(e.value||"").trim():""; vals[f.id]=v||f.blank||("["+f.label+"]"); });
     var out=p.template.replace(/\{(\w+)\}/g,function(m,k){ return (vals[k]!=null?vals[k]:m); });
-    document.getElementById("pgOut").textContent=out;
+    document.getElementById("pgOut").textContent=out; bump("prompt");
     document.getElementById("pgOutWrap").style.display="block";
     var cp=document.getElementById("pgCopy"); if(cp) cp.textContent="Copy";
     document.getElementById("pgOutWrap").scrollIntoView({behavior:"smooth",block:"nearest"});
@@ -1986,7 +2006,7 @@ PROMPTGEN.init();
       var o=rb.textContent; rb.disabled=true; rb.textContent="Sending…"; if(st){ st.className="pg-status"; st.textContent=""; }
       fetch("/api/request-tool",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:msg,from:from,when:new Date().toISOString()})})
         .then(function(r){ return r.text().then(function(t){ if(!r.ok) throw new Error(t||r.status); return t; }); })
-        .then(function(){ rb.disabled=false; rb.textContent=o; document.getElementById("reqMsg").value=""; document.getElementById("reqFrom").value=""; if(st){ st.className="pg-status ok"; st.textContent="Thanks — your idea has been sent."; } })
+        .then(function(){ rb.disabled=false; rb.textContent=o; document.getElementById("reqMsg").value=""; document.getElementById("reqFrom").value=""; if(st){ st.className="pg-status ok"; st.textContent="Thanks — your idea has been sent."; } bump("suggestion"); })
         .catch(function(e){ rb.disabled=false; rb.textContent=o; if(st){ st.className="pg-status warn"; st.textContent="Couldn’t send just now — please try again."; } });
     };
   }
@@ -1996,6 +2016,59 @@ PROMPTGEN.init();
   if(t&&p){ t.onclick=function(){ if(p.hasAttribute("hidden")){ p.removeAttribute("hidden"); t.setAttribute("aria-expanded","true"); var m=document.getElementById("reqMsg"); if(m) m.focus(); } else { p.setAttribute("hidden",""); t.setAttribute("aria-expanded","false"); } }; }
 })();
 /* ================= end share + request ================= */
+
+
+/* ================= USAGE COUNTING ================= */
+function bump(ev){ try{ fetch("/api/count",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({event:ev}),keepalive:true}).catch(function(){}); }catch(e){} }
+function renderPublicStats(){
+  var el=document.getElementById("pubStat"); if(!el) return;
+  fetch("/api/count").then(function(r){return r.ok?r.json():null;}).then(function(j){
+    if(!j||!j.totals) return; var t=j.totals; var b=[];
+    if(t.consent) b.push("<b>"+Number(t.consent).toLocaleString()+"</b> consents generated");
+    if(t.prompt) b.push("<b>"+Number(t.prompt).toLocaleString()+"</b> prompts created");
+    if(!b.length) return; el.innerHTML="✦  "+b.join("  ·  "); el.hidden=false;
+  }).catch(function(){});
+}
+function renderStatsData(j){
+  var body=document.getElementById("statsBody"); if(!body) return;
+  var LB={visit:"Page visits",consent:"Consents generated",prompt:"Prompts created",perio:"Dental Chart reports",review:"Review analyses",suggestion:"Suggestions received"};
+  var order=["visit","consent","prompt","perio","review","suggestion"]; var html="";
+  order.forEach(function(k){ var a=(j.all[k]||0),c=(j.cur&&j.cur[k])||0,p=(j.prev&&j.prev[k])||0;
+    html+='<div class="stat-row"><span class="lbl">'+LB[k]+'</span><span class="nums"><b>'+Number(a).toLocaleString()+'</b> all-time<br>'+Number(c).toLocaleString()+' this month · '+Number(p).toLocaleString()+' last month</span></div>'; });
+  html+='<p style="font-size:12px;color:var(--muted);margin:14px 0 0">Private — passcode-protected. <a href="#" id="statsForget" style="color:var(--teal-700)">Forget passcode on this device</a></p>';
+  body.innerHTML=html;
+  var fg=document.getElementById("statsForget"); if(fg) fg.onclick=function(e){ e.preventDefault(); try{localStorage.removeItem("statsKey");}catch(_){}; askKey("Passcode removed from this device. Enter it to view again."); };
+}
+function askKey(msg){
+  var body=document.getElementById("statsBody"); if(!body) return;
+  body.innerHTML='<p style="font-size:13px;color:var(--muted);margin:0 0 10px">'+(msg||"Enter the stats passcode to view usage.")+'</p><input id="statsKeyInput" type="password" class="pg-input" placeholder="Passcode" autocomplete="off"><div class="pg-actions" style="margin-top:12px"><button type="button" class="pbtn primary" id="statsUnlock">Unlock</button></div>';
+  var inp=document.getElementById("statsKeyInput"); var go=function(){ var k=(inp.value||"").trim(); if(k) tryOpen(k,true); };
+  document.getElementById("statsUnlock").onclick=go;
+  if(inp){ inp.onkeydown=function(e){ if(e.key==="Enter") go(); }; inp.focus(); }
+}
+function tryOpen(key,fromInput){
+  var body=document.getElementById("statsBody"); if(!body) return; body.textContent="Loading…";
+  fetch("/api/count?all=1",{headers: key?{"x-stats-key":key}:{}}).then(function(r){
+    if(r.status===503){ body.textContent="Stats passcode isn’t set up yet — add STATS_KEY in Vercel, then reload."; return; }
+    if(r.status===401){ try{localStorage.removeItem("statsKey");}catch(e){} askKey(fromInput?"That passcode didn’t work — try again.":"Enter the stats passcode to view usage."); return; }
+    if(!r.ok){ body.textContent="Couldn’t load stats right now."; return; }
+    return r.json().then(function(j){ if(!j||!j.all){ body.textContent="The counter isn’t set up yet — add the Upstash keys in Vercel."; return; } try{ if(key) localStorage.setItem("statsKey",key); }catch(e){} renderStatsData(j); });
+  }).catch(function(){ body.textContent="Couldn’t load stats right now."; });
+}
+function openStats(){
+  var w=document.getElementById("statsWrap"); if(!w) return; w.classList.add("show");
+  var saved=""; try{ saved=localStorage.getItem("statsKey")||""; }catch(e){}
+  if(saved) tryOpen(saved,false); else askKey("Enter the stats passcode to view usage.");
+}
+function closeStats(){ var w=document.getElementById("statsWrap"); if(w) w.classList.remove("show"); if(location.hash==="#stats"){ history.replaceState(null,"",location.pathname+location.search); } }
+(function(){
+  var sc=document.getElementById("statsClose"); if(sc) sc.onclick=closeStats;
+  var sw=document.getElementById("statsWrap"); if(sw) sw.addEventListener("click",function(e){ if(e.target===sw) closeStats(); });
+  window.addEventListener("hashchange",function(){ if(location.hash==="#stats") openStats(); });
+  if(location.hash==="#stats") openStats();
+  bump("visit"); renderPublicStats();
+})();
+/* ================= end usage counting ================= */
 
 document.getElementById('langSelect').value = lang;
 applyStaticLang();
